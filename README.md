@@ -31,9 +31,8 @@ This firmware package includes Components Device Drivers, Board Support Package 
 
 Here is the list of references to user documents:
 
-- [DB2862: STM32Cube function pack for IoT node with NFC, BLE connectivity and Time-of-Flight sensors](https://www.st.com/resource/en/data_brief/fp-sns-flight1.pdf)
-- [UM2026: Getting started with the STM32Cube function pack for IoT node with NFC, BLE connectivity and time-of-flight sensors](https://www.st.com/resource/en/user_manual/um2026-getting-started-with-the-stm32cube-function-pack-for-iot-node-with-nfc-ble-connectivity-and-timeofflight-sensors-stmicroelectronics.pdf)
-- [X-CUBE-BLEMGR Quick Start Guide](https://www.st.com/content/ccc/resource/sales_and_marketing/presentation/product_presentation/group0/80/95/e3/1e/fa/47/49/0d/FP-SNS-FLIGHT1%20Quick%20start%20guide/files/fp-sns-flight1_quick_start_guide.pdf/jcr:content/translations/en.fp-sns-flight1_quick_start_guide.pdf)
+- [DB4774: Bluetooth Low Energy manager software expansion for STM32Cube](https://www.st.com/resource/en/data_brief/x-cube-blemgr.pdf)
+- [UM3051: Getting started with the X-CUBE-BLEMGR Bluetooth Low Energy manager software expansion for STM32Cube](https://www.st.com/resource/en/user_manual/um3051-getting-started-with-the-xcubeblemgr-bluetooth-low-energy-manager-software-expansion-for-stm32cube-stmicroelectronics.pdf)
 
 ## Supported Devices and Boards
 
