@@ -3,8 +3,8 @@
   ******************************************************************************
   * @file    main.c
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 1.0.0
-  * @date    31-May-2022
+  * @version 1.1.0
+  * @date    16-September-2022
   * @brief   Main program body
   ******************************************************************************
   * @attention
@@ -21,7 +21,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "app_stm32_ble_manager.h"
+#include "app_blemgr.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -88,7 +88,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_STM32_BLE_Manager_Init();
+  MX_BLEMGR_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -99,7 +99,7 @@ int main(void)
   {
     /* USER CODE END WHILE */
 
-  MX_STM32_BLE_Manager_Process();
+  MX_BLEMGR_Process();
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

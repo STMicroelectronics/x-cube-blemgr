@@ -1,11 +1,9 @@
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file    app_stm32_ble_manager.h
+  * @file    app_blemgr.h
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 1.0.0
-  * @date    31-May-2022
-  * @brief   Header file for app_stm32_ble_manager.c
+  * @brief   Header file for app_blemgr.c
   ******************************************************************************
   * @attention
   *
@@ -22,8 +20,8 @@
 /* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef APP_STM32_BLE_MANAGER_H
-#define APP_STM32_BLE_MANAGER_H
+#ifndef APP_BLEMGR_H
+#define APP_BLEMGR_H
 
 #ifdef __cplusplus
  extern "C" {
@@ -50,8 +48,8 @@
 /* USER CODE END EV */
 
 /* Exported Functions --------------------------------------------------------*/
-void MX_STM32_BLE_Manager_Init(void);
-void MX_STM32_BLE_Manager_Process(void);
+void MX_BLEMGR_Init(void);
+void MX_BLEMGR_Process(void);
 
 extern void SetRandomEnvironmentalValues(int32_t *PressToSend,uint16_t *HumToSend,int16_t *TempToSend);
 
@@ -63,4 +61,4 @@ extern void SetRandomEnvironmentalValues(int32_t *PressToSend,uint16_t *HumToSen
 }
 #endif
 
-#endif /* APP_STM32_BLE_MANAGER_H */
+#endif /* APP_BLEMGR_H */

@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    BLE_PnPLike.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.4.0
-  * @date    31-May-2022
+  * @version 1.6.0
+  * @date    15-September-2022
   * @brief   Add PnPLike info services using vendor specific profile.
   ******************************************************************************
   * @attention
@@ -35,7 +35,7 @@ CustomWriteRequestPnPLike_t CustomWriteRequestPnPLike=NULL;
 /* Data structure pointer for PnPLike info service */
 static BleCharTypeDef BleCharPnPLike;
 /* Buffer used to save the complete command received via BLE*/
-uint8_t *ble_command_buffer;
+static uint8_t *ble_command_buffer;
 
 /* Private functions ---------------------------------------------------------*/
 static void AttrMod_Request_PnPLike(void *BleCharPointer,uint16_t attr_handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data);
@@ -53,7 +53,7 @@ BleCharTypeDef* BLE_InitPnPLikeService(void)
 
   /* Init data structure pointer for PnPLike info service */
   BleCharPointer = &BleCharPnPLike;
-  memset(BleCharPointer,0,sizeof(BleCharTypeDef));  
+  memset(BleCharPointer,0,sizeof(BleCharTypeDef));
   BleCharPointer->AttrMod_Request_CB = AttrMod_Request_PnPLike;
   BleCharPointer->Write_Request_CB = Write_Request_PnPLike;
   COPY_PNPLIKE_CHAR_UUID((BleCharPointer->uuid));
@@ -70,7 +70,7 @@ BleCharTypeDef* BLE_InitPnPLikeService(void)
   }
 
   BLE_MANAGER_PRINTF("BLE PnPLike features ok\r\n");
-  
+
   return BleCharPointer;
 }
 
@@ -94,10 +94,10 @@ tBleStatus BLE_PnPLikeUpdate(uint8_t* buffer, uint32_t len)
  *         With this function it's possible to understand if PnPLike is subscribed or not to the one service
  * @param  void *VoidCharPointer
  * @param  uint16_t attr_handle Handle of the attribute
- * @param  uint16_t Offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode: 
+ * @param  uint16_t Offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
  *                          - Bits 0-14: offset of the reported value inside the attribute.
  *                          - Bit 15: if the entire value of the attribute does not fit inside a single ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event,
- *                            this bit is set to 1 to notify that other ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.                  
+ *                            this bit is set to 1 to notify that other ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
  * @param  uint8_t data_length length of the data
  * @param  uint8_t *att_data attribute data
  * @retval None
@@ -115,13 +115,13 @@ static void AttrMod_Request_PnPLike(void *VoidCharPointer, uint16_t attr_handle,
       CustomNotifyEventPnPLike(BLE_NOTIFY_UNSUB);
     }
   }
- 
+
 #if (BLE_DEBUG_LEVEL>1)
  if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
-   BytesToWrite =(uint8_t)sprintf((char *)BufferToWrite,"--->PnPLike=%s\n", (CustomNotifyEventPnPLike == BLE_NOTIFY_SUB) ? " ON" : " OFF");
+   BytesToWrite =(uint8_t)sprintf((char *)BufferToWrite,"--->PnPLike=%s\n", (att_data[0] == BLE_NOTIFY_SUB) ? " ON" : " OFF");
    Term_Update(BufferToWrite,BytesToWrite);
  } else {
-   BLE_MANAGER_PRINTF("--->PnPLike=%s", (CustomNotifyEventPnPLike == BLE_NOTIFY_SUB) ? " ON\r\n" : " OFF\r\n");
+   BLE_MANAGER_PRINTF("--->PnPLike=%s", (att_data[0] == BLE_NOTIFY_SUB) ? " ON\r\n" : " OFF\r\n");
  }
 #endif
 }
@@ -148,7 +148,7 @@ static void Write_Request_PnPLike(void *BleCharPointer,uint16_t handle, uint16_t
   }
   else
   {
-    BLE_MANAGER_PRINTF("\r\n\nRead request PnPLike function not defined\r\n\n");
+    BLE_MANAGER_PRINTF("\r\n\nWrite request PnPLike function not defined\r\n\n");
   }
 }
 

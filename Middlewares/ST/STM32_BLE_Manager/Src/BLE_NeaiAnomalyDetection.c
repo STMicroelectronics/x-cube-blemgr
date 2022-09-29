@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    BLE_NeaiAnomalyDetection.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.4.0
-  * @date    31-May-2022
+  * @version 1.6.0
+  * @date    15-September-2022
   * @brief   Add Anomaly Detection info services using vendor specific profiles.
   ******************************************************************************
   * @attention
@@ -99,8 +99,8 @@ tBleStatus BLE_NeaiAnomalyDetectionUpdate(BLE_AD_output_t output)
   buff[1] = NEAI_AD_ESCAPE;
   buff[2] = NEAI_AD_ESCAPE;
   buff[3] = NEAI_AD_ESCAPE;
-  buff[4] = output.phase;
-  buff[5] = output.state;
+  buff[4] = (uint8_t)output.phase;
+  buff[5] = (uint8_t)output.state;
   buff[6] = output.progress;
   buff[7] = output.status;
   buff[8] = output.similarity;

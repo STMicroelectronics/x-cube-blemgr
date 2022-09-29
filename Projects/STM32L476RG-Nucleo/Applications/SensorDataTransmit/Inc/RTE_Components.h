@@ -22,10 +22,10 @@
 #define  __RTE_COMPONENTS_H__
 
 /* Defines ------------------------------------------------------------------*/
-/* STMicroelectronics.X-CUBE-BLE2.3.2.2 */
+/* STMicroelectronics.X-CUBE-BLE2.3.3.0 */
 #define HCI_TL
 #define HCI_TL_INTERFACE
-/* STMicroelectronics.X-CUBE-BLEMGR.1.0.0 */
+/* STMicroelectronics.X-CUBE-BLEMGR.1.1.0 */
 #define BLE_MANAGER_ENVIRONMENTAL
 #define BLE_MANAGER_LED
 #define BLE_MANAGER_SENSOR_FUSION

@@ -1,11 +1,9 @@
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file    app_stm32_ble_manager.c
+  * @file    app_blemgr.c
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 1.0.0
-  * @date    31-May-2022
-  * @brief   This file provides code for stm32_ble_manager application.
+  * @brief   This file provides code for blemgr application.
   *
   ******************************************************************************
   * @attention
@@ -23,7 +21,7 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
-#include "app_stm32_ble_manager.h"
+#include "app_blemgr.h"
 #include "BLE_Manager.h"
 
 /* USER CODE BEGIN Includes */
@@ -67,44 +65,44 @@ static void ComputeRandomQuaternions(void);
 
 /* USER CODE END PFP */
 
-void MX_STM32_BLE_Manager_Init(void)
+void MX_BLEMGR_Init(void)
 {
   /* USER CODE BEGIN SV */
 
   /* USER CODE END SV */
 
-  /* USER CODE BEGIN STM32_BLE_Manager_Init_PreTreatment */
+  /* USER CODE BEGIN BLEMGR_Init_PreTreatment */
 
-  /* USER CODE END STM32_BLE_Manager_Init_PreTreatment */
+  /* USER CODE END BLEMGR_Init_PreTreatment */
 
-  /* Initialize STM32_BLE_MANAGER application */
+  /* Initialize BLEMGR application */
 
   User_Init();
   /* Initialize the BlueNRG stack and services */
 
   BluetoothInit();
 
-  /* USER CODE BEGIN STM32_BLE_Manager_Init_PostTreatment */
+  /* USER CODE BEGIN BLEMGR_Init_PostTreatment */
 
-  /* USER CODE END STM32_BLE_Manager_Init_PostTreatment */
+  /* USER CODE END BLEMGR_Init_PostTreatment */
 }
 
 /*
- * STM32_BLE_MANAGER background task
+ * BLEMGR background task
  */
-void MX_STM32_BLE_Manager_Process(void)
+void MX_BLEMGR_Process(void)
 {
-  /* USER CODE BEGIN STM32_BLE_Manager_Process_PreTreatment */
+  /* USER CODE BEGIN BLEMGR_Process_PreTreatment */
 
-  /* USER CODE END STM32_BLE_Manager_Process_PreTreatment */
+  /* USER CODE END BLEMGR_Process_PreTreatment */
 
-  /* Process of the STM32_BLE_MANAGER application */
+  /* Process of the BLEMGR application */
 
   User_Process();
 
-  /* USER CODE BEGIN STM32_BLE_Manager_Process_PostTreatment */
+  /* USER CODE BEGIN BLEMGR_Process_PostTreatment */
 
-  /* USER CODE END STM32_BLE_Manager_Process_PostTreatment */
+  /* USER CODE END BLEMGR_Process_PostTreatment */
 }
 
 /**

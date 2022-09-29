@@ -337,7 +337,7 @@
             <v6WtE>0</v6WtE>
             <v6Rtti>0</v6Rtti>
             <VariousControls>
-              <MiscControls></MiscControls>
+              <MiscControls>-Wno-format</MiscControls>
               <Define>USE_HAL_DRIVER,STM32L476xx</Define>
               <Undefine></Undefine>
               <IncludePath>../Inc;../../../../../Drivers/STM32L4xx_HAL_Driver/Inc;../../../../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy;../../../../../Drivers/CMSIS/Device/ST/STM32L4xx/Include;../../../../../Drivers/CMSIS/Include;../../../../../Middlewares/Third_Party/parson;../../../../../Middlewares/ST/STM32_BLE_Manager/Inc;../../../../../Middlewares/ST/BlueNRG-2/hci/hci_tl_patterns/Basic;../../../../../Middlewares/ST/BlueNRG-2/utils;../../../../../Middlewares/ST/BlueNRG-2/includes</IncludePath>
@@ -395,6 +395,11 @@
           <GroupName>Application/User</GroupName>
           <Files>
             <File>
+              <FileName>app_blemgr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\app_blemgr.c</FilePath>
+            </File>
+            <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Src/main.c</FilePath>
@@ -408,11 +413,6 @@
               <FileName>BLE_Implementation.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Src/BLE_Implementation.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_stm32_ble_manager.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Src/app_stm32_ble_manager.c</FilePath>
             </File>
             <File>
               <FileName>stm32l4xx_nucleo_bus.c</FileName>

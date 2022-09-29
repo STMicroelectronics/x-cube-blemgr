@@ -1,8 +1,8 @@
 | Component                                			| Copyright            | License   |
 |:---------                                			|:-------              |:----------|
-| Core CMSIS                               			| ARM Limited          | Apache 2.0 |
-| CMSIS                                    			| ARM Limited          | Apache License 2.0 |
-| CMSIS Device                             			| ARM Limited - STMicroelectronics   | Apache License 2.0 |
+| Core CMSIS                               			| ARM Limited          | Apache-2.0 |
+| CMSIS                                    			| ARM Limited          | Apache License-2.0 |
+| CMSIS Device                             			| ARM Limited - STMicroelectronics   | Apache License-2.0 |
 | STM32L4 HAL                              			| STMicroelectronics   | BSD-3-Clause |
 | BSP Components                           			| STMicroelectronics   | BSD-3-Clause |
 | BSP STM32L4xx_Nucleo                     			| STMicroelectronics   | BSD-3-Clause |

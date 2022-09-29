@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    BLE_HighSpeedDataLog.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.4.0
-  * @date    31-May-2022
+  * @version 1.6.0
+  * @date    15-September-2022
   * @brief   Add High Speed Data Log info services using vendor specific
   *          profiles.
   ******************************************************************************
@@ -130,7 +130,7 @@ static void Write_Request_HighSpeedDataLog(void *BleCharPointer,uint16_t handle,
   if(CustomWriteRequestHighSpeedDataLog!= NULL) {
     CustomWriteRequestHighSpeedDataLog(att_data, data_length);
   } else {
-    BLE_MANAGER_PRINTF("\r\n\nRead request High Speed Data Log function not defined\r\n\n");
+    BLE_MANAGER_PRINTF("\r\n\nWrite request High Speed Data Log function not defined\r\n\n");
   }
 }
 

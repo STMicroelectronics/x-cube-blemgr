@@ -3,8 +3,8 @@
   ******************************************************************************
   * @file    BLE_Implementation.h
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 1.0.0
-  * @date    31-May-2022
+  * @version 1.1.0
+  * @date    16-September-2022
   * @brief   BLE Implementation header template file.
   *          This file should be copied to the application folder and renamed
   *          to BLE_Implementation.h.
@@ -166,7 +166,7 @@
 
 /* Package Version firmware */
 #define BLE_VERSION_FW_MAJOR  '1'
-#define BLE_VERSION_FW_MINOR  '0'
+#define BLE_VERSION_FW_MINOR  '1'
 #define BLE_VERSION_FW_PATCH  '0'
 
 /* Firmware Package Name */

@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    BLE_Manager.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.4.0
-  * @date    31-May-2022
+  * @version 1.6.0
+  * @date    15-September-2022
   * @brief   Add bluetooth services using vendor specific profiles.
   ******************************************************************************
   * @attention
@@ -1453,7 +1453,7 @@ BLE_CustomCommadResult_t *ParseCustomCommand(BLE_ExtCustomCommand_t *LocCustomCo
       BLE_MANAGER_PRINTF("Error: Mem alloc error: %d@%s\r\n", __LINE__, __FILE__);
     }
     
-    CommandResult->CommandName = (uint8_t*)BLE_MallocFunction(strlen((char*)LocLastCustomCommand->CommandName));
+    CommandResult->CommandName = (uint8_t*)BLE_MallocFunction(strlen((char*)LocLastCustomCommand->CommandName)+1);
     if(CommandResult->CommandName==NULL) {
       BLE_MANAGER_PRINTF("Error: Mem alloc error: %d@%s\r\n", __LINE__, __FILE__);
       BLE_FreeFunction(CommandResult);
@@ -1500,7 +1500,7 @@ BLE_CustomCommadResult_t *ParseCustomCommand(BLE_ExtCustomCommand_t *LocCustomCo
       if(json_object_dothas_value(JSON_ParseHandler,"argString")) {
         uint8_t *NewString = (uint8_t *)json_object_dotget_string(JSON_ParseHandler,"argString");
         CommandResult->IntValue= 0;
-        CommandResult->StringValue = (uint8_t*)BLE_MallocFunction(strlen((char*)NewString));
+        CommandResult->StringValue = (uint8_t*)BLE_MallocFunction(strlen((char*)NewString)+1);
         if(CommandResult->StringValue==NULL) {
           BLE_MANAGER_PRINTF("Error: Mem alloc error: %d@%s\r\n", __LINE__, __FILE__);
           BLE_FreeFunction(CommandResult);
@@ -1563,6 +1563,7 @@ static void ClearSingleCommand(BLE_ExtCustomCommand_t *Command)
 * @param  BLE_ExtCustomCommand_t **LocLastCustomCommand Poiter to Pointer to slast Custom Command
 * @param  char *CommandName Command Name
 * @param  BLE_CustomCommandTypes_t CommandType Command Type
+* @param  int32_t DefaultValue (for BLE_CUSTOM_COMMAND_INTEGER,BLE_CUSTOM_COMMAND_ENUM_INTEGER,BLE_CUSTOM_COMMAND_ENUM_STRING or BLE_CUSTOM_COMMAND_BOOLEAN)
 * @param  int32_t Min  Optional Minim value (BLE_MANAGER_CUSTOM_COMMAND_VALUE_NAN if not needed)
 * @param  int32_t Max Max value
 * @param  int32_t *ValidValuesInt array of Valid Integer Values (NULL if not needed)
@@ -1572,7 +1573,7 @@ static void ClearSingleCommand(BLE_ExtCustomCommand_t *Command)
 * @retval uint8_t Valid/NotValid Command (1/0)
 */
 uint8_t GenericAddCustomCommand(BLE_ExtCustomCommand_t **LocCustomCommands, BLE_ExtCustomCommand_t **LocLastCustomCommand,
-                         char *CommandName,BLE_CustomCommandTypes_t CommandType, 
+                         char *CommandName,BLE_CustomCommandTypes_t CommandType, int32_t DefaultValue,
                          int32_t Min, int32_t Max, int32_t *ValidValuesInt, char **ValidValuesString,char *ShortDesc,JSON_Array *JSON_SensorArray)
 {
   uint8_t Valid =1U;
@@ -1615,6 +1616,16 @@ uint8_t GenericAddCustomCommand(BLE_ExtCustomCommand_t **LocCustomCommands, BLE_
     case  BLE_CUSTOM_COMMAND_ENUM_STRING:
       json_object_dotset_string(tempJSON1_Obj, "Type", "EnumString");
       break;
+    }
+    
+    //Add the Optional Default Value
+    if((CommandType==BLE_CUSTOM_COMMAND_INTEGER) |
+       (CommandType==BLE_CUSTOM_COMMAND_BOOLEAN) |
+       (CommandType==BLE_CUSTOM_COMMAND_ENUM_INTEGER) |
+       (CommandType==BLE_CUSTOM_COMMAND_ENUM_STRING)) {
+      if(DefaultValue!= (int32_t)BLE_MANAGER_CUSTOM_COMMAND_VALUE_NAN) {
+        json_object_dotset_number(tempJSON1_Obj, "DefaultValue", DefaultValue);
+      }
     }
     
     //Add the Optional Description
@@ -1688,7 +1699,7 @@ uint8_t GenericAddCustomCommand(BLE_ExtCustomCommand_t **LocCustomCommands, BLE_
     (*LocLastCustomCommand)->CommandType = CommandType;
     
     //Alloc the size for commandName
-    (*LocLastCustomCommand)->CommandName = BLE_MallocFunction(strlen(CommandName)*sizeof(char));
+    (*LocLastCustomCommand)->CommandName = BLE_MallocFunction(strlen(CommandName)+1);
      if(((*LocLastCustomCommand)->CommandName)==NULL) {
        BLE_MANAGER_PRINTF("Error: Mem calloc error %d@%s\r\n",__LINE__,__FILE__);
        return 0;

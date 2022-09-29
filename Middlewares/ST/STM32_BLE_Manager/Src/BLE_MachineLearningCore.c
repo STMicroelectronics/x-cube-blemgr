@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    BLE_MachineLearningCore.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.4.0
-  * @date    31-May-2022
+  * @version 1.6.0
+  * @date    15-September-2022
   * @brief   Add Machine Learning Core info services using vendor specific
   *          profiles.
   ******************************************************************************

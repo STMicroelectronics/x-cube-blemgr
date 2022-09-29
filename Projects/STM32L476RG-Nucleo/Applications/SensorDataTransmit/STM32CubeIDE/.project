@@ -41,9 +41,9 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Src/BLE_Implementation.c</locationURI>
 		</link>
 		<link>
-			<name>Application/User/app_stm32_ble_manager.c</name>
+			<name>Application/User/app_blemgr.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Src/app_stm32_ble_manager.c</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/Src/app_blemgr.c</locationURI>
 		</link>
 		<link>
 			<name>Application/User/hci_tl_interface.c</name>

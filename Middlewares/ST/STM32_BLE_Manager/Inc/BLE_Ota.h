@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    BLE_Ota.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.4.0
-  * @date    31-May-2022
+  * @version 1.6.0
+  * @date    15-September-2022
   * @brief   Ota characteristic APIs.
   ******************************************************************************
   * @attention

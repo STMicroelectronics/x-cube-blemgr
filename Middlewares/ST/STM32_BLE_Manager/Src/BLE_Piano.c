@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    BLE_Piano.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.4.0
-  * @date    31-May-2022
+  * @version 1.6.0
+  * @date    15-September-2022
   * @brief   AddP iano info services using vendor specific
   *          profiles.
   ******************************************************************************
@@ -132,7 +132,7 @@ static void Write_Request_Piano(void *BleCharPointer,uint16_t handle, uint16_t O
   if(CustomWriteRequestPiano != NULL) {
     CustomWriteRequestPiano(att_data, data_length);
   } else {
-    BLE_MANAGER_PRINTF("\r\n\nRead request Piano function not defined\r\n\n");
+    BLE_MANAGER_PRINTF("\r\n\nWrite request Piano function not defined\r\n\n");
   }
 }
 

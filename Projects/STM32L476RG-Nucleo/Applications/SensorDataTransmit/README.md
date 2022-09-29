@@ -30,25 +30,20 @@ For this reason:
 
 Read user manual for more details. 
 
-## Issue
-
-Compiler warnings are generated from sprintf, specifically related to Keil µVision 5.
-It doesn't affect the performances.
-
 ## Dependencies
 
 STM32Cube packages:
-  - STM32L4xx drivers from STM32CubeL4 V1.17.0
+  - STM32L4xx drivers from STM32CubeL4 V1.17.1
   
 X-CUBE packages:
-  - X-CUBE-BLE2 V3.2.2
+  - X-CUBE-BLE2 V3.3.0
   
 ## Hardware and Software environment
 
 - This example runs on Sensor expansion board attached to STM32L476RG devices can be easily tailored to any other supported device and development board.
-- This example must be used with the related ST BLE Sensor Android/iOS application (Version 4.13.0/4.11.0 or higher) available on Play/itune store, in order to read the sent information by Bluetooth Low Energy protocol.
+- This example must be used with the related ST BLE Sensor Android/iOS application (Version 4.14.7/4.14.6 or higher) available on Play/itune store, in order to read the sent information by Bluetooth Low Energy protocol.
 - Inside the Binary Directory there are the following binaries:
-  - STM32L476RG-Nucleo_SensorDataTransmit_v1.0.0.bin
+  - STM32L476RG-Nucleo_SensorDataTransmit_v1.1.0.bin
 
 ## How to use it ?
 
@@ -69,7 +64,7 @@ For Keil µVision 5:
  - Rebuild all files
  
 For Integrated Development Environment for STM32:
- - Open STM32CubeIDE (this firmware has been successfully tested with Version 1.9.0).
+ - Open STM32CubeIDE (this firmware has been successfully tested with Version 1.10.1).
  - Set the default workspace proposed by the IDE (please be sure that there are not spaces in the workspace path).
  - Press "File" -> "Import" -> "Existing Projects into Workspace"; press "Browse" in the "Select root directory" and choose the path where the System
    Workbench project is located (it should be STM32CubeIDE). 

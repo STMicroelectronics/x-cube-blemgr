@@ -2,8 +2,8 @@
   ******************** (C) COPYRIGHT 2022 STMicroelectronics *******************
   * @file    readme.txt
   * @author  System Research & Applications Team - Catania Lab.
-  * @version V1.0.0
-  * @date    31-May-2022
+  * @version V1.1.0
+  * @date    16-September-2022
   * @brief   Description of the Application FW.
   ******************************************************************************
   * @attention
@@ -51,12 +51,6 @@ Application Description
    (currently available only for Windows PC) in order to update the firmware of the BLE module of X-NUCLEO-BNRG2A1.
  Read user manual for more details.
  
-                                    ----------
-                                    | Issue: |
-                                    ----------
- Compiler warnings are generated from sprintf, specifically related to Keil µVision 5.
- It doesn't affect the performances.
- 
 @par Hardware and Software environment
 
   - This example runs on Sensor expansion board attached to STM32L476RG devices
@@ -66,12 +60,12 @@ Application Description
     in order to read the sent information by Bluetooth Low Energy protocol
 	
   - Inside the Binary Directory there are the following binaries:
-    - STM32L476RG-Nucleo_SensorDataTransmit_v1.0.0.bin
+    - STM32L476RG-Nucleo_SensorDataTransmit_v1.1.0.bin
 
 @par STM32Cube packages:
-  - STM32L4xx drivers from STM32CubeL4 V1.17.0
+  - STM32L4xx drivers from STM32CubeL4 V1.17.1
 @par X-CUBE packages:
-  - X-CUBE-BLE2 V3.2.2
+  - X-CUBE-BLE2 V3.3.0
 
 @par How to use it ? 
 
@@ -92,7 +86,7 @@ For Keil µVision 5:
  - Rebuild all files
  
 For Integrated Development Environment for STM32:
- - Open STM32CubeIDE (this firmware has been successfully tested with Version 1.9.0).
+ - Open STM32CubeIDE (this firmware has been successfully tested with Version 1.10.1).
  - Set the default workspace proposed by the IDE (please be sure that there are not spaces in the workspace path).
  - Press "File" -> "Import" -> "Existing Projects into Workspace"; press "Browse" in the "Select root directory" and choose the path where the System
    Workbench project is located (it should be STM32CubeIDE). 

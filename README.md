@@ -43,16 +43,11 @@ Here is the list of references to user documents:
 
 -   IAR Embedded Workbench for ARM (EWARM) toolchain V9.20.1 + STLink/V2
 -   RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.37.0 + ST-LINK/V2
--   Integrated Development Environment for STM32 (STM32CubeIDE) V1.9.0 + ST-LINK
-
-## Issue
-
-Compiler warnings are generated from sprintf, specifically related to Keil µVision 5.
-It doesn't affect the performances.
+-   Integrated Development Environment for STM32 (STM32CubeIDE) V1.10.1 + ST-LINK
 	
 ## Dependencies 
 
 This software release is compatible with:
 
-- [**ST BLE Sensor Android application**](https://play.google.com/store/apps/details?id=com.st.bluems)  V4.13.0 (or higher)
+- [**ST BLE Sensor Android application**](https://play.google.com/store/apps/details?id=com.st.bluems)  V4.14.7 (or higher)
 - [**ST BLE Sensor iOS application**](https://apps.apple.com/it/app/st-ble-sensor/id993670214)  V4.14.6 (or higher)

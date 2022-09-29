@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    BLE_NeaiAnomalyDetection.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.4.0
-  * @date    31-May-2022
+  * @version 1.6.0
+  * @date    15-September-2022
   * @brief   NEAI(Cartesiam) Anomaly Detection info services APIs.
   ******************************************************************************
   * @attention
@@ -33,7 +33,7 @@ typedef enum
 {
   NEAI_AD_NORMAL        = 0x00,
   NEAI_AD_ANOMALY       = 0x01,
-  NEAI_AD_STATUS_NULL   = 0xFF
+  NEAI_AD_STATUS_NULL   = 0x02
 } BLE_AD_status_t;
 
 typedef enum

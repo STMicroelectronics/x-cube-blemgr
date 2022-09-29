@@ -3,8 +3,8 @@
   ******************************************************************************
   * @file    stm32l4xx_nucleo_bus.c
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 1.0.0
-  * @date    31-May-2022
+  * @version 1.1.0
+  * @date    16-September-2022
   * @brief   source file for the BSP BUS IO driver
   ******************************************************************************
   * @attention

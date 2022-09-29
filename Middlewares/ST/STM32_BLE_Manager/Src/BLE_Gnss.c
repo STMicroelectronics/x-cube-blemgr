@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    BLE_Gnss.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.4.0
-  * @date    31-May-2022
+  * @version 1.6.0
+  * @date    15-September-2022
   * @brief   Add GNSS info services using vendor specific profiles.
   ******************************************************************************
   * @attention

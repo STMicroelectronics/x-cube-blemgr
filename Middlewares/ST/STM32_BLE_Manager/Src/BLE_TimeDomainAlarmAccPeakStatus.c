@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    BLE_TimeDomainAlarmAccPeakStatus.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.4.0
-  * @date    31-May-2022
+  * @version 1.6.0
+  * @date    15-September-2022
   * @brief   Add BLE Time Domain Alarm Acc Peak Status info services using vendor
   *          specific profiles.
   ******************************************************************************

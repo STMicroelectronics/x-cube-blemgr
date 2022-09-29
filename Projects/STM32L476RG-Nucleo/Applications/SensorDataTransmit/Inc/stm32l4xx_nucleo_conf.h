@@ -3,8 +3,8 @@
   ******************************************************************************
   * @file    stm32l4xx_nucleo_conf.h
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 1.0.0
-  * @date    31-May-2022
+  * @version 1.1.0
+  * @date    16-September-2022
   * @brief   Configuration file
   ******************************************************************************
   * @attention
