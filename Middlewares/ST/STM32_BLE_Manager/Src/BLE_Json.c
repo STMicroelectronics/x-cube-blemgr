@@ -130,10 +130,10 @@ static void AttrMod_Request_Json(void *VoidCharPointer, uint16_t attr_handle, ui
  
 #if (BLE_DEBUG_LEVEL>1)
  if(BLE_StdTerm_Service==BLE_SERV_ENABLE) {
-   BytesToWrite =(uint8_t)sprintf((char *)BufferToWrite,"--->Json=%s\n", (CustomNotifyEventJson == BLE_NOTIFY_SUB) ? " ON" : " OFF");
+   BytesToWrite =(uint8_t)sprintf((char *)BufferToWrite,"--->Json=%s\n", (att_data[0] == 01U) ? " ON" : " OFF");
    Term_Update(BufferToWrite,BytesToWrite);
  } else {
-   BLE_MANAGER_PRINTF("--->Json=%s", (CustomNotifyEventJson == BLE_NOTIFY_SUB) ? " ON\r\n" : " OFF\r\n");
+   BLE_MANAGER_PRINTF("--->Json=%s", (att_data[0] == 01U) ? " ON\r\n" : " OFF\r\n");
  }
 #endif
 }
