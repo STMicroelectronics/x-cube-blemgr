@@ -101,7 +101,7 @@ tBleStatus BLE_BatteryUpdate(uint32_t BatteryLevel, uint32_t Voltage, uint32_t C
 
   ret = ACI_GATT_UPDATE_CHAR_VALUE(&BleCharBattery, 0, 2+2+2+2+1,buff);
 
-  if (ret != BLE_STATUS_SUCCESS){
+  if (ret != (tBleStatus)BLE_STATUS_SUCCESS){
     if(BLE_StdErr_Service==BLE_SERV_ENABLE){
       BytesToWrite = (uint8_t)sprintf((char *)BufferToWrite, "Error Updating Bat Char\n");
       Stderr_Update(BufferToWrite,BytesToWrite);

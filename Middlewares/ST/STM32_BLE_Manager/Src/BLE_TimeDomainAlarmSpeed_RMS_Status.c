@@ -104,8 +104,8 @@ tBleStatus BLE_TD_AlarmSpeed_RMS_StatusUpdate(sBLE_TD_AlarmSpeed_RMS_Status_t Al
   
   ret = ACI_GATT_UPDATE_CHAR_VALUE(&BleCharTD_AlarmSpeed_RMS_Status, 0, 2+13, Buff);
   
-  if (ret != BLE_STATUS_SUCCESS){
-    if(ret != BLE_STATUS_INSUFFICIENT_RESOURCES) {
+  if (ret != (tBleStatus)BLE_STATUS_SUCCESS){
+    if(ret != (tBleStatus)BLE_STATUS_INSUFFICIENT_RESOURCES) {
       if(BLE_StdErr_Service==BLE_SERV_ENABLE){
         BytesToWrite = (uint8_t)sprintf((char *)BufferToWrite, "Error Updating Time Domain Alarm Speed RMS Status Char\n");
         Stderr_Update(BufferToWrite,BytesToWrite);

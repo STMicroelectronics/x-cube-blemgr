@@ -2,9 +2,9 @@
   ******************************************************************************
   * @file    BLE_NeaiNClassClassification.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.6.0
-  * @date    15-September-2022
-  * @brief   Add N-Class Classification info services using vendor specific profiles.
+  * @version 1.0.0
+  * @date    30-September-2022
+  * @brief   NEAI Classification info services APIs.
   ******************************************************************************
   * @attention
   *
@@ -24,56 +24,101 @@
 #include "BLE_ManagerCommon.h"
 
 /* Private define ------------------------------------------------------------*/
-#define COPY_NEAI_NCLASSCLASSIFICATION_CHAR_UUID(uuid_struct) COPY_UUID_128(uuid_struct,0x00,0x00,0x00,0x1a,0x00,0x02,0x11,0xe1,0xac,0x36,0x00,0x02,0xa5,0xd5,0xc5,0x1b)
+#define COPY_NEAI_CLASSIFICATION_CHAR_UUID(uuid_struct) COPY_UUID_128(uuid_struct,0x00,0x00,0x00,0x1a,0x00,0x02,0x11,0xe1,0xac,0x36,0x00,0x02,0xa5,0xd5,0xc5,0x1b)
 
 /* Exported variables --------------------------------------------------------*/
-CustomNotifyEventNeaiNClassClassification_t  CustomNotifyEventNCC=NULL;
-CustomWriteRequestNClassClassification_t    CustomWriteRequestNCC=NULL;
+CustomNotifyEventNeaiClassification_t  CustomNotifyEventNCC=NULL;
+CustomWriteRequestClassification_t    CustomWriteRequestNCC=NULL;
 /* Private Types ----------------------------------------------------------- */
 
 /* Private variables ---------------------------------------------------------*/
 
-/* Data structure pointer for N-Class Classification info service */
+/* Data structure pointer for NEAI Classification info service */
 static BleCharTypeDef NccBleChar;
-/* Size for NCC characteristic */
-static uint8_t  NccCharSize;
+/* Size for Classification Characteristic */
+static uint8_t  NccCharMaxSize;
 
 /* Private functions ---------------------------------------------------------*/
-static void AttrMod_Request_NCC(void *BleCharPointer,uint16_t attr_handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data);
-static void Write_Request_NCC(void *BleCharPointer,uint16_t handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data);
+static void AttrMod_Request_Neai_Classification(void *BleCharPointer,uint16_t attr_handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data);
+static void Write_Request_Neai_Classification(void *BleCharPointer,uint16_t handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data);
 
-BleCharTypeDef* BLE_InitNCCService(void)
+BleCharTypeDef* BLE_InitNeaiClassificationService(void)
 {
   /* Data structure pointer for BLE service */
   BleCharTypeDef *BleCharPointer= NULL;
-  NccCharSize = 8 + CLASS_NUMBER_NCC;
+  NccCharMaxSize = 8U + CLASS_NUMBER_NCC;
 
   /* Init data structure pointer for N-Class Classification info service */
   BleCharPointer = &NccBleChar;
   memset(BleCharPointer,0,sizeof(BleCharTypeDef));
-  BleCharPointer->AttrMod_Request_CB= AttrMod_Request_NCC;
-  BleCharPointer->Write_Request_CB = Write_Request_NCC;
-  COPY_NEAI_NCLASSCLASSIFICATION_CHAR_UUID((BleCharPointer->uuid));
+  BleCharPointer->AttrMod_Request_CB= AttrMod_Request_Neai_Classification;
+  BleCharPointer->Write_Request_CB = Write_Request_Neai_Classification;
+  COPY_NEAI_CLASSIFICATION_CHAR_UUID((BleCharPointer->uuid));
 
   BleCharPointer->Char_UUID_Type= UUID_TYPE_128;
-  BleCharPointer->Char_Value_Length= NccCharSize;
+  BleCharPointer->Char_Value_Length= NccCharMaxSize;
   BleCharPointer->Char_Properties= ((uint8_t)(CHAR_PROP_NOTIFY))|((uint8_t)(CHAR_PROP_WRITE));
   BleCharPointer->Security_Permissions= ATTR_PERMISSION_NONE;
   BleCharPointer->GATT_Evt_Mask= GATT_NOTIFY_ATTRIBUTE_WRITE;
   BleCharPointer->Enc_Key_Size= 16;
-  BleCharPointer->Is_Variable= 0;
+  BleCharPointer->Is_Variable= 1;
 
   if(CustomWriteRequestNCC == NULL) {
-    BLE_MANAGER_PRINTF("CustomWriteRequestNCC function Not Defined\r\n");
+    BLE_MANAGER_PRINTF("CustomWriteRequestNeaiClassification function Not Defined\r\n");
   }
 
-  BLE_MANAGER_PRINTF("BLE NEAI N-Class Classification char is ok\r\n");
+  BLE_MANAGER_PRINTF("BLE NEAI Classification char is ok\r\n");
 
   return BleCharPointer;
 }
 
 /**
-* @brief  Update NEAI NCC characteristic value
+* @brief  Update NEAI Classification Characteristic Value
+* @param  BLE_1CC_output_t output contains info about:
+* - phase = (idle=0x00) | (classification=0x01)
+* - state = (NEAI_OK=0x00) | .....
+* - is_outlier = 0x01 if it is an outlier, 0x00 otherwise
+*
+* ONLY THE PHASE FIELD IS MANDATORY
+*
+* @retval tBleStatus:          Status
+*/
+tBleStatus BLE_Neai1ClassClassificationUpdate(BLE_1CC_output_t output)
+{
+
+  tBleStatus ret;
+  uint8_t char_length = 6;
+  uint8_t buff[/*Execution Time*/ 4 + /* Type Selector */ 1 + /*Phase*/ 1 + /* State*/ 1 + /* Is Outlier */ 1];
+
+  buff[0] = NEAI_NCC_ESCAPE;
+  buff[1] = NEAI_NCC_ESCAPE;
+  buff[2] = NEAI_NCC_ESCAPE;
+  buff[3] = NEAI_NCC_ESCAPE;
+  buff[4] = (uint8_t)output.sel;
+  buff[5] = (uint8_t)output.phase;
+
+  if(output.phase == NEAI_NCC_PHASE_CLASSIFICATION){
+    buff[6] = (uint8_t)output.state;
+    buff[7] = (uint8_t)output.is_outlier;
+    char_length+=2U;
+  }
+
+  ret = ACI_GATT_UPDATE_CHAR_VALUE(&NccBleChar, 0, char_length, buff);
+
+  if (ret != (tBleStatus)BLE_STATUS_SUCCESS){
+    if(BLE_StdErr_Service==BLE_SERV_ENABLE){
+      BytesToWrite = (uint8_t)sprintf((char *)BufferToWrite, "Error Updating NEAI Classification Char\n");
+      Stderr_Update(BufferToWrite,BytesToWrite);
+    } else {
+      BLE_MANAGER_PRINTF("Error: Updating NEAI Classification Char\r\n");
+    }
+  }
+  return ret;
+}
+
+
+/**
+* @brief  Update NEAI Classification Characteristic Value
 * @param  BLE_NCC_output_t output contains info about:
 * - phase = (idle=0x00) | (classification=0x01)
 * - state = (NEAI_OK=0x00) | .....
@@ -81,7 +126,6 @@ BleCharTypeDef* BLE_InitNCCService(void)
 * - probabilities = array with size equals to CLASS_NUMBER_NCC that contains class probabilities
 *
 * ONLY THE PHASE FIELD IS MANDATORY
-* if you don't want use one of the others info, you can put NEAI_NCC_ESCAPE
 *
 * @retval tBleStatus:          Status
 */
@@ -89,31 +133,36 @@ tBleStatus BLE_NeaiNClassClassificationUpdate(BLE_NCC_output_t output)
 {
 
   tBleStatus ret;
+  uint8_t char_length = 6;
   uint8_t prob, i;
 
-  uint8_t buff[/*Execution Time*/ 4 + /*Phase*/ 1 + /* State*/ 1 + /*Class Number NCC*/ 1 + /*Major Class*/ 1 + /*Classes Probability*/ + CLASS_NUMBER_NCC ];
+  uint8_t buff[/*Execution Time*/ 4U + /* Type Selector */ 1U + /*Phase*/ 1U + /* State*/ 1U + /*Most Probable Class*/ 1U + /*Classes Probability*/ + CLASS_NUMBER_NCC ];
 
   buff[0] = NEAI_NCC_ESCAPE;
   buff[1] = NEAI_NCC_ESCAPE;
   buff[2] = NEAI_NCC_ESCAPE;
   buff[3] = NEAI_NCC_ESCAPE;
-  buff[4] = (uint8_t)output.phase;
-  buff[5] = (uint8_t)output.state;
-  buff[6] = CLASS_NUMBER_NCC;
-  buff[7] = output.major_class;
+  buff[4] = (uint8_t)output.sel;
+  buff[5] = (uint8_t)output.phase;
 
-  for(prob=8, i = 0; prob< ((uint8_t)(8 + CLASS_NUMBER_NCC)); prob++, i++){
-	  buff[prob] = output.probabilities[i];
+  if(output.phase == NEAI_NCC_PHASE_CLASSIFICATION){
+    buff[6] = (uint8_t)output.state;
+    buff[7] = output.most_probable_class;
+
+    for(prob=8, i = 0; prob< ((uint8_t)(8U + CLASS_NUMBER_NCC)); prob++, i++){
+      buff[prob] = (uint8_t)((100.0)*output.probabilities[i]);
+    }
+    char_length = char_length + (2U + CLASS_NUMBER_NCC);
   }
 
-  ret = ACI_GATT_UPDATE_CHAR_VALUE(&NccBleChar, 0, (8 + CLASS_NUMBER_NCC), buff);
+  ret = ACI_GATT_UPDATE_CHAR_VALUE(&NccBleChar, 0, char_length, buff);
 
   if (ret != (tBleStatus)BLE_STATUS_SUCCESS){
     if(BLE_StdErr_Service==BLE_SERV_ENABLE){
-      BytesToWrite = (uint8_t)sprintf((char *)BufferToWrite, "Error Updating NEAI N-Class Classification Char\n");
+      BytesToWrite = (uint8_t)sprintf((char *)BufferToWrite, "Error Updating NEAI Classification Char\n");
       Stderr_Update(BufferToWrite,BytesToWrite);
     } else {
-      BLE_MANAGER_PRINTF("Error: Updating NEAI N-Class Classification Char\r\n");
+      BLE_MANAGER_PRINTF("Error: Updating NEAI Classification Char\r\n");
     }
   }
   return ret;
@@ -133,7 +182,7 @@ tBleStatus BLE_NeaiNClassClassificationUpdate(BLE_NCC_output_t output)
  * @retval None
  */
 
-static void AttrMod_Request_NCC(void *VoidCharPointer,uint16_t attr_handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data)
+static void AttrMod_Request_Neai_Classification(void *VoidCharPointer,uint16_t attr_handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data)
 {
   if(CustomNotifyEventNCC!=NULL) {
     if (att_data[0] == 01U) {
@@ -162,7 +211,7 @@ static void AttrMod_Request_NCC(void *VoidCharPointer,uint16_t attr_handle, uint
  * @param  uint16_t handle Handle of the attribute
  * @retval None
  */
-static void Write_Request_NCC(void *BleCharPointer,uint16_t handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data)
+static void Write_Request_Neai_Classification(void *BleCharPointer,uint16_t handle, uint16_t Offset, uint8_t data_length, uint8_t *att_data)
 {
   if(CustomWriteRequestNCC != NULL) {
     CustomWriteRequestNCC(att_data, data_length);

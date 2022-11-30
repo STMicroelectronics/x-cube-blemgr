@@ -104,8 +104,8 @@ tBleStatus BLE_TD_AlarmAccPeakStatusUpdate(sBLE_Manager_TD_AlarmAccPeakStatusAla
   
   ret = ACI_GATT_UPDATE_CHAR_VALUE(&BleCharTD_AlarmAccPeakStatus, 0, 2+13, Buff);
   
-  if (ret != BLE_STATUS_SUCCESS){
-    if(ret != BLE_STATUS_INSUFFICIENT_RESOURCES) {
+  if (ret != (tBleStatus)BLE_STATUS_SUCCESS){
+    if(ret != (tBleStatus)BLE_STATUS_INSUFFICIENT_RESOURCES) {
       if(BLE_StdErr_Service==BLE_SERV_ENABLE){
         BytesToWrite = (uint8_t)sprintf((char *)BufferToWrite, "Error Updating FFT Alarm Acc Peak Status Char\n");
         Stderr_Update(BufferToWrite,BytesToWrite);

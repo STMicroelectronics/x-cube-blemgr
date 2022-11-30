@@ -104,7 +104,7 @@ tBleStatus BLE_AudioLevelUpdate(uint16_t *AudioLevelData, uint8_t AudioLevelNumb
   
   ret = ACI_GATT_UPDATE_CHAR_VALUE(&BleCharAudioLevel, 0, (2U + AudioLevelNumber), buff);
   
-  if (ret != BLE_STATUS_SUCCESS){
+  if (ret != (tBleStatus)BLE_STATUS_SUCCESS){
     if(BLE_StdErr_Service==BLE_SERV_ENABLE){
       BytesToWrite = (uint8_t)sprintf((char *)BufferToWrite, "Error Updating Audio Level Data Char\r\n");
       Stderr_Update(BufferToWrite,BytesToWrite);

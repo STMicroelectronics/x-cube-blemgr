@@ -48,10 +48,10 @@ BleCharTypeDef* BLE_InitGeneralPurposeService(uint8_t Size)
 {
   /* Data structure pointer for BLE service */
   BleCharTypeDef *BleCharPointer;
-  uint8_t GP_CharNum = NumberAllocatedGP;
+  uint8_t GP_CharNum = (uint8_t)NumberAllocatedGP;
 
   /* Some Controls */
-  if(NumberAllocatedGP>=BLE_GENERAL_PURPOSE_MAX_CHARS_NUM) {
+  if((uint8_t)NumberAllocatedGP>=BLE_GENERAL_PURPOSE_MAX_CHARS_NUM) {
     BLE_MANAGER_PRINTF("Error GP_CharNum must be < %d\r\n",BLE_GENERAL_PURPOSE_MAX_CHARS_NUM);
     return NULL;
   }
@@ -90,7 +90,7 @@ tBleStatus BLE_GeneralPurposeStatusUpdate(uint8_t GP_CharNum,uint8_t *Data)
   uint8_t buff[BLE_GENERAL_PURPOSE_MAX_CHARS_DIM];
 
   STORE_LE_16(buff  ,(HAL_GetTick()>>3));
-  memcpy(buff+2,Data,BleCharGeneralPurpose[GP_CharNum].Char_Value_Length-2);
+  memcpy(buff+2,Data,(uint32_t)BleCharGeneralPurpose[GP_CharNum].Char_Value_Length-2U);
 
   ret = ACI_GATT_UPDATE_CHAR_VALUE(&BleCharGeneralPurpose[GP_CharNum], 0, BleCharGeneralPurpose[GP_CharNum].Char_Value_Length, buff);
 
@@ -127,9 +127,9 @@ static void AttrMod_Request_GeneralPurpose(void *VoidCharPointer, uint16_t attr_
     //find the right GP feature
     BleCharTypeDef *LocalBleChar = (BleCharTypeDef*)VoidCharPointer;
     uint32_t search;
-    for(search=0;((search<NumberAllocatedGP) && (GP_CharNum == BLE_GENERAL_PURPOSE_MAX_CHARS_NUM));search++) {
+    for(search=0;((search<(uint32_t)NumberAllocatedGP) && (GP_CharNum == BLE_GENERAL_PURPOSE_MAX_CHARS_NUM));search++) {
       if(LocalBleChar->uuid[14] ==BleCharGeneralPurpose[search].uuid[14]) {
-        GP_CharNum = search;
+        GP_CharNum = (uint8_t)search;
       }
     }
     

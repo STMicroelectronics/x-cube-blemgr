@@ -98,7 +98,7 @@ tBleStatus BLE_AudioSceneClassUpdate(BLE_ASC_output_t ASC_Code)
 
   ret = ACI_GATT_UPDATE_CHAR_VALUE(&BleCharAudioSceneClass, 0, 2+1,buff);
 
-  if (ret != BLE_STATUS_SUCCESS){
+  if (ret != (tBleStatus)BLE_STATUS_SUCCESS){
     if(BLE_StdErr_Service==BLE_SERV_ENABLE){
       BytesToWrite = (uint8_t)sprintf((char *)BufferToWrite, "Error Updating ASC Char\n");
       Stderr_Update(BufferToWrite,BytesToWrite);

@@ -3,8 +3,8 @@
   ******************************************************************************
   * @file    BLE_Implementation.h
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 1.2.0
-  * @date    05-October-2022
+  * @version 1.3.0
+  * @date    04-November2022
   * @brief   BLE Implementation header template file.
   *          This file should be copied to the application folder and renamed
   *          to BLE_Implementation.h.
@@ -166,7 +166,7 @@
 
 /* Package Version firmware */
 #define BLE_VERSION_FW_MAJOR  '1'
-#define BLE_VERSION_FW_MINOR  '2'
+#define BLE_VERSION_FW_MINOR  '3'
 #define BLE_VERSION_FW_PATCH  '0'
 
 /* Firmware Package Name */
@@ -208,8 +208,15 @@ extern void BLE_SetCustomAdvertiseData(uint8_t *manuf_data);
 extern void BluetoothInit(void);
 extern void DisconnectionCompletedFunction(void);
 extern void ConnectionCompletedFunction(uint16_t ConnectionHandle, uint8_t Address_Type, uint8_t addr[6]);
+extern void AttrModConfigFunction(uint8_t * att_data, uint8_t data_length);
+extern void PairingCompletedFunction(uint8_t PairingStatus);
+extern void SetConnectableFunction(uint8_t *ManufData);
+extern void AciGattTxPoolAvailableEventFunction(void);
+extern void HardwareErrorEventHandlerFunction(uint8_t Hardware_Code);
 extern uint32_t DebugConsoleParsing(uint8_t * att_data, uint8_t data_length);
 extern void WriteRequestConfigFunction(uint8_t * att_data, uint8_t data_length);
+
+extern void ReadRequestEnvFunction(int32_t *Press,uint16_t *Hum,int16_t *Temp1,int16_t *Temp2);
 
 /**********************************************************************************************
  * Callback functions prototypes to manage the extended configuration characteristic commands *

@@ -38,7 +38,13 @@ extern "C" {
  * BLUE_WB         0x03
 */
 
+#define BLE_MANAGER_USE_PARSON
+
 #define BLUE_CORE BLUENRG_1_2
+
+#ifndef BLE_MANAGER_USE_PARSON
+  #define BLE_MANAGER_NO_PARSON
+#endif /* BLE_MANAGER_USE_PARSON */
 
 /*---------- Out-Of-Band data -----------*/
 #define OUT_OF_BAND_ENABLEDATA      0x00

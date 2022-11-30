@@ -74,7 +74,7 @@ BleCharTypeDef* BLE_InitSDLogService(void)
   BleCharPointer->Char_Value_Length= 2+9;
   BleCharPointer->Char_Properties= ((uint8_t)CHAR_PROP_NOTIFY) | ((uint8_t)CHAR_PROP_WRITE) |((uint8_t)(CHAR_PROP_READ));
   BleCharPointer->Security_Permissions= ATTR_PERMISSION_NONE;
-  BleCharPointer->GATT_Evt_Mask= GATT_NOTIFY_ATTRIBUTE_WRITE | GATT_NOTIFY_READ_REQ_AND_WAIT_FOR_APPL_RESP;
+  BleCharPointer->GATT_Evt_Mask= ((uint8_t)GATT_NOTIFY_ATTRIBUTE_WRITE) | ((uint8_t)GATT_NOTIFY_READ_REQ_AND_WAIT_FOR_APPL_RESP);
   BleCharPointer->Enc_Key_Size= 16;
   BleCharPointer->Is_Variable= 0;
     
@@ -110,7 +110,7 @@ tBleStatus BLE_SDLoggingUpdate(BLE_SDLog_Status_t Status, uint32_t FeatureMask,u
   
   /* Time Stamp */ 
   STORE_LE_16(buff  ,(HAL_GetTick()>>3));
-  buff[2] = Status;
+  buff[2] = (uint8_t)Status;
   STORE_LE_32(buff+3,FeatureMask);
   STORE_LE_32(buff+7,TimeStep);
   

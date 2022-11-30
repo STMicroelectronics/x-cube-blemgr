@@ -1260,7 +1260,7 @@ static void Write_Request_ExtConfig(void *VoidCharPointer,uint16_t attr_handle, 
         BLE_MANAGER_PRINTF("Command ReadBanksFwId\r\n");
         CustomExtConfigReadBanksFwIdCommandCallback(&CurBank,&FwId1,&FwId2);
 
-        json_object_dotset_number(tempJSON_Obj, "BankStatus.currentBank", CurBank);
+        json_object_dotset_number(tempJSON_Obj, "BankStatus.currentBank", (double)CurBank);
         sprintf((char *)LocalBufferToWrite,"0x%02X",FwId1);
         json_object_dotset_string(tempJSON_Obj, "BankStatus.fwId1", (char *)LocalBufferToWrite);
         sprintf((char *)LocalBufferToWrite,"0x%02X",FwId2);
@@ -1453,7 +1453,7 @@ BLE_CustomCommadResult_t *ParseCustomCommand(BLE_ExtCustomCommand_t *LocCustomCo
       BLE_MANAGER_PRINTF("Error: Mem alloc error: %d@%s\r\n", __LINE__, __FILE__);
     }
     
-    CommandResult->CommandName = (uint8_t*)BLE_MallocFunction(strlen((char*)LocLastCustomCommand->CommandName)+1);
+    CommandResult->CommandName = (uint8_t*)BLE_MallocFunction(strlen((char*)LocLastCustomCommand->CommandName)+1U);
     if(CommandResult->CommandName==NULL) {
       BLE_MANAGER_PRINTF("Error: Mem alloc error: %d@%s\r\n", __LINE__, __FILE__);
       BLE_FreeFunction(CommandResult);
@@ -1500,7 +1500,7 @@ BLE_CustomCommadResult_t *ParseCustomCommand(BLE_ExtCustomCommand_t *LocCustomCo
       if(json_object_dothas_value(JSON_ParseHandler,"argString")) {
         uint8_t *NewString = (uint8_t *)json_object_dotget_string(JSON_ParseHandler,"argString");
         CommandResult->IntValue= 0;
-        CommandResult->StringValue = (uint8_t*)BLE_MallocFunction(strlen((char*)NewString)+1);
+        CommandResult->StringValue = (uint8_t*)BLE_MallocFunction(strlen((char*)NewString)+1U);
         if(CommandResult->StringValue==NULL) {
           BLE_MANAGER_PRINTF("Error: Mem alloc error: %d@%s\r\n", __LINE__, __FILE__);
           BLE_FreeFunction(CommandResult);
@@ -1624,7 +1624,7 @@ uint8_t GenericAddCustomCommand(BLE_ExtCustomCommand_t **LocCustomCommands, BLE_
        (CommandType==BLE_CUSTOM_COMMAND_ENUM_INTEGER) |
        (CommandType==BLE_CUSTOM_COMMAND_ENUM_STRING)) {
       if(DefaultValue!= (int32_t)BLE_MANAGER_CUSTOM_COMMAND_VALUE_NAN) {
-        json_object_dotset_number(tempJSON1_Obj, "DefaultValue", DefaultValue);
+        json_object_dotset_number(tempJSON1_Obj, "DefaultValue", (double)DefaultValue);
       }
     }
     
@@ -1699,7 +1699,7 @@ uint8_t GenericAddCustomCommand(BLE_ExtCustomCommand_t **LocCustomCommands, BLE_
     (*LocLastCustomCommand)->CommandType = CommandType;
     
     //Alloc the size for commandName
-    (*LocLastCustomCommand)->CommandName = BLE_MallocFunction(strlen(CommandName)+1);
+    (*LocLastCustomCommand)->CommandName = BLE_MallocFunction(strlen(CommandName)+1U);
      if(((*LocLastCustomCommand)->CommandName)==NULL) {
        BLE_MANAGER_PRINTF("Error: Mem calloc error %d@%s\r\n",__LINE__,__FILE__);
        return 0;
@@ -2000,7 +2000,7 @@ BLE_CustomCommadResult_t *AskGenericCustomCommands(uint8_t *hs_command_buffer)
       } else {
         CommandResult->CommandType= BLE_CUSTOM_COMMAND_VOID;
         
-        CommandResult->CommandName = BLE_MallocFunction(strlen(BLE_MANAGER_READ_CUSTOM_COMMAND) + 1);
+        CommandResult->CommandName = BLE_MallocFunction(strlen(BLE_MANAGER_READ_CUSTOM_COMMAND) + 1U);
         if((CommandResult->CommandName)==NULL) {
           BLE_MANAGER_PRINTF("Error: Mem alloc error: %d@%s\r\n", __LINE__, __FILE__);
           BLE_FreeFunction(CommandResult);
@@ -2303,13 +2303,13 @@ void updateAdvData()
   /* Filling Manufacter Advertise data */
   manuf_data[0 ] = 8U;
   manuf_data[1 ] = 0x09U;
-  manuf_data[2 ] = BLE_StackValue.BoardName[0];/* Complete Name */
-  manuf_data[3 ] = BLE_StackValue.BoardName[1];
-  manuf_data[4 ] = BLE_StackValue.BoardName[2];
-  manuf_data[5 ] = BLE_StackValue.BoardName[3];
-  manuf_data[6 ] = BLE_StackValue.BoardName[4];
-  manuf_data[7 ] = BLE_StackValue.BoardName[5];
-  manuf_data[8 ] = BLE_StackValue.BoardName[6];           
+  manuf_data[2 ] = (uint8_t)BLE_StackValue.BoardName[0];/* Complete Name */
+  manuf_data[3 ] = (uint8_t)BLE_StackValue.BoardName[1];
+  manuf_data[4 ] = (uint8_t)BLE_StackValue.BoardName[2];
+  manuf_data[5 ] = (uint8_t)BLE_StackValue.BoardName[3];
+  manuf_data[6 ] = (uint8_t)BLE_StackValue.BoardName[4];
+  manuf_data[7 ] = (uint8_t)BLE_StackValue.BoardName[5];
+  manuf_data[8 ] = (uint8_t)BLE_StackValue.BoardName[6];           
   manuf_data[9 ] = 15U;
   manuf_data[10] = 0xFFU;
   manuf_data[11] = 0x30U;/* STM Manufacter AD */
@@ -2517,7 +2517,7 @@ int32_t BleManagerAddChar(BleCharTypeDef *BleChar)
   int32_t retValue=0;
   
   if(BleChar != NULL) {
-    if(UsedBleChars<BLE_MANAGER_MAX_ALLOCABLE_CHARS) {
+    if(UsedBleChars<(uint8_t)BLE_MANAGER_MAX_ALLOCABLE_CHARS) {
       BleCharsArray[UsedBleChars] = BleChar;
       UsedBleChars++;
       retValue=1;
@@ -3108,7 +3108,7 @@ static tBleStatus InitBleManager_BLE_Stack(void)
   }
   
   /* Check Random MAC */
-  if ((BLE_StackValue.BleMacAddress[5] & 0xC0) != 0xC0) {
+  if ((BLE_StackValue.BleMacAddress[5] & 0xC0U) != 0xC0U) {
     BLE_MANAGER_PRINTF("\tStatic Random address not well formed\r\n");
     goto fail;
   }
@@ -3254,8 +3254,8 @@ static tBleStatus InitBleManager_BLE_Stack(void)
                        BLE_StackValue.BleMacAddress[0]);
 
 #if (BLUE_CORE != BLUENRG_LP)
-  BLE_MANAGER_PRINTF("\t\tBlueNRG-2 HW ver%d.%d\r\n", ((hwVersion>>4)&0x0F), (hwVersion&0x0F));
-  BLE_MANAGER_PRINTF("\t\tBlueNRG-2 FW ver%d.%d.%c\r\n\r\n", (fwVersion>>8)&0xF, (fwVersion>>4)&0xF, ('a' + (fwVersion&0xF)));
+  BLE_MANAGER_PRINTF("\t\tBlueNRG-2 HW ver%d.%d\r\n", ((hwVersion>>4)&0x0FU), (hwVersion&0x0FU));
+  BLE_MANAGER_PRINTF("\t\tBlueNRG-2 FW ver%d.%d.%c\r\n\r\n", (fwVersion>>8)&0xFU, (fwVersion>>4)&0xFU, ('a' + (fwVersion&0xFU)));
 #else /* (BLUE_CORE != BLUENRG_LP) */
   BLE_MANAGER_PRINTF("BlueNRG-LP HWver %d FWver %d\r\n", hwVersion, fwVersion);
 #endif /* (BLUE_CORE != BLUENRG_LP)*/
@@ -3304,10 +3304,10 @@ uint8_t getBlueNRGVersion(uint8_t *hwVersion, uint16_t *fwVersion)
                                               &manufacturer_name, &lmp_pal_subversion);
 
   if (status == BLE_STATUS_SUCCESS) {
-    *hwVersion = hci_revision >> 8;
-    *fwVersion = (hci_revision & 0xFF) << 8;              // Major Version Number
-    *fwVersion |= ((lmp_pal_subversion >> 4) & 0xF) << 4; // Minor Version Number
-    *fwVersion |= lmp_pal_subversion & 0xF;               // Patch Version Number
+    *hwVersion = (uint8_t)(hci_revision >> 8);
+    *fwVersion = (hci_revision & 0xFFU) << 8;              // Major Version Number
+    *fwVersion |= ((lmp_pal_subversion >> 4) & 0xFU) << 4; // Minor Version Number
+    *fwVersion |= lmp_pal_subversion & 0xFU;               // Patch Version Number
   }
   return status;
 }

@@ -111,7 +111,7 @@ tBleStatus BLE_FFTAmplitudeUpdate(uint8_t *DataToSend, uint16_t DataNumber, uint
   
   ret = ACI_GATT_UPDATE_CHAR_VALUE(&BleCharFFTAmplitude, 0, NumByteSent,Buff);
   
-  if (ret == BLE_STATUS_SUCCESS)
+  if (ret == (tBleStatus)BLE_STATUS_SUCCESS)
   {
     (*CountSendData)++;
       

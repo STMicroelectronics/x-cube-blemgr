@@ -203,7 +203,7 @@ tBleStatus BLE_MachineLearningCoreUpdate(uint8_t *mlc_out, uint8_t *mlc_status_m
     ret = ACI_GATT_UPDATE_CHAR_VALUE(&BleCharMachineLearningCore, 0, 2+4+1, buff);
   }
 
-  if (ret != BLE_STATUS_SUCCESS){
+  if (ret != (tBleStatus)BLE_STATUS_SUCCESS){
     if(BLE_StdErr_Service==BLE_SERV_ENABLE){
       BytesToWrite = (uint8_t)sprintf((char *)BufferToWrite, "Error Updating Machine Learning Core Char\n");
       Stderr_Update(BufferToWrite,BytesToWrite);

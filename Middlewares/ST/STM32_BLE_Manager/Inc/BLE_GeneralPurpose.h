@@ -28,7 +28,7 @@
 
 /* Exported defines --------------------------------------------------------- */
 #ifndef BLE_GENERAL_PURPOSE_MAX_CHARS_NUM
-  #define BLE_GENERAL_PURPOSE_MAX_CHARS_NUM 3
+  #define BLE_GENERAL_PURPOSE_MAX_CHARS_NUM 3U
 #endif /* BLE_GENERAL_PURPOSE_MAX_CHARS_NUM */
 
 #ifndef BLE_GENERAL_PURPOSE_MAX_CHARS_DIM

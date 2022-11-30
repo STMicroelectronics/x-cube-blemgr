@@ -206,7 +206,7 @@ tBleStatus BLE_FiniteStateMachineUpdate(uint8_t *fsm_out, uint8_t *fsm_status_a_
     ret = ACI_GATT_UPDATE_CHAR_VALUE(&BleCharFiniteStateMachine, 0, 2+8+1, buff);
   }
 
-  if (ret != BLE_STATUS_SUCCESS){
+  if (ret != (tBleStatus)BLE_STATUS_SUCCESS){
     if(BLE_StdErr_Service==BLE_SERV_ENABLE){
       BytesToWrite = (uint8_t)sprintf((char *)BufferToWrite, "Error Updating Finite State Machine Char\n");
       Stderr_Update(BufferToWrite,BytesToWrite);

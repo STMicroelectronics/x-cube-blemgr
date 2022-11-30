@@ -30,6 +30,12 @@ __weak void BLE_SetCustomAdvertiseData(uint8_t *manuf_data);
 __weak void DisconnectionCompletedFunction(void);
 __weak void ConnectionCompletedFunction(uint16_t ConnectionHandle, uint8_t Address_Type, uint8_t addr[6]);
 
+__weak void AttrModConfigFunction(uint8_t * att_data, uint8_t data_length);
+__weak void PairingCompletedFunction(uint8_t PairingStatus);
+__weak void SetConnectableFunction(uint8_t *ManufData);
+__weak void AciGattTxPoolAvailableEventFunction(void);
+__weak void HardwareErrorEventHandlerFunction(uint8_t Hardware_Code);
+
 __weak uint32_t DebugConsoleParsing(uint8_t * att_data, uint8_t data_length);
 __weak void WriteRequestConfigFunction(uint8_t * att_data, uint8_t data_length);
 
@@ -40,6 +46,8 @@ __weak void ExtExtConfigUidCommandCallback(uint8_t **UID);
 __weak void ExtConfigVersionFwCommandCallback(uint8_t *Answer);
 __weak void ExtConfigInfoCommandCallback(uint8_t *Answer);
 __weak void ExtConfigHelpCommandCallback(uint8_t *Answer);
+
+__weak void ReadRequestEnvFunction(int32_t *Press,uint16_t *Hum,int16_t *Temp1,int16_t *Temp2);
 
 /*************************************************************
  * Callback functions prototypes to manage the notify events *
@@ -58,8 +66,6 @@ __weak void NotifyEventSensorFusion(BLE_NotifyEvent_t Event);
 /* USER CODE END PV */
 
 /* Private functions ---------------------------------------------------------*/
-
-static void ReadRequestEnvFunction(int32_t *Press,uint16_t *Hum,int16_t *Temp1,int16_t *Temp2);
 
 /** @brief Initialize the BlueNRG stack and services
   * @param  None
@@ -133,6 +139,21 @@ void BLE_InitCustomService(void) {
 
   /* Define Custom Function for Disconnection Completed */
   CustomDisconnectionCompleted = DisconnectionCompletedFunction;
+
+  /* Define Custom Function for Attribute Modify Config */
+  CustomAttrModConfigCallback = AttrModConfigFunction;
+
+  /* Define Custom Function for Pairing Completed */
+  CustomPairingCompleted = PairingCompletedFunction;
+
+  /* Define Custom Function for Set Connectable */
+  CustomSetConnectable = SetConnectableFunction;
+
+  /* Define Custom Function for Aci Gatt Tx Pool Available Event */
+  CustomAciGattTxPoolAvailableEvent = AciGattTxPoolAvailableEventFunction;
+
+  /* Define Custom Function for Hardware Error Event Handler */
+  CustomHardwareErrorEventHandler = HardwareErrorEventHandlerFunction;
 
   /* Define Custom Function for Debug Console Command parsing */
   CustomDebugConsoleParsingCallback = DebugConsoleParsing;
@@ -296,12 +317,9 @@ __weak uint32_t DebugConsoleParsing(uint8_t * att_data, uint8_t data_length)
  * @param  int16_t *Temp2 Temperature Number 2
  * @retval None
  */
-static void ReadRequestEnvFunction(int32_t *Press,uint16_t *Hum,int16_t *Temp1,int16_t *Temp2)
+__weak void ReadRequestEnvFunction(int32_t *Press,uint16_t *Hum,int16_t *Temp1,int16_t *Temp2)
 {
-  /* Insert here the function to read the environmental data */
-  /* USER CODE BEGIN */
-
-  /* USER CODE END */
+  /* NOTE: Insert here the function to read the environmental data */
 }
 
 /**
@@ -339,6 +357,83 @@ __weak void ConnectionCompletedFunction(uint16_t ConnectionHandle, uint8_t Addre
 
   BLE_MANAGER_PRINTF("Call to ConnectionCompletedFunction\r\n");
   BLE_MANAGER_DELAY(100);
+}
+
+/**
+ * @brief  This function is called when there is a change on the gatt attribute.
+ * @param  None
+ * @retval None
+ */
+__weak void AttrModConfigFunction(uint8_t * att_data, uint8_t data_length)
+{
+  BLE_MANAGER_PRINTF("Call to AttrModConfigFunction\r\n");
+  BLE_MANAGER_DELAY(100);
+
+  /* NOTE: This function Should not be modified, when the callback is needed,
+           the AttrModConfigFunction could be implemented in the user file
+   */
+}
+
+/**
+ * @brief  This function is called when the pairing process has completed successfully
+ *         or a pairing procedure timeout has occurred or the pairing has failed.
+ * @param  uint8_t PairingStatus
+ * @retval None
+ */
+__weak void PairingCompletedFunction(uint8_t PairingStatus)
+{
+  BLE_MANAGER_PRINTF("Call to PairingCompletedFunction\r\n");
+  BLE_MANAGER_DELAY(100);
+
+  /* NOTE: This function Should not be modified, when the callback is needed,
+           the PairingCompletedFunction could be implemented in the user file
+   */
+}
+
+/**
+ * @brief  This function is called when the device is put in connectable mode.
+ * @param  uint8_t *ManufData Filling Manufacter Advertise data
+ * @retval None
+ */
+__weak void SetConnectableFunction(uint8_t *ManufData)
+{
+  BLE_MANAGER_PRINTF("Call to SetConnectableFunction\r\n");
+  BLE_MANAGER_DELAY(100);
+
+  /* NOTE: This function Should not be modified, when the callback is needed,
+           the SetConnectableFunction could be implemented in the user file
+   */
+}
+
+/**
+ * @brief  This function is called when bluetooth congestion buffer occurs
+ *         or a pairing procedure timeout has occurred or the pairing has failed.
+ * @param  None
+ * @retval None
+ */
+__weak void AciGattTxPoolAvailableEventFunction(void)
+{
+  BLE_MANAGER_PRINTF("Call to AciGattTxPoolAvailableEventFunction\r\n");
+  BLE_MANAGER_DELAY(100);
+
+  /* NOTE: This function Should not be modified, when the callback is needed,
+           the AciGattTxPoolAvailableEventFunction could be implemented in the user file
+   */
+}
+
+/**
+ * @brief  This event is used to notify the Host that a hardware failure has occurred in the Controller.
+ * @param  uint8_t Hardware_Code Hardware Error Event code.
+ * @retval None
+ */
+__weak void HardwareErrorEventHandlerFunction(uint8_t Hardware_Code)
+{
+  BLE_MANAGER_PRINTF("Call to HardwareErrorEventHandlerFunction\r\n");
+  BLE_MANAGER_DELAY(100);
+
+  /* NOTE: This function Should not be modified, when the callback is needed,
+           the HardwareErrorEventHandlerFunction could be implemented in the user file
+   */
 }
 
 /**

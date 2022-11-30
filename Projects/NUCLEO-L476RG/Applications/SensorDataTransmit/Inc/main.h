@@ -3,8 +3,8 @@
   ******************************************************************************
   * @file    main.h
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 1.2.0
-  * @date    05-October-2022
+  * @version 1.3.0
+  * @date    04-November2022
   * @brief   Header for main.c file.
   *          This file contains the common defines of the application.
   ******************************************************************************

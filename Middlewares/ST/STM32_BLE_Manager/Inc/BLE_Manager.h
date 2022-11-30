@@ -651,11 +651,11 @@ extern BLE_CustomCommadResult_t *ParseCustomCommand(BLE_ExtCustomCommand_t *LocC
 extern BLE_CustomCommadResult_t * AskGenericCustomCommands(uint8_t *hs_command_buffer);
 #endif /* BLE_MANAGER_NO_PARSON */
 
-#ifdef ACC_BLE_CONGESTION
+#ifdef ACC_BLUENRG_CONGESTION
   #define ACI_GATT_UPDATE_CHAR_VALUE safe_aci_gatt_update_char_value
-#else /* ACC_BLE_CONGESTION */
+#else /* ACC_BLUENRG_CONGESTION */
   #define ACI_GATT_UPDATE_CHAR_VALUE aci_gatt_update_char_value_wrapper
-#endif /* ACC_BLE_CONGESTION */
+#endif /* ACC_BLUENRG_CONGESTION */
 #ifdef __cplusplus
 }
 #endif
