@@ -3,13 +3,13 @@
   ******************************************************************************
   * @file    stm32l4xx_nucleo.h
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 1.3.0
-  * @date    04-November2022
+  * @version 2.0.0
+  * @date    03-February-2023
   * @brief   header file for the BSP Common driver
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file

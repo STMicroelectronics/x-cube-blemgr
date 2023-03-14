@@ -3,15 +3,13 @@
   ******************************************************************************
   * @file    BLE_Implementation.h
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 1.3.0
-  * @date    04-November2022
   * @brief   BLE Implementation header template file.
   *          This file should be copied to the application folder and renamed
   *          to BLE_Implementation.h.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -51,10 +49,10 @@
 
 /* For Help Command */
 #define Help      1
-/* Enable/Disable BlueNRG config extend services */
-#define ENABLE_EXT_CONFIG      1
 /* For Set Certificate Commnad */
 #define SetCert      0
+/* Enable/Disable BlueNRG config extend services */
+#define ENABLE_EXT_CONFIG      1
 /* Enable/Disable BlueNRG config services */
 #define ENABLE_CONFIG      1
 /* For Change Secure PIN Command */
@@ -117,11 +115,10 @@
 #define ENABLE_ENV_TEMPERATURE_DATA      1
 /* For Swapping the Flash Banks */
 #define BanksSwap      0
+/* Supported hardware platform */
+#define USED_PLATFORM      0x7EU
 /* Enable/Disable accelerometer data (Disable= 0- Enable=1) */
 #define ENABLE_ACC_DATA      1
-
-/* USER CODE BEGIN 1 */
-
 /* Select the used hardware platform
  *
  * STEVAL-WESU1                         --> BLE_MANAGER_STEVAL_WESU1_PLATFORM
@@ -141,7 +138,7 @@
  * STM32L053R8_NUCLEO Board             --> BLE_MANAGER_STM32L053R8_NUCLEO_PLATFORM
  * STM32L476RG_NUCLEO Board             --> BLE_MANAGER_STM32L476RG_NUCLEO_PLATFORM
  * STM32F401RE_NUCLEO Board             --> BLE_MANAGER_STM32F401RE_NUCLEO_PLATFORM
- * Not defined platform					--> BLE_MANAGER_UNDEF_PLATFORM
+ * Not defined platform                 --> BLE_MANAGER_UNDEF_PLATFORM
  *
  * For example:
  * #define BLE_MANAGER_USED_PLATFORM	BLE_MANAGER_NUCLEO_PLATFORM
@@ -149,7 +146,7 @@
 */
 
 /* Used platform */
-#define BLE_MANAGER_USED_PLATFORM       BLE_MANAGER_STM32L476RG_NUCLEO_PLATFORM
+#define BLE_MANAGER_USED_PLATFORM       USED_PLATFORM
 
 /* STM32 Unique ID */
 #define BLE_STM32_UUID          UID_BASE
@@ -164,9 +161,11 @@
 /* STM32  Microcontrolles type */
 #define BLE_STM32_MICRO "STM32L4xx"
 
+/* USER CODE BEGIN 1 */
+
 /* Package Version firmware */
-#define BLE_VERSION_FW_MAJOR  '1'
-#define BLE_VERSION_FW_MINOR  '3'
+#define BLE_VERSION_FW_MAJOR  '2'
+#define BLE_VERSION_FW_MINOR  '0'
 #define BLE_VERSION_FW_PATCH  '0'
 
 /* Firmware Package Name */
@@ -208,6 +207,7 @@ extern void BLE_SetCustomAdvertiseData(uint8_t *manuf_data);
 extern void BluetoothInit(void);
 extern void DisconnectionCompletedFunction(void);
 extern void ConnectionCompletedFunction(uint16_t ConnectionHandle, uint8_t Address_Type, uint8_t addr[6]);
+extern void SetBoardName(void);
 extern void AttrModConfigFunction(uint8_t * att_data, uint8_t data_length);
 extern void PairingCompletedFunction(uint8_t PairingStatus);
 extern void SetConnectableFunction(uint8_t *ManufData);

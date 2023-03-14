@@ -9,7 +9,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -29,6 +29,7 @@
 __weak void BLE_SetCustomAdvertiseData(uint8_t *manuf_data);
 __weak void DisconnectionCompletedFunction(void);
 __weak void ConnectionCompletedFunction(uint16_t ConnectionHandle, uint8_t Address_Type, uint8_t addr[6]);
+__weak void SetBoardName(void);
 
 __weak void AttrModConfigFunction(uint8_t * att_data, uint8_t data_length);
 __weak void PairingCompletedFunction(uint8_t PairingStatus);
@@ -87,10 +88,7 @@ void BluetoothInit(void)
   BLE_StackValue.OwnAddressType = ADDRESS_TYPE;
 
   /* Set the BLE Board Name */
-  sprintf(BLE_StackValue.BoardName,"%s%c%c%c","BLEM",
-          BLE_VERSION_FW_MAJOR,
-          BLE_VERSION_FW_MINOR,
-          BLE_VERSION_FW_PATCH);
+  SetBoardName();
 
   /* En_High_Power Enable High Power mode.
      High power mode should be enabled only to reach the maximum output power.
@@ -125,6 +123,19 @@ void BluetoothInit(void)
   }
 
   InitBleManager();
+}
+
+/**
+ * @brief  Set Board Name.
+ * @param  None
+ * @retval None
+ */
+__weak void SetBoardName(void)
+{
+  sprintf(BLE_StackValue.BoardName,"%s%c%c%c","BLEM",
+          BLE_VERSION_FW_MAJOR,
+          BLE_VERSION_FW_MINOR,
+          BLE_VERSION_FW_PATCH);
 }
 
 /**

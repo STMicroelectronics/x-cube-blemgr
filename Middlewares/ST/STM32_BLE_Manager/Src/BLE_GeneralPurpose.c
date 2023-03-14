@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    BLE_GeneralPurpose.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.6.0
-  * @date    15-September-2022
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Add General Purpose info services using vendor specific profiles.
   ******************************************************************************
   * @attention
@@ -92,7 +92,7 @@ tBleStatus BLE_GeneralPurposeStatusUpdate(uint8_t GP_CharNum,uint8_t *Data)
   STORE_LE_16(buff  ,(HAL_GetTick()>>3));
   memcpy(buff+2,Data,(uint32_t)BleCharGeneralPurpose[GP_CharNum].Char_Value_Length-2U);
 
-  ret = ACI_GATT_UPDATE_CHAR_VALUE(&BleCharGeneralPurpose[GP_CharNum], 0, BleCharGeneralPurpose[GP_CharNum].Char_Value_Length, buff);
+  ret = ACI_GATT_UPDATE_CHAR_VALUE(&BleCharGeneralPurpose[GP_CharNum], 0, (uint8_t)BleCharGeneralPurpose[GP_CharNum].Char_Value_Length, buff);
 
   if (ret != (tBleStatus)BLE_STATUS_SUCCESS){
     if(BLE_StdErr_Service==BLE_SERV_ENABLE){

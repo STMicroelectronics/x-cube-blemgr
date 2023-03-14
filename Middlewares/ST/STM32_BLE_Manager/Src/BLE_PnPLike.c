@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    BLE_PnPLike.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.6.0
-  * @date    15-September-2022
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Add PnPLike info services using vendor specific profile.
   ******************************************************************************
   * @attention
@@ -80,7 +80,7 @@ BleCharTypeDef* BLE_InitPnPLikeService(void)
  * @param  uint32_t len
  * @retval tBleStatus Status
  */
-tBleStatus BLE_PnPLikeUpdate(uint8_t* buffer, uint32_t len)
+tBleStatus BLE_PnPLikeUpdate(uint8_t* buffer, uint8_t len)
 {
   tBleStatus ret;
   ret = ACI_GATT_UPDATE_CHAR_VALUE(&BleCharPnPLike, 0, len, buffer);
@@ -141,7 +141,7 @@ static void Write_Request_PnPLike(void *BleCharPointer,uint16_t handle, uint16_t
   {
      CommandBufLen = BLE_Command_TP_Parse(&ble_command_buffer, att_data, data_length);
 
-     if(CommandBufLen>0)
+     if(CommandBufLen>0U)
      {
        CustomWriteRequestPnPLike(ble_command_buffer, CommandBufLen);
      }

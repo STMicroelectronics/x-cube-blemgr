@@ -30,8 +30,15 @@ For this reason:
  - then you can use a standard ST-Link V2-1 with 5 jumper wires female-female together with STSW-BNRGFLASHER software tool
   (currently available only for Windows PC) in order to update the firmware of the BLE module of X-NUCLEO-BNRG2A1.
 
-Read user manual for more details. 
+Read user manual for more details.
 
+### <b>Required IDE settings</b>
+
+For Keil IDE:
+
+ - set the "Micro LIB" option from within the "Project/Option for Target" menu (Target tab).
+ - set the "Misc Controls" option with the "-Wno-format" string, from within the "Project/Option for Target" menu (C/C++ (AC6) tab).
+ 
 ### <b>Keywords</b>
 
 BLE, BLE_Manager, BlueNRG-2, SPI, UART
@@ -80,7 +87,7 @@ For Keil µVision 5:
  
 For Integrated Development Environment for STM32:
 
- - Open STM32CubeIDE (this firmware has been successfully tested with Version 1.10.1).
+ - Open STM32CubeIDE (this firmware has been successfully tested with Version 1.11.0).
  - Set the default workspace proposed by the IDE (please be sure that there are not spaces in the workspace path).
  - Press "File" -> "Import" -> "Existing Projects into Workspace"; press "Browse" in the "Select root directory" and choose the path where the System
    Workbench project is located (it should be STM32CubeIDE). 

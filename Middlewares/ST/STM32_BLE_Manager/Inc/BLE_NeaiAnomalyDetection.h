@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    BLE_NeaiAnomalyDetection.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.6.0
-  * @date    15-September-2022
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   NEAI(Cartesiam) Anomaly Detection info services APIs.
   ******************************************************************************
   * @attention
@@ -31,30 +31,31 @@
 
 typedef enum
 {
-  NEAI_AD_NORMAL        = 0x00,
-  NEAI_AD_ANOMALY       = 0x01,
-  NEAI_AD_STATUS_NULL   = 0x02
+  NEAI_AD_STATUS_NORMAL  = 0x00,
+  NEAI_AD_STATUS_ANOMALY = 0x01,
+  NEAI_AD_STATUS_NULL    = 0xFF
 } BLE_AD_status_t;
 
 typedef enum
 {
-  NEAI_AD_IDLE          = 0x00,
-  NEAI_AD_LEARNING      = 0x01,
-  NEAI_AD_DETECTING     = 0x02,
-  NEAI_AD_IDLE_TRAINED  = 0x03,
-  NEAI_AD_PHASE_NULL    = 0xFF
+  NEAI_AD_PHASE_IDLE          = 0x00,
+  NEAI_AD_PHASE_LEARNING      = 0x01,
+  NEAI_AD_PHASE_DETECTING     = 0x02,
+  NEAI_AD_PHASE_IDLE_TRAINED  = 0x03,
+  NEAI_AD_PHASE_BUSY          = 0x04,
+  NEAI_AD_PHASE_NULL          = 0xFF
 } BLE_AD_phase_t;
 
 typedef enum
 {
-  NEAI_AD_OK                     = 0x00,
-  NEAI_AD_NOINIT                 = 0x7B,
-  NEAI_AD_BOARD_ERROR            = 0x7C,
-  NEAI_AD_BUFFER_ERROR           = 0x7D,
-  NEAI_NOT_ENOUGH_CALL           = 0x7E,
-  NEAI_RECOMMENDED_LEARNING_DONE = 0x7F,
-  NEAI_AD_UNKNOWN                = 0x80,
-  NEAI_AD_STATE_NULL             = 0xFF
+  NEAI_AD_STATE_OK              = 0x00,
+  NEAI_AD_STATE_NOINIT          = 0x7B,
+  NEAI_AD_STATE_BOARD_ERROR     = 0x7C,
+  NEAI_AD_STATE_BUFFER_ERROR    = 0x7D,
+  NEAI_NOT_STATE_ENOUGH_CALL    = 0x7E,
+  NEAI_AD_STATE_LEARNING_DONE   = 0x7F,
+  NEAI_AD_STATE_UNKNOWN         = 0x80,
+  NEAI_AD_STATE_NULL            = 0xFF
 } BLE_AD_state_t;
 
 typedef struct

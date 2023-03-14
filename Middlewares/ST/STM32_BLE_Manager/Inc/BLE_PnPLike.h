@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    BLE_PnPLike.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.6.0
-  * @date    15-September-2022
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   BLE_PnPLike info services APIs.
   ******************************************************************************
   * @attention
@@ -49,7 +49,7 @@ extern BleCharTypeDef* BLE_InitPnPLikeService(void);
  * @param  uint32_t len
  * @retval tBleStatus Status
  */
-extern tBleStatus BLE_PnPLikeUpdate(uint8_t* buffer, uint32_t len);
+extern tBleStatus BLE_PnPLikeUpdate(uint8_t* buffer, uint8_t len);
 
 #ifdef __cplusplus
 }

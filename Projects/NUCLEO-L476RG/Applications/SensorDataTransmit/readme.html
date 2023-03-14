@@ -68,6 +68,14 @@ available only for Windows PC) in order to update the firmware of the
 BLE module of X-NUCLEO-BNRG2A1.</li>
 </ul>
 <p>Read user manual for more details.</p>
+<h3 id="required-ide-settings"><b>Required IDE settings</b></h3>
+<p>For Keil IDE:</p>
+<ul>
+<li>set the “Micro LIB” option from within the “Project/Option for
+Target” menu (Target tab).</li>
+<li>set the “Misc Controls” option with the “-Wno-format” string, from
+within the “Project/Option for Target” menu (C/C++ (AC6) tab).</li>
+</ul>
 <h3 id="keywords"><b>Keywords</b></h3>
 <p>BLE, BLE_Manager, BlueNRG-2, SPI, UART</p>
 <h3 id="hardware-and-software-environment"><b>Hardware and Software
@@ -117,7 +125,7 @@ tested with MDK-ARM Professional Version: 5.37.0).</li>
 <p>For Integrated Development Environment for STM32:</p>
 <ul>
 <li>Open STM32CubeIDE (this firmware has been successfully tested with
-Version 1.10.1).</li>
+Version 1.11.0).</li>
 <li>Set the default workspace proposed by the IDE (please be sure that
 there are not spaces in the workspace path).</li>
 <li>Press “File” -&gt; “Import” -&gt; “Existing Projects into

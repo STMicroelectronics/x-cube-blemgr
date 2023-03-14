@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    BLE_Manager.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.6.0
-  * @date    15-September-2022
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   Add bluetooth services using vendor specific profiles.
   ******************************************************************************
   * @attention
@@ -1619,9 +1619,9 @@ uint8_t GenericAddCustomCommand(BLE_ExtCustomCommand_t **LocCustomCommands, BLE_
     }
     
     //Add the Optional Default Value
-    if((CommandType==BLE_CUSTOM_COMMAND_INTEGER) |
-       (CommandType==BLE_CUSTOM_COMMAND_BOOLEAN) |
-       (CommandType==BLE_CUSTOM_COMMAND_ENUM_INTEGER) |
+    if((CommandType==BLE_CUSTOM_COMMAND_INTEGER) ||
+       (CommandType==BLE_CUSTOM_COMMAND_BOOLEAN) ||
+       (CommandType==BLE_CUSTOM_COMMAND_ENUM_INTEGER) ||
        (CommandType==BLE_CUSTOM_COMMAND_ENUM_STRING)) {
       if(DefaultValue!= (int32_t)BLE_MANAGER_CUSTOM_COMMAND_VALUE_NAN) {
         json_object_dotset_number(tempJSON1_Obj, "DefaultValue", (double)DefaultValue);
@@ -2292,12 +2292,13 @@ tBleStatus Config_Update_32(uint32_t Feature,uint8_t Command,uint32_t data)
   return BLE_STATUS_SUCCESS;
 }
 
+
+#if (BLUE_CORE != BLUENRG_LP)
 /**
-* @brief  Puts the device in connectable mode.
+* @brief  Update the Advertise Data
 * @param  None
 * @retval None
 */
-#if (BLUE_CORE != BLUENRG_LP)
 void updateAdvData()
 {
   /* Filling Manufacter Advertise data */
@@ -2347,6 +2348,11 @@ void updateAdvData()
   } 
 }
 
+/**
+* @brief  Puts the device in connectable mode.
+* @param  None
+* @retval None
+*/
 void setConnectable(void)
 {
 #if (BLUE_CORE == BLUENRG_MS)
@@ -2407,6 +2413,11 @@ EndLabel:
   return;
 }
 #else /* (BLUE_CORE != BLUENRG_LP) */
+/**
+* @brief  Puts the device in connectable mode.
+* @param  None
+* @retval None
+*/
 void setConnectable(void)
 {
   tBleStatus ret;
@@ -2491,6 +2502,28 @@ void setConnectable(void)
   }
   
 EndLabel:
+  return;
+}
+
+/**
+* @brief  Update Advertise Data
+* @param  None
+* @retval None
+*/
+
+void updateAdvData()
+{
+  tBleStatus ret;
+  /* Set the Custom BLE Advertise Data */
+  BLE_SetCustomAdvertiseData(manuf_data);
+
+  ret = aci_gap_set_advertising_data_nwk(0, ADV_COMPLETE_DATA, BLE_MANAGER_ADVERTISE_DATA_LENGHT, manuf_data);
+  if(ret != BLE_STATUS_SUCCESS) {
+    BLE_MANAGER_PRINTF("aci_gap_set_advertising_data_nwk failed: 0x%02x\r\n", ret);
+  } else {
+    BLE_MANAGER_PRINTF("aci_gap_set_advertising_data_nwk\r\n");
+  }
+
   return;
 }
 #endif /* (BLUE_CORE != BLUENRG_LP) */
@@ -3985,6 +4018,7 @@ void aci_gap_pairing_complete_event(uint16_t ConnectionHandle, uint8_t status, u
       BLE_MANAGER_PRINTF("aci_gap_pairing_complete_event failed:\r\n\tstatus= %s\r\n\treason= %s\r\n",
                 StatusString[status],
                 ReasonString[reason]);
+      break;
   }
   
   UNUSED(StatusString);
@@ -4388,14 +4422,31 @@ void hci_hardware_error_event(uint8_t Hardware_Code)
   else
   {
 #if (BLE_DEBUG_LEVEL>2)
+#if 0
     char *HWCodeString[] = {
       /* 0x00 */ "NaN", 
       /* 0x01 */ "Radio state error",
       /* 0x02 */ "Timer overrun error",
       /* 0x03 */ "Internal queue overflow error"
     };
-    
     BLE_MANAGER_PRINTF("\r\n-------->hci_hardware_error_event Hardware_Code=\r\n\t%s<--------\r\n",HWCodeString[Hardware_Code]);
+#else
+    switch(Hardware_Code)
+    {
+    case 0:
+      BLE_MANAGER_PRINTF("\r\n-------->hci_hardware_error_event Hardware_Code=\r\n\tNaN<--------\r\n");
+      break;
+    case 1:
+      BLE_MANAGER_PRINTF("\r\n-------->hci_hardware_error_event Hardware_Code=\r\n\tRadio state error<--------\r\n");
+      break;
+    case 2:
+      BLE_MANAGER_PRINTF("\r\n-------->hci_hardware_error_event Hardware_Code=\r\n\tTimer overrun error<--------\r\n");
+      break;
+    case 3:
+      BLE_MANAGER_PRINTF("\r\n-------->hci_hardware_error_event Hardware_Code=\r\n\tInternal queue overflow error<--------\r\n");
+      break;
+    }
+#endif
 #endif
     BLE_MANAGER_DELAY(1000);
     HAL_NVIC_SystemReset();

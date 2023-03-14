@@ -3,14 +3,14 @@
   ******************************************************************************
   * @file    main.h
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 1.3.0
-  * @date    04-November2022
+  * @version 2.0.0
+  * @date    03-February-2023
   * @brief   Header for main.c file.
   *          This file contains the common defines of the application.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -71,6 +71,7 @@ void Error_Handler(void);
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14
 #define TCK_GPIO_Port GPIOA
+
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

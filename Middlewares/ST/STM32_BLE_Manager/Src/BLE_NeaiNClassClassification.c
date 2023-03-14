@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    BLE_NeaiNClassClassification.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.0.0
-  * @date    30-September-2022
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   NEAI Classification info services APIs.
   ******************************************************************************
   * @attention
@@ -135,6 +135,7 @@ tBleStatus BLE_NeaiNClassClassificationUpdate(BLE_NCC_output_t output)
   tBleStatus ret;
   uint8_t char_length = 6;
   uint8_t prob, i;
+  float temp;
 
   uint8_t buff[/*Execution Time*/ 4U + /* Type Selector */ 1U + /*Phase*/ 1U + /* State*/ 1U + /*Most Probable Class*/ 1U + /*Classes Probability*/ + CLASS_NUMBER_NCC ];
 
@@ -150,9 +151,10 @@ tBleStatus BLE_NeaiNClassClassificationUpdate(BLE_NCC_output_t output)
     buff[7] = output.most_probable_class;
 
     for(prob=8, i = 0; prob< ((uint8_t)(8U + CLASS_NUMBER_NCC)); prob++, i++){
-      buff[prob] = (uint8_t)((100.0)*output.probabilities[i]);
+      temp= (float)100.0*output.probabilities[i];
+      buff[prob] = (uint8_t)(((int32_t)temp));
     }
-    char_length = char_length + (2U + CLASS_NUMBER_NCC);
+    char_length = char_length + (2U +CLASS_NUMBER_NCC);
   }
 
   ret = ACI_GATT_UPDATE_CHAR_VALUE(&NccBleChar, 0, char_length, buff);

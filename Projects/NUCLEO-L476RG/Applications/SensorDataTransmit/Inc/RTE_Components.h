@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -25,7 +25,7 @@
 /* STMicroelectronics.X-CUBE-BLE2.3.3.0 */
 #define HCI_TL
 #define HCI_TL_INTERFACE
-/* STMicroelectronics.X-CUBE-BLEMGR.1.3.0 */
+/* STMicroelectronics.X-CUBE-BLEMGR.2.0.0 */
 #define USE_PARSON
 #define BLE_MANAGER_ENVIRONMENTAL
 #define BLE_MANAGER_LED

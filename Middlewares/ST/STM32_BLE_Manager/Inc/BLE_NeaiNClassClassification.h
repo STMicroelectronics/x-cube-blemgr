@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    BLE_NeaiNClassClassification.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.0.0
-  * @date    30-September-2022
+  * @version 1.8.0
+  * @date    02-December-2022
   * @brief   NEAI Classification info services APIs.
   ******************************************************************************
   * @attention
@@ -60,7 +60,8 @@ typedef enum
 typedef enum
 {
   NEAI_NCC_PHASE_IDLE            = 0x00,
-  NEAI_NCC_PHASE_CLASSIFICATION  = 0x01
+  NEAI_NCC_PHASE_CLASSIFICATION  = 0x01,
+  NEAI_NCC_PHASE_BUSY            = 0x02
 } BLE_NCC_phase_t;
 
 typedef enum

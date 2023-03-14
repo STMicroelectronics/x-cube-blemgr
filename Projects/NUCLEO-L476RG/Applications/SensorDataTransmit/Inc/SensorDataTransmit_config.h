@@ -3,13 +3,13 @@
   ******************************************************************************
   * @file    SensorDataTransmit_config.h
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 1.3.0
-  * @date    04-November2022
+  * @version 2.0.0
+  * @date    03-February-2023
   * @brief   X-CUBE-BLEMGR configuration
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -55,8 +55,8 @@ if QUAT_UPDATE_MUL_10MS!=3, then SEND_N_QUATERNIONS must be ==1
 /*************** Don't Change the following defines *************/
 
 /* Package Version only numbers 0->9 */
-#define FW_VERSION_MAJOR '1'
-#define FW_VERSION_MINOR '3'
+#define FW_VERSION_MAJOR '2'
+#define FW_VERSION_MINOR '0'
 #define FW_VERSION_PATCH '0'
 
 /* Package Name */
