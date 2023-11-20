@@ -3,8 +3,8 @@
   ******************************************************************************
   * @file    stm32l4xx_nucleo_conf.h
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 2.0.0
-  * @date    03-February-2023
+  * @version 3.0.0
+  * @date    09-October-2023
   * @brief   Configuration file
   ******************************************************************************
   * @attention
@@ -54,7 +54,7 @@
 /* IRQ priorities */
 #define BSP_BUTTON_USER_IT_PRIORITY         15U
 
-/* I2C1 Frequeny in Hz  */
+/* I2C1 Frequency in Hz  */
 #define BUS_I2C1_FREQUENCY                  100000U /* Frequency of I2C1 = 100 KHz*/
 
 /* SPI1 Baud rate in bps  */

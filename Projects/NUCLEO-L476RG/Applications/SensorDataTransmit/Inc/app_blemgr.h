@@ -24,7 +24,7 @@
 #define APP_BLEMGR_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -51,7 +51,7 @@
 void MX_BLEMGR_Init(void);
 void MX_BLEMGR_Process(void);
 
-extern void SetRandomEnvironmentalValues(int32_t *PressToSend,uint16_t *HumToSend,int16_t *TempToSend);
+extern void SetRandomEnvironmentalValues(int32_t *PressToSend, uint16_t *HumToSend, int16_t *TempToSend);
 
 /* USER CODE BEGIN EFP */
 

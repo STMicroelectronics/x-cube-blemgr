@@ -7,6 +7,7 @@
 | BSP Components                           			| STMicroelectronics   | BSD-3-Clause |
 | BSP STM32L4xx_Nucleo                     			| STMicroelectronics   | BSD-3-Clause |
 | BlueNRG-2 Middleware                    			| STMicroelectronics   | SLA0055 |
+| BlueNRG-LP Middleware                    			| STMicroelectronics   | SLA0077 |
 | STM32_BLE_Manager Middleware             			| STMicroelectronics   | SLA0094 |
 | Parson Middleware                        			| Third_Party          | MIT     |
 | STM32L476RG-Nucleo Application Projects  			| STMicroelectronics   | SLA0094 |

@@ -3,8 +3,8 @@
   ******************************************************************************
   * @file    stm32l4xx_it.h
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 2.0.0
-  * @date    03-February-2023
+  * @version 3.0.0
+  * @date    09-October-2023
   * @brief   This file contains the headers of the interrupt handlers.
   ******************************************************************************
   * @attention

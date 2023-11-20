@@ -3,8 +3,8 @@
   ******************************************************************************
   * @file    stm32l4xx_hal_msp.c
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 2.0.0
-  * @date    03-February-2023
+  * @version 3.0.0
+  * @date    09-October-2023
   * @brief   This file provides code for the MSP Initialization
   *          and de-Initialization codes.
   ******************************************************************************
@@ -23,6 +23,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */

@@ -3,8 +3,8 @@
   ******************************************************************************
   * @file    stm32l4xx_nucleo.c
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 2.0.0
-  * @date    03-February-2023
+  * @version 3.0.0
+  * @date    09-October-2023
   * @brief   Source file for the BSP Common driver
   ******************************************************************************
   * @attention

@@ -25,7 +25,7 @@
 /* STMicroelectronics.X-CUBE-BLE2.3.3.0 */
 #define HCI_TL
 #define HCI_TL_INTERFACE
-/* STMicroelectronics.X-CUBE-BLEMGR.2.0.0 */
+/* STMicroelectronics.X-CUBE-BLEMGR.3.0.0 */
 #define USE_PARSON
 #define BLE_MANAGER_ENVIRONMENTAL
 #define BLE_MANAGER_LED

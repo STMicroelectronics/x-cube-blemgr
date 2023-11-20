@@ -26,17 +26,17 @@
 #define _BLE_IMPLEMENTATION_H_
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
 
 /**
-* User can added here the header file for the selected BLE features.
-* For example:
-* #include "BLE_Environmental.h"
-* #include "BLE_Inertial.h"
-*/
+  * User can added here the header file for the selected BLE features.
+  * For example:
+  * #include "BLE_Environmental.h"
+  * #include "BLE_Inertial.h"
+  */
 
 #include "BLE_Environmental.h"
 
@@ -47,76 +47,78 @@
 /* Exported Defines --------------------------------------------------------*/
 #define STM32L4xx
 
-/* For Help Command */
-#define Help      1
-/* For Set Certificate Commnad */
-#define SetCert      0
+/* For Set Certificate Command */
+#define SET_CERT      0
+/* For Custom Command */
+#define READ_CUSTOM_COMMANDS      0
 /* Enable/Disable BlueNRG config extend services */
 #define ENABLE_EXT_CONFIG      1
 /* Enable/Disable BlueNRG config services */
 #define ENABLE_CONFIG      1
-/* For Change Secure PIN Command */
-#define ChangePin      0
+/* For Set Date Command */
+#define SET_DATE      0
 /* Enable/Disable Secure Connection */
 #define ENABLE_SECURE_CONNECTION      0
-/* For Power off Command */
-#define PowerOff      0
-/* For Set sensor config */
-#define SensorConfig      0
-/* For Set Date Command */
-#define SetDate      0
-/* For PowerStatus Command */
-#define PowerStatus      0
+/* For Version Fw Command */
+#define VERSION_FW      1
+/* For Info Command */
+#define INFO      1
+/* For Change Secure PIN Command */
+#define CHANGE_PIN      0
+/* For Clear Secure Data Base Command */
+#define CLEAR_DB      0
+/* For UID Command */
+#define UID_COMMAND      1
+/* For Read Certificate Command */
+#define READ_CERT      0
+/* For Swapping the Flash Banks */
+#define BANKS_SWAP      0
 /* Number of audio channels (Max audio channels 4) */
 #define AUDIO_CHANNELS_NUMBER      1
-/* For Reading the Flash Banks Fw Ids */
-#define ReadBanksFwId      0
-/* For Set Wi-Fi Command */
-#define SetWiFi      0
 /* Number of the general purpose features to use */
 #define NUM_GENERAL_PURPOSE      1
+/* For Help Command */
+#define HELP      1
+/* For Reading the Flash Banks Fw Ids */
+#define READ_BANKS_FW_ID      0
 /* Enable/Disable magnetometer data (Disable= 0- Enable=1) */
 #define ENABLE_MAG_DATA      1
-/* For Clear Secure Data Base Command */
-#define ClearDB      0
+/* For Reboot on DFU Command */
+#define REBOOT_ON_DFU_MODE      0
+/* For Set Time Command */
+#define SET_TIME      0
+/* For Power Status Command */
+#define POWER_STATUS      0
 /* Secure PIN */
 #define SECURE_PIN      123456
-/* For Set Time Command */
-#define SetTime      0
-/* For Reboot on DFU Command */
-#define RebootOnDFUMode      0
-/* For Read Certificate Command */
-#define ReadCert      0
+/* Audio Scene Classificatio algorithm code */
+#define ALGORITHM_CODE      0
 /* Enable/Disable pressure data (Disable= 0- Enable=1) */
 #define ENABLE_ENV_PRESSURE_DATA      1
-/* For Set board Name Command */
-#define SetName      0
 /* Enable/Disable Random Secure PIN */
 #define ENABLE_RANDOM_SECURE_PIN      0
-/* For Info Command */
-#define Info      1
+/* For Set board Name Command */
+#define SET_NAME      0
 /* Enable/Disable BlueNRG console services */
 #define ENABLE_CONSOLE      1
-/* For Custom Command */
-#define ReadCustomCommands      0
 /* Enable/Disable giroscope data (Disable= 0- Enable=1) */
 #define ENABLE_GYRO_DATA      1
-/* For UID Command */
-#define UidCommand      1
 /* Enable/Disable humidity data (Disable= 0- Enable=1) */
 #define ENABLE_ENV_HUMIDITY_DATA      1
 /* Size of the general purpose feature */
 #define GENERAL_PURPOSE_SIZE_1      3
 /* Number of quaternion to send (max value 3) */
 #define NUMBER_OF_QUATERNION      1
-/* For VersionFw Command */
-#define VersionFw      1
 /* Enable/Disable number of temperature (0, 1, 2) */
 #define ENABLE_ENV_TEMPERATURE_DATA      1
-/* For Swapping the Flash Banks */
-#define BanksSwap      0
+/* For Set Wi-Fi Command */
+#define SET_WIFI      0
+/* For Set sensor config */
+#define SENSOR_CONFIG      0
 /* Supported hardware platform */
 #define USED_PLATFORM      0x7EU
+/* For Power off Command */
+#define POWER_OFF      0
 /* Enable/Disable accelerometer data (Disable= 0- Enable=1) */
 #define ENABLE_ACC_DATA      1
 /* Select the used hardware platform
@@ -141,7 +143,7 @@
  * Not defined platform                 --> BLE_MANAGER_UNDEF_PLATFORM
  *
  * For example:
- * #define BLE_MANAGER_USED_PLATFORM	BLE_MANAGER_NUCLEO_PLATFORM
+ * #define BLE_MANAGER_USED_PLATFORM  BLE_MANAGER_NUCLEO_PLATFORM
  *
 */
 
@@ -153,10 +155,10 @@
 
 /* STM32 MCU_ID */
 #ifdef DBGMCU_BASE
-	#define BLE_STM32_MCU_ID        ((uint32_t *)DBGMCU_BASE)
-#else
-	#define BLE_STM32_MCU_ID        ((uint32_t *)0x00000000UL)
-#endif
+#define BLE_STM32_MCU_ID        ((uint32_t *)DBGMCU_BASE)
+#else /* DBGMCU_BASE */
+#define BLE_STM32_MCU_ID        ((uint32_t *)0x00000000UL)
+#endif /* DBGMCU_BASE */
 
 /* STM32  Microcontrolles type */
 #define BLE_STM32_MICRO "STM32L4xx"
@@ -164,7 +166,7 @@
 /* USER CODE BEGIN 1 */
 
 /* Package Version firmware */
-#define BLE_VERSION_FW_MAJOR  '2'
+#define BLE_VERSION_FW_MAJOR  '3'
 #define BLE_VERSION_FW_MINOR  '0'
 #define BLE_VERSION_FW_PATCH  '0'
 
@@ -208,27 +210,27 @@ extern void BluetoothInit(void);
 extern void DisconnectionCompletedFunction(void);
 extern void ConnectionCompletedFunction(uint16_t ConnectionHandle, uint8_t Address_Type, uint8_t addr[6]);
 extern void SetBoardName(void);
-extern void AttrModConfigFunction(uint8_t * att_data, uint8_t data_length);
+extern void AttrModConfigFunction(uint8_t *att_data, uint8_t data_length);
 extern void PairingCompletedFunction(uint8_t PairingStatus);
 extern void SetConnectableFunction(uint8_t *ManufData);
 extern void AciGattTxPoolAvailableEventFunction(void);
 extern void HardwareErrorEventHandlerFunction(uint8_t Hardware_Code);
-extern uint32_t DebugConsoleParsing(uint8_t * att_data, uint8_t data_length);
-extern void WriteRequestConfigFunction(uint8_t * att_data, uint8_t data_length);
+extern uint32_t DebugConsoleParsing(uint8_t *att_data, uint8_t data_length);
+extern void WriteRequestConfigFunction(uint8_t *att_data, uint8_t data_length);
 
-extern void ReadRequestEnvFunction(int32_t *Press,uint16_t *Hum,int16_t *Temp1,int16_t *Temp2);
+extern void ReadRequestEnvFunction(int32_t *Press, uint16_t *Hum, int16_t *Temp1, int16_t *Temp2);
 
-/**********************************************************************************************
- * Callback functions prototypes to manage the extended configuration characteristic commands *
- **********************************************************************************************/
+/***********************************************************************************************
+  * Callback functions prototypes to manage the extended configuration characteristic commands *
+  **********************************************************************************************/
 extern void ExtExtConfigUidCommandCallback(uint8_t **UID);
 extern void ExtConfigVersionFwCommandCallback(uint8_t *Answer);
 extern void ExtConfigInfoCommandCallback(uint8_t *Answer);
 extern void ExtConfigHelpCommandCallback(uint8_t *Answer);
 
-/*************************************************************
- * Callback functions prototypes to manage the notify events *
- *************************************************************/
+/**************************************************************
+  * Callback functions prototypes to manage the notify events *
+  *************************************************************/
 
 extern void NotifyEventEnv(BLE_NotifyEvent_t Event);
 

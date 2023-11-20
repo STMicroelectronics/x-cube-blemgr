@@ -50,15 +50,14 @@ BLE, BLE_Manager, BlueNRG-2, SPI, UART
   - This example has been tested with STMicroelectronics:
     - NUCLEO-L476RG RevC board
 	
-ADDITIONAL_BOARD : [X-NUCLEO-BNRG2A1](https://www.st.com/en/ecosystems/x-nucleo-bnrg2a1.html)
-
-ADDITIONAL_COMP : [BlueNRG-M2SP](https://www.st.com/en/wireless-connectivity/bluenrg-2.html)
+ADDITIONAL_BOARD : X-NUCLEO-BNRG2A1 https://www.st.com/en/ecosystems/x-nucleo-bnrg2a1.html
+ADDITIONAL_COMP : BlueNRG-M2SP https://www.st.com/en/wireless-connectivity/bluenrg-2.html
 
 ### <b>Dependencies</b>
 
 STM32Cube packages:
 
-  - STM32L4xx drivers from STM32CubeL4 V1.17.1
+  - STM32L4xx drivers from STM32CubeL4 V1.18.0
   
 X-CUBE packages:
 
@@ -87,7 +86,7 @@ For Keil µVision 5:
  
 For Integrated Development Environment for STM32:
 
- - Open STM32CubeIDE (this firmware has been successfully tested with Version 1.11.0).
+ - Open STM32CubeIDE (this firmware has been successfully tested with Version 1.13.2).
  - Set the default workspace proposed by the IDE (please be sure that there are not spaces in the workspace path).
  - Press "File" -> "Import" -> "Existing Projects into Workspace"; press "Browse" in the "Select root directory" and choose the path where the System
    Workbench project is located (it should be STM32CubeIDE). 

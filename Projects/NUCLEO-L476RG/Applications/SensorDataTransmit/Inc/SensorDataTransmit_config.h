@@ -3,8 +3,8 @@
   ******************************************************************************
   * @file    SensorDataTransmit_config.h
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 2.0.0
-  * @date    03-February-2023
+  * @version 3.0.0
+  * @date    09-October-2023
   * @brief   X-CUBE-BLEMGR configuration
   ******************************************************************************
   * @attention
@@ -24,6 +24,10 @@
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __SENSOR_DT_CONFIG_H
 #define __SENSOR_DT_CONFIG_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Exported define ------------------------------------------------------------*/
 /* Define The transmission interval in Multiple of 10ms for quaternions*/
@@ -55,7 +59,7 @@ if QUAT_UPDATE_MUL_10MS!=3, then SEND_N_QUATERNIONS must be ==1
 /*************** Don't Change the following defines *************/
 
 /* Package Version only numbers 0->9 */
-#define FW_VERSION_MAJOR '2'
+#define FW_VERSION_MAJOR '3'
 #define FW_VERSION_MINOR '0'
 #define FW_VERSION_PATCH '0'
 
@@ -66,9 +70,9 @@ if QUAT_UPDATE_MUL_10MS!=3, then SEND_N_QUATERNIONS must be ==1
 #define STM32_BOARD "STM32L476RG-NUCLEO"
 
 #ifdef SENSOR_DT_ENABLE_PRINTF
-  #define SENSOR_DT_PRINTF(...) printf(__VA_ARGS__)
+#define SENSOR_DT_PRINTF(...) printf(__VA_ARGS__)
 #else /* SENSOR_DT_ENABLE_PRINTF */
-  #define SENSOR_DT_PRINTF(...)
+#define SENSOR_DT_PRINTF(...)
 #endif /* SENSOR_DT_ENABLE_PRINTF */
 
 /* STM32 MCU_ID */
@@ -77,11 +81,15 @@ if QUAT_UPDATE_MUL_10MS!=3, then SEND_N_QUATERNIONS must be ==1
 /* Control Section */
 
 #if ((SEND_N_QUATERNIONS<1) || (SEND_N_QUATERNIONS>3))
-  #error "SEND_N_QUATERNIONS could be only 1,2 or 3"
-#endif
+#error "SEND_N_QUATERNIONS could be only 1,2 or 3"
+#endif /* ((SEND_N_QUATERNIONS<1) || (SEND_N_QUATERNIONS>3)) */
 
 #if ((QUAT_UPDATE_MUL_10MS!=3) && (SEND_N_QUATERNIONS!=1))
-  #error "If QUAT_UPDATE_MUL_10MS!=3 then SEND_N_QUATERNIONS must be = 1"
+#error "If QUAT_UPDATE_MUL_10MS!=3 then SEND_N_QUATERNIONS must be = 1"
+#endif /* ((QUAT_UPDATE_MUL_10MS!=3) && (SEND_N_QUATERNIONS!=1)) */
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif /* __SENSOR_DT_CONFIG_H */
