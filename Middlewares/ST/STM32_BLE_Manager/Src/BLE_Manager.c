@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_Manager.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.9.1
-  * @date    10-October-2023
+  * @version 1.11.0
+  * @date    15-February-2024
   * @brief   Add bluetooth services using vendor specific profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2023 STMicroelectronics.
+  * Copyright (c) 2024 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -84,7 +84,6 @@ typedef enum
   EXT_CONFIG_COM_SET_DFU,
   EXT_CONFIG_COM_SET_OFF,
   EXT_CONFIG_COM_CLEAR_DB,
-  EXT_CONFIG_COM_READ_SENSOR_CONFIG,
   EXT_CONFIG_COM_READ_BANKS_FW_ID,
   EXT_CONFIG_COM_BANKS_SWAP,
 
@@ -95,7 +94,6 @@ typedef enum
   EXT_CONFIG_COM_SET_NAME,
   EXT_CONFIG_COM_CHANGE_PIN,
   EXT_CONFIG_COM_SET_CERT,
-  EXT_CONFIG_COM_SET_SENSOR_CONFIG,
 
   /* Total Number of Commands */
   EXT_CONFIG_COMMAND_NUMBER
@@ -190,9 +188,6 @@ CustomExtConfigCustomCommand_t CustomExtConfigCustomCommandCallback;
 CustomExtConfigReadCertCommand_t CustomExtConfigReadCertCommandCallback;
 /* For Set Certificate Command */
 CustomExtConfigSetCertCommand_t CustomExtConfigSetCertCommandCallback;
-/* Sensor Configuration */
-CustomExtConfigReadSensorsConfigCommands_t CustomExtConfigReadSensorsConfigCommandsCallback;
-CustomExtConfigSetSensorsConfigCommands_t CustomExtConfigSetSensorsConfigCommandsCallback;
 
 /* Private variables ------------------------------------------------------------*/
 
@@ -211,7 +206,6 @@ static BLE_ExtConfigCommand_t StandardExtConfigCommands[EXT_CONFIG_COMMAND_NUMBE
   {EXT_CONFIG_COM_SET_DFU, "DFU"},
   {EXT_CONFIG_COM_SET_OFF, "Off"},
   {EXT_CONFIG_COM_CLEAR_DB, "ClearDB"},
-  {EXT_CONFIG_COM_READ_SENSOR_CONFIG, "ReadSensorsConfig"},
   {EXT_CONFIG_COM_READ_BANKS_FW_ID, "ReadBanksFwId"},
   {EXT_CONFIG_COM_BANKS_SWAP, "BanksSwap"},
   {EXT_CONFIG_COM_SET_WIFI, "SetWiFi"},
@@ -219,8 +213,7 @@ static BLE_ExtConfigCommand_t StandardExtConfigCommands[EXT_CONFIG_COMMAND_NUMBE
   {EXT_CONFIG_COM_SET_TIME, "SetTime"},
   {EXT_CONFIG_COM_SET_NAME, "SetName"},
   {EXT_CONFIG_COM_CHANGE_PIN, "ChangePIN"},
-  {EXT_CONFIG_COM_SET_CERT, "SetCert"},
-  {EXT_CONFIG_COM_SET_SENSOR_CONFIG, "SetSensorsConfig"}
+  {EXT_CONFIG_COM_SET_CERT, "SetCert"}
 };
 
 /* Table for Custom Commands: */
@@ -342,11 +335,6 @@ static void AttrMod_Request_ExtConfig(void *VoidCharPointer, uint16_t attr_handl
 static void Write_Request_ExtConfig(void *VoidCharPointer, uint16_t attr_handle, uint16_t Offset, uint8_t data_length,
                                     uint8_t *att_data);
 static void ClearSingleCommand(BLE_ExtCustomCommand_t *Command);
-
-static void create_JSON_SensorDescriptor(COM_SensorDescriptor_t *sensor_descriptor, JSON_Value *tempJSON);
-static void create_JSON_SensorStatus(COM_Sensor_t *sensor, JSON_Value *tempJSON);
-static void create_JSON_SubSensorDescriptor(COM_SubSensorDescriptor_t *sub_sensor_descriptor, JSON_Value *tempJSON);
-static void create_JSON_SubSensorStatus(COM_SubSensorStatus_t *sub_sensor_status, JSON_Value *tempJSON);
 #endif /* BLE_MANAGER_NO_PARSON */
 
 static void ResetBleManagerCallbackFunctionPointer(void);
@@ -846,176 +834,6 @@ static void AttrMod_Request_ExtConfig(void *VoidCharPointer, uint16_t attr_handl
   }
 }
 
-
-static void create_JSON_SensorDescriptor(COM_SensorDescriptor_t *sensor_descriptor, JSON_Value *tempJSON)
-{
-  uint32_t ii = 0;
-
-  JSON_Object *JSON_SensorDescriptor = json_value_get_object(tempJSON);
-  JSON_Array *JSON_SensorArray1;
-  JSON_Value *tempJSON1;
-
-  json_object_dotset_value(JSON_SensorDescriptor, "subSensorDescriptor", json_value_init_array());
-  JSON_SensorArray1 = json_object_dotget_array(JSON_SensorDescriptor, "subSensorDescriptor");
-  for (ii = 0; ii < sensor_descriptor->nSubSensors; ii++)
-  {
-    tempJSON1 = json_value_init_object();
-    create_JSON_SubSensorDescriptor(&sensor_descriptor->subSensorDescriptor[ii], tempJSON1);
-    json_array_append_value(JSON_SensorArray1, tempJSON1);
-  }
-}
-
-static void create_JSON_SensorStatus(COM_Sensor_t *sensor, JSON_Value *tempJSON)
-{
-  uint32_t ii = 0;
-  COM_SensorStatus_t sensor_status = sensor->sensorStatus;
-  COM_SensorDescriptor_t pSensorDescriptor = sensor->sensorDescriptor;
-
-  JSON_Object *JSON_SensorStatus = json_value_get_object(tempJSON);
-  JSON_Array *JSON_SensorArray2;
-  JSON_Value *tempJSON2;
-
-  json_object_dotset_value(JSON_SensorStatus, "subSensorStatus", json_value_init_array());
-  JSON_SensorArray2 = json_object_dotget_array(JSON_SensorStatus, "subSensorStatus");
-  for (ii = 0; ii < pSensorDescriptor.nSubSensors; ii++)
-  {
-    tempJSON2 = json_value_init_object();
-    create_JSON_SubSensorStatus(&sensor_status.subSensorStatus[ii], tempJSON2);
-    json_array_append_value(JSON_SensorArray2, tempJSON2);
-  }
-}
-
-static void create_JSON_SubSensorStatus(COM_SubSensorStatus_t *sub_sensor_status, JSON_Value *tempJSON)
-{
-#define PRECISION6(n) floor(1000000.0*(n))/1000000.0
-  JSON_Object *JSON_SubSensorStatus = json_value_get_object(tempJSON);
-
-  json_object_dotset_number(JSON_SubSensorStatus, "ODR", sub_sensor_status->ODR);
-  json_object_dotset_number(JSON_SubSensorStatus, "ODRMeasured", sub_sensor_status->measuredODR);
-  json_object_dotset_number(JSON_SubSensorStatus, "initialOffset",
-                            PRECISION6((double)sub_sensor_status->initialOffset));
-  json_object_dotset_number(JSON_SubSensorStatus, "FS", sub_sensor_status->FS);
-  json_object_dotset_number(JSON_SubSensorStatus, "sensitivity", PRECISION6((double)sub_sensor_status->sensitivity));
-  json_object_dotset_boolean(JSON_SubSensorStatus, "isActive", (int)sub_sensor_status->isActive);
-  json_object_dotset_number(JSON_SubSensorStatus, "samplesPerTs", (double)(sub_sensor_status->samplesPerTimestamp));
-  json_object_dotset_number(JSON_SubSensorStatus, "usbDataPacketSize", (double)(sub_sensor_status->usbDataPacketSize));
-  json_object_dotset_number(JSON_SubSensorStatus, "sdWriteBufferSize", (double)(sub_sensor_status->sdWriteBufferSize));
-  json_object_dotset_number(JSON_SubSensorStatus, "wifiDataPacketSize",
-                            (double)(sub_sensor_status->wifiDataPacketSize));
-  json_object_dotset_number(JSON_SubSensorStatus, "comChannelNumber", (double)(sub_sensor_status->comChannelNumber));
-  json_object_dotset_boolean(JSON_SubSensorStatus, "ucfLoaded", (int)sub_sensor_status->ucfLoaded);
-#undef PRECISION6
-}
-
-static void create_JSON_SubSensorDescriptor(COM_SubSensorDescriptor_t *sub_sensor_descriptor, JSON_Value *tempJSON)
-{
-  uint32_t ii = 0;
-
-  JSON_Value *tempJSONarray = json_value_init_object();
-  JSON_Array *JSON_SensorArray = json_value_get_array(tempJSONarray);
-  JSON_Object *JSON_SubSensorDescriptor = json_value_get_object(tempJSON);
-
-  json_object_dotset_number(JSON_SubSensorDescriptor, "id", (double)(sub_sensor_descriptor->id));
-
-  switch (sub_sensor_descriptor->sensorType)
-  {
-    case COM_TYPE_ACC:
-      json_object_dotset_string(JSON_SubSensorDescriptor, "sensorType", "ACC");
-      break;
-    case COM_TYPE_MAG:
-      json_object_dotset_string(JSON_SubSensorDescriptor, "sensorType", "MAG");
-      break;
-    case COM_TYPE_GYRO:
-      json_object_dotset_string(JSON_SubSensorDescriptor, "sensorType", "GYRO");
-      break;
-    case COM_TYPE_TEMP:
-      json_object_dotset_string(JSON_SubSensorDescriptor, "sensorType", "TEMP");
-      break;
-    case COM_TYPE_PRESS:
-      json_object_dotset_string(JSON_SubSensorDescriptor, "sensorType", "PRESS");
-      break;
-    case COM_TYPE_HUM:
-      json_object_dotset_string(JSON_SubSensorDescriptor, "sensorType", "HUM");
-      break;
-    case COM_TYPE_MIC:
-      json_object_dotset_string(JSON_SubSensorDescriptor, "sensorType", "MIC");
-      break;
-    case COM_TYPE_MLC:
-      json_object_dotset_string(JSON_SubSensorDescriptor, "sensorType", "MLC");
-      break;
-    default:
-      json_object_dotset_string(JSON_SubSensorDescriptor, "sensorType", "NA");
-      break;
-  }
-
-  json_object_dotset_number(JSON_SubSensorDescriptor, "dimensions", (double)sub_sensor_descriptor->dimensions);
-
-  json_object_dotset_value(JSON_SubSensorDescriptor, "dimensionsLabel", json_value_init_array());
-  JSON_SensorArray = json_object_dotget_array(JSON_SubSensorDescriptor, "dimensionsLabel");
-
-  for (ii = 0; ii < sub_sensor_descriptor->dimensions; ii++)
-  {
-    json_array_append_string(JSON_SensorArray, sub_sensor_descriptor->dimensionsLabel[ii]);
-  }
-
-  json_object_dotset_string(JSON_SubSensorDescriptor, "unit", sub_sensor_descriptor->unit);
-
-  switch (sub_sensor_descriptor->dataType)
-  {
-    case DATA_TYPE_UINT8:
-      json_object_dotset_string(JSON_SubSensorDescriptor, "dataType", "uint8_t");
-      break;
-    case DATA_TYPE_INT8:
-      json_object_dotset_string(JSON_SubSensorDescriptor, "dataType", "int8_t");
-      break;
-    case DATA_TYPE_UINT16:
-      json_object_dotset_string(JSON_SubSensorDescriptor, "dataType", "uint16_t");
-      break;
-    case DATA_TYPE_INT16:
-      json_object_dotset_string(JSON_SubSensorDescriptor, "dataType", "int16_t");
-      break;
-    case DATA_TYPE_UINT32:
-      json_object_dotset_string(JSON_SubSensorDescriptor, "dataType", "uint32_t");
-      break;
-    case DATA_TYPE_INT32:
-      json_object_dotset_string(JSON_SubSensorDescriptor, "dataType", "int32_t");
-      break;
-    case DATA_TYPE_FLOAT:
-      json_object_dotset_string(JSON_SubSensorDescriptor, "dataType", "float");
-      break;
-    default:
-      json_object_dotset_string(JSON_SubSensorDescriptor, "dataType", "NA");
-      break;
-  }
-  ii = 0;
-
-  json_object_dotset_value(JSON_SubSensorDescriptor, "FS", json_value_init_array());
-  JSON_SensorArray = json_object_dotget_array(JSON_SubSensorDescriptor, "FS");
-  while (sub_sensor_descriptor->FS[ii] > 0.0f)
-  {
-    json_array_append_number(JSON_SensorArray, sub_sensor_descriptor->FS[ii]);
-    ii++;
-  }
-
-  ii = 0;
-
-  json_object_dotset_value(JSON_SubSensorDescriptor, "ODR", json_value_init_array());
-  JSON_SensorArray = json_object_dotget_array(JSON_SubSensorDescriptor, "ODR");
-  while (sub_sensor_descriptor->ODR[ii] > 0.0f)
-  {
-    json_array_append_number(JSON_SensorArray, sub_sensor_descriptor->ODR[ii]);
-    ii++;
-  }
-
-  json_object_dotset_number(JSON_SubSensorDescriptor, "samplesPerTs.min",
-                            (double)(sub_sensor_descriptor->samplesPerTimestamp[0]));
-  json_object_dotset_number(JSON_SubSensorDescriptor, "samplesPerTs.max",
-                            (double)(sub_sensor_descriptor->samplesPerTimestamp[1]));
-  json_object_dotset_string(JSON_SubSensorDescriptor, "samplesPerTs.dataType", "int16_t");
-
-  json_value_free(tempJSONarray);
-}
-
 /**
   * @brief  This function is called when there is a change on the gatt attribute as consequence of write request
   *         for the Extended Configuration characteristic value service
@@ -1059,11 +877,6 @@ static void Write_Request_ExtConfig(void *VoidCharPointer, uint16_t attr_handle,
         {
           WritingPointer += sprintf((char *)LocalBufferToWrite + WritingPointer, "%s,",
                                     StandardExtConfigCommands[EXT_CONFIG_COM_READ_CUSTOM_COMMAND].CommandString);
-        }
-        if (CustomExtConfigReadSensorsConfigCommandsCallback != NULL)
-        {
-          WritingPointer += sprintf((char *)LocalBufferToWrite + WritingPointer, "%s,",
-                                    StandardExtConfigCommands[EXT_CONFIG_COM_READ_SENSOR_CONFIG].CommandString);
         }
         if (CustomExtConfigRebootOnDFUModeCommandCallback != NULL)
         {
@@ -1202,33 +1015,6 @@ static void Write_Request_ExtConfig(void *VoidCharPointer, uint16_t attr_handle,
         }
         break;
 
-      case EXT_CONFIG_COM_READ_SENSOR_CONFIG:
-        if (CustomExtConfigReadSensorsConfigCommandsCallback != NULL)
-        {
-          JSON_Value *tempJSON = json_value_init_object();
-          JSON_Object *tempJSON_Obj = json_value_get_object(tempJSON);
-          JSON_Array *JSON_SensorArray;
-          char *JSON_string_command = NULL;
-          uint32_t JSON_size = 0;
-
-          BLE_MANAGER_PRINTF("Command ReadSensorsConfigCommand\r\n");
-
-          json_object_dotset_value(tempJSON_Obj, "sensor", json_value_init_array());
-          JSON_SensorArray = json_object_dotget_array(tempJSON_Obj, "sensor");
-
-          /* Filling the array */
-          CustomExtConfigReadSensorsConfigCommandsCallback(JSON_SensorArray);
-
-          /* convert to a json string and write as string */
-          JSON_string_command = json_serialize_to_string(tempJSON);
-          JSON_size = json_serialization_size(tempJSON);
-
-          BLE_ExtConfiguration_Update((uint8_t *) JSON_string_command, JSON_size);
-          BLE_FREE_FUNCTION(JSON_string_command);
-          json_value_free(tempJSON);
-        }
-        break;
-
       case EXT_CONFIG_COM_READ_VER_FW:
         if (CustomExtConfigVersionFwCommandCallback != NULL)
         {
@@ -1336,7 +1122,7 @@ static void Write_Request_ExtConfig(void *VoidCharPointer, uint16_t attr_handle,
           char *JSON_string_command = NULL;
           uint32_t JSON_size = 0;
 
-          BLE_MANAGER_PRINTF("Command PowerStatus\r\n");
+          BLE_MANAGER_PRINTF("Command Certificate\r\n");
 
           CustomExtConfigReadCertCommandCallback(LocalBufferToWrite);
 
@@ -1534,15 +1320,6 @@ static void Write_Request_ExtConfig(void *VoidCharPointer, uint16_t attr_handle,
           json_value_free(tempJSON);
         }
         break;
-
-      case EXT_CONFIG_COM_SET_SENSOR_CONFIG:
-        if (CustomExtConfigSetSensorsConfigCommandsCallback != NULL)
-        {
-          BLE_MANAGER_PRINTF("Command SetSensorsConfigCommand\r\n");
-          CustomExtConfigSetSensorsConfigCommandsCallback(hs_command_buffer);
-        }
-        break;
-
       default:
         /* Check if it's a custom Command or not */
         if (CustomExtConfigCustomCommandCallback != NULL)
@@ -1888,7 +1665,7 @@ uint8_t GenericAddCustomCommand(BLE_ExtCustomCommand_t **LocCustomCommands,
 
       if ((*LocCustomCommands) == NULL)
       {
-        BLE_MANAGER_PRINTF("Error: Mem calloc error: %d@%s\r\n", __LINE__, __FILE__);
+        BLE_MANAGER_PRINTF("Error: Mem alloc error: %d@%s\r\n", __LINE__, __FILE__);
         return 0;
       }
 
@@ -1899,7 +1676,7 @@ uint8_t GenericAddCustomCommand(BLE_ExtCustomCommand_t **LocCustomCommands,
       (*LocLastCustomCommand)->NextCommand = (void *) BLE_MALLOC_FUNCTION(sizeof(BLE_ExtCustomCommand_t));
       if ((*LocCustomCommands) == NULL)
       {
-        BLE_MANAGER_PRINTF("Error: Mem calloc error %d@%s\r\n", __LINE__, __FILE__);
+        BLE_MANAGER_PRINTF("Error: Mem alloc error %d@%s\r\n", __LINE__, __FILE__);
         return 0;
       }
       (*LocLastCustomCommand) = (BLE_ExtCustomCommand_t *)(*LocLastCustomCommand)->NextCommand;
@@ -1911,7 +1688,7 @@ uint8_t GenericAddCustomCommand(BLE_ExtCustomCommand_t **LocCustomCommands,
     (*LocLastCustomCommand)->CommandName = BLE_MALLOC_FUNCTION(strlen(CommandName) + 1U);
     if (((*LocLastCustomCommand)->CommandName) == NULL)
     {
-      BLE_MANAGER_PRINTF("Error: Mem calloc error %d@%s\r\n", __LINE__, __FILE__);
+      BLE_MANAGER_PRINTF("Error: Mem alloc error %d@%s\r\n", __LINE__, __FILE__);
       return 0;
     }
     sprintf((*LocLastCustomCommand)->CommandName, "%s", CommandName);
@@ -2003,23 +1780,6 @@ void SendInfo(char *message)
   BLE_FREE_FUNCTION(JSON_string_command);
 }
 
-void create_JSON_Sensor(COM_Sensor_t *sensor, JSON_Value *tempJSON)
-{
-  uint8_t nSensor = sensor->sensorDescriptor.id;
-
-  JSON_Object *JSON_Sensor = json_value_get_object(tempJSON);
-
-  json_object_dotset_number(JSON_Sensor, "id", (double)nSensor);
-  json_object_dotset_string(JSON_Sensor, "name", sensor->sensorDescriptor.name);
-
-  JSON_Value *DescriptorJSON = json_value_init_object();
-  json_object_set_value(JSON_Sensor, "sensorDescriptor", DescriptorJSON);
-  create_JSON_SensorDescriptor(&sensor->sensorDescriptor, DescriptorJSON);
-
-  JSON_Value *statusJSON = json_value_init_object();
-  json_object_set_value(JSON_Sensor, "sensorStatus", statusJSON);
-  create_JSON_SensorStatus(sensor, statusJSON);
-}
 #endif /* BLE_MANAGER_NO_PARSON */
 
 /**
@@ -2328,7 +2088,7 @@ tBleStatus BLE_ExtConfiguration_Update(uint8_t *data, uint32_t length)
 
   if (JSON_string_command_wTP == NULL)
   {
-    BLE_MANAGER_PRINTF("Error: Mem calloc error [%lu]: %d@%s\r\n", length, __LINE__, __FILE__);
+    BLE_MANAGER_PRINTF("Error: Mem alloc error [%lu]: %d@%s\r\n", length, __LINE__, __FILE__);
     return BLE_STATUS_ERROR;
   }
   else
@@ -2977,9 +2737,6 @@ static void ResetBleManagerCallbackFunctionPointer(void)
   CustomExtConfigReadCertCommandCallback = NULL;
   /* For Set Certificate Command */
   CustomExtConfigSetCertCommandCallback = NULL;
-  /* For Sensor Configuration */
-  CustomExtConfigReadSensorsConfigCommandsCallback = NULL;
-  CustomExtConfigSetSensorsConfigCommandsCallback = NULL;
 #endif /* BLE_MANAGER_NO_PARSON */
 }
 
@@ -2992,7 +2749,7 @@ tBleStatus InitBleManager(void)
 {
   tBleStatus ret = BLE_STATUS_SUCCESS;
 
-  if (BLE_StackValue.BoardId == 0)
+  if (BLE_StackValue.BoardId == 0U)
   {
     BLE_MANAGER_PRINTF("Error BLE_StackValue.BoardId Not Defined\r\n");
     return BLE_ERROR_UNSPECIFIED;
@@ -3524,7 +3281,11 @@ static tBleStatus InitBleManager_BLE_Stack(void)
   hci_reset();
 
   /* Wait some time for the BlueNRG to be fully operational */
+#ifndef  BLE_INITIAL_DELAY
   BLE_MANAGER_DELAY(2000);
+#else /* BLE_INITIAL_DELAY */
+  BLE_INITIAL_DELAY(2000);
+#endif /* BLE_INITIAL_DELAY */
 
   /* get the BlueNRG HW and FW versions */
   getBlueNRGVersion(&hwVersion, &fwVersion);
@@ -3802,11 +3563,6 @@ static tBleStatus InitBleManagerServices(void)
   tBleStatus Status = BLE_ERROR_UNSPECIFIED;
   BleCharTypeDef *BleCharPointer;
 
-#ifndef BLE_MANAGER_NO_PARSON
-  /* Set the Malloc/Free Functions  used inside the Json Parser */
-  json_set_allocation_functions(BLE_MALLOC_FUNCTION, BLE_FREE_FUNCTION);
-#endif /* BLE_MANAGER_NO_PARSON */
-
 #ifdef BLE_MANAGER_SDKV2
   BLE_MANAGER_PRINTF("BlueST-SDK V2\r\n");
 #else /* BLE_MANAGER_SDKV2 */
@@ -4052,13 +3808,13 @@ uint32_t BLE_Command_TP_Parse(uint8_t **buffer_out, uint8_t *buffer_in, uint32_t
   * @param  BytePacketSize: Packet Size in Bytes
   * @retval Buffer out length.
   */
-uint32_t BLE_Command_TP_Encapsulate(uint8_t *buffer_out, uint8_t *buffer_in, uint32_t len, int32_t BytePacketSize)
+uint32_t BLE_Command_TP_Encapsulate(uint8_t *buffer_out, uint8_t *buffer_in, uint32_t len, uint32_t BytePacketSize)
 {
   uint32_t size = 0;
   uint32_t tot_size = 0;
   uint32_t counter = 0;
   BLE_COMM_TP_Packet_Typedef packet_type = BLE_COMM_TP_START_PACKET;
-  int32_t BytePacketSizeMinus1 = BytePacketSize - 1;
+  uint32_t BytePacketSizeMinus1 = BytePacketSize - 1U;
 
   /* One byte header is added to each BLE packet */
   while (counter < len)
@@ -4632,22 +4388,27 @@ void hci_le_data_length_change_event(uint16_t Connection_Handle,
 {
 #if (BLUE_CORE == BLUENRG_LP)
   tBleStatus RetStatus;
+  int32_t MaxRetryNumber=10;
+  int32_t RetryNumber = 0;
 #endif /* (BLUE_CORE == BLUENRG_LP) */
 #if (BLE_DEBUG_LEVEL>2)
   BLE_MANAGER_PRINTF("hci_le_data_length_change_event\r\n");
 #endif /* (BLE_DEBUG_LEVEL>2) */
 
 #if (BLUE_CORE == BLUENRG_LP)
-  BLE_MANAGER_DELAY(200);
-  RetStatus = aci_gatt_clt_exchange_config(Connection_Handle);
-  if (RetStatus != BLE_STATUS_SUCCESS)
-  {
-    BLE_MANAGER_PRINTF("Error: ACI GATT Exchange Config Failed (0x%x)\r\n", RetStatus);
-  }
-  else
-  {
-    BLE_MANAGER_PRINTF("ACI GATT Exchange Config Done\r\n");
-  }
+  do {
+    BLE_MANAGER_DELAY(200);
+    RetStatus = aci_gatt_clt_exchange_config(Connection_Handle);
+    if( RetStatus !=BLE_STATUS_SUCCESS) {
+      BLE_MANAGER_PRINTF("Error: ACI GATT Exchange Config Failed (0x%x)\r\n", RetStatus);
+      RetryNumber++;
+    } 
+    else 
+    {
+      BLE_MANAGER_PRINTF("ACI GATT Exchange Config Done\r\n");
+    }
+  } while ((RetStatus != BLE_STATUS_SUCCESS) & (RetryNumber<MaxRetryNumber));
+  
 #endif /* (BLUE_CORE == BLUENRG_LP) */
 }
 

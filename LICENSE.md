@@ -10,5 +10,6 @@
 | BlueNRG-LP Middleware                    			| STMicroelectronics   | SLA0077 |
 | STM32_BLE_Manager Middleware             			| STMicroelectronics   | SLA0094 |
 | Parson Middleware                        			| Third_Party          | MIT     |
-| STM32L476RG-Nucleo Application Projects  			| STMicroelectronics   | SLA0094 |
+| NUCLEO-L476RG Application Projects				| STMicroelectronics   | SLA0094 |
+| NUCLEO-U575ZI-Q Application Projects				| STMicroelectronics   | SLA0094 |
 

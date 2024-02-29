@@ -9,7 +9,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2023 STMicroelectronics.
+  * Copyright (c) 2024 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -95,6 +95,8 @@ extern "C" {
 
 /* Define the Delay function to use inside the BLE Manager (HAL_Delay/osDelay) */
 #define BLE_MANAGER_DELAY HAL_Delay
+/* Function InitBleManager_BLE_Stack use this define as delay if defined */
+/* #define BLE_INITIAL_DELAY HAL_Delay */
 
 /****************** Memory management functions **************************/
 #define BLE_MALLOC_FUNCTION      malloc

@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_Manager.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.9.1
-  * @date    10-October-2023
+  * @version 1.11.0
+  * @date    15-February-2024
   * @brief   BLE Manager services APIs
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2023 STMicroelectronics.
+  * Copyright (c) 2024 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -112,6 +112,8 @@ extern "C" {
 #define BLE_MANAGER_SENSOR_TILE_BOX_PRO_B_PLATFORM 0x11U
 #define BLE_MANAGER_STEVAL_STWINBX1_B_PLATFORM     0x12U
 #define BLE_MANAGER_NUCLEO_PLATFORM                0x80U
+#define BLE_MANAGER_STM32U5A5ZJ_NUCLEO_PLATFORM    0x7AU
+#define BLE_MANAGER_STM32U575ZI_NUCLEO_PLATFORM    0x7BU
 #define BLE_MANAGER_STM32F446RE_NUCLEO_PLATFORM    0x7CU
 #define BLE_MANAGER_STM32L053R8_NUCLEO_PLATFORM    0x7DU
 #define BLE_MANAGER_STM32L476RG_NUCLEO_PLATFORM    0x7EU
@@ -152,18 +154,6 @@ extern "C" {
 #define DATA_TYPE_UINT32    (uint8_t)(0x04)
 #define DATA_TYPE_INT32     (uint8_t)(0x05)
 #define DATA_TYPE_FLOAT     (uint8_t)(0x06)
-
-#define N_MAX_DIM_LABELS                    8U
-#define DIM_LABELS_LENGTH                   3U
-#define N_MAX_SENSOR_COMBO                  4U
-#define N_MAX_SUPPORTED_ODR                 16U
-#define N_MAX_SUPPORTED_FS                  16U
-
-#define COM_END_OF_LIST_INT -1
-#define COM_END_OF_LIST_FLOAT -1.0f
-
-#define COM_LIST_SEPARATOR_INT -2
-#define COM_LIST_SEPARATOR_FLOAT -2.0f
 
 #if (BLUE_CORE == BLUENRG_MS)
 #define BLE_ERROR_UNSPECIFIED         ERR_UNSPECIFIED_ERROR
@@ -349,72 +339,6 @@ typedef struct
   uint8_t *StringValue;
 } BLE_CustomCommadResult_t;
 
-typedef struct
-{
-  uint8_t    id;
-  uint8_t    sensorType;
-  uint8_t    dimensions;
-  char       dimensionsLabel[N_MAX_DIM_LABELS][DIM_LABELS_LENGTH + 1U];
-  char       unit[16];
-  uint8_t    dataType;
-  float      FS[N_MAX_SUPPORTED_FS];
-  float      ODR[N_MAX_SUPPORTED_ODR];
-  uint16_t   samplesPerTimestamp[2];
-}
-COM_SubSensorDescriptor_t;
-
-/* Context is only used in the firmware, it's not written into DeviceConfiG.json */
-typedef struct
-{
-  float     n_samples_acc;          /*  sensor_n_samples_acc */
-  double    old_time_stamp;
-  uint16_t  n_samples_to_timestamp; /* sensor_n_samples_to_timestamp */
-  uint8_t   first_dataReady;        /*  sensor_first_dataReady */
-  uint8_t  *sd_write_buffer;
-  uint32_t  sd_write_buffer_idx;
-}
-COM_SubSensorContext_t;
-
-typedef struct
-{
-  uint8_t                 isActive;
-  float                   ODR;
-  float                   measuredODR;
-  float                   initialOffset;
-  uint16_t                samplesPerTimestamp;
-  float                   FS;
-  float                   sensitivity;
-  uint16_t                usbDataPacketSize;
-  uint32_t                sdWriteBufferSize;
-  uint32_t                wifiDataPacketSize;
-  int16_t                 comChannelNumber;
-  uint8_t                 ucfLoaded;
-  COM_SubSensorContext_t  context;
-}
-COM_SubSensorStatus_t;
-
-typedef struct
-{
-  uint8_t                   id;
-  char                      name[16];
-  uint8_t                   nSubSensors;
-  COM_SubSensorDescriptor_t subSensorDescriptor[N_MAX_SENSOR_COMBO];
-} COM_SensorDescriptor_t;
-
-typedef struct
-{
-  COM_SubSensorStatus_t  subSensorStatus[N_MAX_SENSOR_COMBO];
-}
-COM_SensorStatus_t;
-
-typedef struct
-{
-  COM_SensorDescriptor_t sensorDescriptor;
-  COM_SensorStatus_t     sensorStatus;
-}
-COM_Sensor_t;
-
-
 /* Exported Variables ------------------------------------------------------- */
 
 extern  BLE_ServEnab_t BLE_Conf_Service;
@@ -559,9 +483,6 @@ extern CustomExtConfigSetCertCommand_t CustomExtConfigSetCertCommandCallback;
 typedef void (*CustomExtConfigReadCustomCommands_t)(JSON_Array *JSON_SensorArray);
 extern CustomExtConfigReadCustomCommands_t CustomExtConfigReadCustomCommandsCallback;
 
-/* For Sensor Configuration */
-typedef void (*CustomExtConfigReadSensorsConfigCommands_t)(JSON_Array *JSON_SensorArray);
-extern CustomExtConfigReadSensorsConfigCommands_t CustomExtConfigReadSensorsConfigCommandsCallback;
 
 typedef void (*CustomExtConfigSetSensorsConfigCommands_t)(uint8_t *Answer);
 extern CustomExtConfigSetSensorsConfigCommands_t CustomExtConfigSetSensorsConfigCommandsCallback;
@@ -640,8 +561,6 @@ extern void GenericClearCustomCommandsList(BLE_ExtCustomCommand_t **CustomComman
 /* Little specialization for Ext configuration */
 #define ClearCustomCommandsList() GenericClearCustomCommandsList(&ExtConfigCustomCommands, &ExtConfigLastCustomCommand)
 
-extern void create_JSON_Sensor(COM_Sensor_t *sensor, JSON_Value *tempJSON);
-
 extern void SendNewCustomCommandList(void);
 extern void SendError(char *message);
 extern void SendInfo(char *message);
@@ -676,7 +595,7 @@ extern uint32_t BLE_Command_TP_Parse(uint8_t **buffer_out, uint8_t *buffer_in, u
   * @retval Buffer out length.
   */
 extern uint32_t BLE_Command_TP_Encapsulate(uint8_t *buffer_out, uint8_t *buffer_in, uint32_t len,
-                                           int32_t BytePacketSize);
+                                           uint32_t BytePacketSize);
 
 extern tBleStatus BLE_ExtConfiguration_Update(uint8_t *data, uint32_t length);
 

@@ -3,13 +3,15 @@
   ******************************************************************************
   * @file    BLE_Implementation.h
   * @author  System Research & Applications Team - Catania Lab.
+  * @version 3.1.0
+  * @date    16-February-2024
   * @brief   BLE Implementation header template file.
   *          This file should be copied to the application folder and renamed
   *          to BLE_Implementation.h.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2023 STMicroelectronics.
+  * Copyright (c) 2024 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -76,7 +78,7 @@ extern "C" {
 /* Number of audio channels (Max audio channels 4) */
 #define AUDIO_CHANNELS_NUMBER      1
 /* Number of the general purpose features to use */
-#define NUM_GENERAL_PURPOSE      1
+#define NUM_GENERAL_PURPOSE      3
 /* For Help Command */
 #define HELP      1
 /* For Reading the Flash Banks Fw Ids */
@@ -103,6 +105,10 @@ extern "C" {
 #define ENABLE_CONSOLE      1
 /* Enable/Disable giroscope data (Disable= 0- Enable=1) */
 #define ENABLE_GYRO_DATA      1
+/* Size of the general purpose feature */
+#define GENERAL_PURPOSE_SIZE_3      3
+/* Size of the general purpose feature */
+#define GENERAL_PURPOSE_SIZE_2      3
 /* Enable/Disable humidity data (Disable= 0- Enable=1) */
 #define ENABLE_ENV_HUMIDITY_DATA      1
 /* Size of the general purpose feature */
@@ -113,8 +119,6 @@ extern "C" {
 #define ENABLE_ENV_TEMPERATURE_DATA      1
 /* For Set Wi-Fi Command */
 #define SET_WIFI      0
-/* For Set sensor config */
-#define SENSOR_CONFIG      0
 /* Supported hardware platform */
 #define USED_PLATFORM      0x7EU
 /* For Power off Command */
@@ -136,6 +140,8 @@ extern "C" {
  * SENSOR_TILE_BOX_PRO                  --> BLE_MANAGER_SENSOR_TILE_BOX_PRO_PLATFORM
  * STEVAL_ASTRA1                        --> BLE_MANAGER_STEVAL_ASTRA1_PLATFORM
  * STM32NUCLEO Board                    --> BLE_MANAGER_NUCLEO_PLATFORM
+ * STM32U5A5ZJ_NUCLEO Board             --> BLE_MANAGER_STM32U5A5ZJ_NUCLEO_PLATFORM
+ * STM32U575ZI_NUCLEO Board             --> BLE_MANAGER_STM32U575ZI_NUCLEO_PLATFORM
  * STM32F446RE_NUCLEO Board             --> BLE_MANAGER_STM32F446RE_NUCLEO_PLATFORM
  * STM32L053R8_NUCLEO Board             --> BLE_MANAGER_STM32L053R8_NUCLEO_PLATFORM
  * STM32L476RG_NUCLEO Board             --> BLE_MANAGER_STM32L476RG_NUCLEO_PLATFORM
@@ -167,7 +173,7 @@ extern "C" {
 
 /* Package Version firmware */
 #define BLE_VERSION_FW_MAJOR  '3'
-#define BLE_VERSION_FW_MINOR  '0'
+#define BLE_VERSION_FW_MINOR  '1'
 #define BLE_VERSION_FW_PATCH  '0'
 
 /* Firmware Package Name */

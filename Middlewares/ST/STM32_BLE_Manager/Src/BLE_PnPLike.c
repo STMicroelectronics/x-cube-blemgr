@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    BLE_PnPLike.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 1.9.1
-  * @date    10-October-2023
+  * @version 1.11.0
+  * @date    15-February-2024
   * @brief   Add PnPLike info services using vendor specific profile.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2023 STMicroelectronics.
+  * Copyright (c) 2024 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -44,6 +44,8 @@ static void AttrMod_Request_PnPLike(void *BleCharPointer, uint16_t attr_handle, 
 static void Write_Request_PnPLike(void *BleCharPointer, uint16_t handle, uint16_t Offset, uint8_t data_length,
                                   uint8_t *att_data);
 
+
+static uint16_t PnPLikeContentMaxCharLength = DEFAULT_MAX_PNPL_NOTIFICATION_CHAR_LEN;
 /**
   * @brief  Init PnPLike info service
   * @param  None
@@ -61,7 +63,7 @@ BleCharTypeDef *BLE_InitPnPLikeService(void)
   BleCharPointer->Write_Request_CB = Write_Request_PnPLike;
   COPY_PNPLIKE_CHAR_UUID((BleCharPointer->uuid));
   BleCharPointer->Char_UUID_Type = UUID_TYPE_128;
-  BleCharPointer->Char_Value_Length = 20;
+  BleCharPointer->Char_Value_Length = PnPLikeContentMaxCharLength;
   BleCharPointer->Char_Properties = ((uint8_t)CHAR_PROP_NOTIFY) | ((uint8_t)CHAR_PROP_WRITE_WITHOUT_RESP);
   BleCharPointer->Security_Permissions = ATTR_PERMISSION_NONE;
   BleCharPointer->GATT_Evt_Mask = GATT_NOTIFY_ATTRIBUTE_WRITE;
@@ -157,12 +159,12 @@ static void Write_Request_PnPLike(void *BleCharPointer, uint16_t handle, uint16_
     {
       CustomWriteRequestPnPLike(ble_command_buffer, CommandBufLen);
 
+#if (BLE_DEBUG_LEVEL>1)
+      BLE_MANAGER_PRINTF("\r\n%.*s\r\n", CommandBufLen,ble_command_buffer);
+#endif /* (BLE_DEBUG_LEVEL>1) */
+
       BLE_FREE_FUNCTION(ble_command_buffer);
       ble_command_buffer = NULL;
-
-#if (BLE_DEBUG_LEVEL>1)
-      BLE_MANAGER_PRINTF("\r\n%s\r\n", ble_command_buffer);
-#endif /* (BLE_DEBUG_LEVEL>1) */
     }
   }
   else
@@ -172,5 +174,26 @@ static void Write_Request_PnPLike(void *BleCharPointer, uint16_t handle, uint16_
 #endif /* (BLE_DEBUG_LEVEL>1) */
   }
 }
+
+/**
+  * @brief  PnPLike Set Max Char Length
+  * @param  uint16_t MaxCharLength
+  * @retval none
+  */
+void BLE_PnPLikeSetMaxCharLength(uint16_t MaxCharLength)
+{
+  PnPLikeContentMaxCharLength = MaxCharLength;
+}
+
+/**
+  * @brief  PnPLike Get Max Char Length
+  * @param  None
+  * @retval uint16_t MaxCharLength
+  */
+uint16_t BLE_PnPLikeGetMaxCharLength(void)
+{
+  return PnPLikeContentMaxCharLength;
+}
+
 
 

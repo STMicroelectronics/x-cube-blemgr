@@ -1,6 +1,6 @@
 ## <b>SensorDataTransmit Application Description</b>
 
-Application for STM32L476RG with X-NUCLEO-BNRG2A1 expansion board.
+Application for NUCLEO-L476RG with X-NUCLEO-BNRG2A1 expansion board.
 
 Example Description:
 

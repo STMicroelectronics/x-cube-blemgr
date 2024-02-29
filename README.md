@@ -26,6 +26,9 @@ This firmware package includes Components Device Drivers, Board Support Package 
 
 - NUCLEO-L476RG nucleo development board and expansion boards:
   - X-NUCLEO-BNRG2A1 Bluetooth Low energy expansion boards
+  
+- NUCLEO-U575ZI-Q nucleo development board and expansion boards:
+  - X-NUCLEO-BNRG2A1 Bluetooth Low energy expansion boards
 
 [![The X-CUBE-BLEMGR package contents](_htmresc/X-CUBE-BLEMGR_Software_Architecture.png)]()
 
@@ -37,6 +40,7 @@ Here is the list of references to user documents:
 ## Supported Devices and Boards
 
 - NUCLEO-L476RG STM32 Nucleo-64 development board with STM32L476RG MCU, supports Arduino and ST morpho connectivity \[[NUCLEO-L476RG](https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-l476rg.html)\]
+- NUCLEO-U575ZI-Q STM32 Nucleo-144 development board with STM32U575ZIT6Q MCU, supports Arduino, ST Zio and morpho connectivity connectivity \[[NUCLEO-U575ZI-Q](https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-u575zi-q.html)\]
 - X-NUCLEO-BNRG2A1 Bluetooth Low Energy expansion board based on the BLUENRG-M2SP module for STM32 Nucleo \[[X-NUCLEO-BNRG2A1](https://www.st.com/en/ecosystems/x-nucleo-bnrg2a1.html)]
 
 ## Development Toolchains and Compilers
