@@ -2,14 +2,14 @@
   ******************************************************************************
   * @file    ble_finite_state_machine.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.0.0
-  * @date    25-September-2024
+  * @version 2.1.0
+  * @date    11-March-2025
   * @brief   Add Machine Learning info services using vendor specific
   *          profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -50,9 +50,9 @@ __weak void read_request_finite_state_machine_function(uint8_t *fsm_out,
 static void attr_mod_request_finite_state_machine(void *ble_char_pointer, uint16_t attr_handle, uint16_t offset,
                                                   uint8_t data_length, uint8_t *att_data);
 
-#if (BLUE_CORE != BLUENRG_LP)
+#if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N))
 static void read_request_finite_state_machine(void *ble_char_pointer, uint16_t handle);
-#else /* (BLUE_CORE != BLUENRG_LP) */
+#else /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
 static void read_request_finite_state_machine(void *ble_char_pointer,
                                               uint16_t handle,
                                               uint16_t connection_handle,
@@ -60,7 +60,7 @@ static void read_request_finite_state_machine(void *ble_char_pointer,
                                               uint16_t attr_val_offset,
                                               uint8_t data_length,
                                               uint8_t data[]);
-#endif /* (BLUE_CORE != BLUENRG_LP) */
+#endif /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
 
 /* Exported functions ------------------------------------------------------- */
 /**
@@ -208,7 +208,7 @@ static void attr_mod_request_finite_state_machine(void *void_char_pointer, uint1
   * @param  uint16_t handle Handle of the attribute
   * @retval None
   */
-#if (BLUE_CORE != BLUENRG_LP)
+#if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N))
 static void read_request_finite_state_machine(void *void_char_pointer, uint16_t handle)
 {
   uint8_t fsm_out[16];
@@ -217,7 +217,7 @@ static void read_request_finite_state_machine(void *void_char_pointer, uint16_t 
   read_request_finite_state_machine_function(fsm_out, &fsm_status_a_mainpage, &fsm_status_b_mainpage);
   ble_finite_state_machine_update(fsm_out, &fsm_status_a_mainpage, &fsm_status_b_mainpage);
 }
-#else /* (BLUE_CORE != BLUENRG_LP) */
+#else /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
 static void read_request_finite_state_machine(void *ble_char_pointer,
                                               uint16_t handle,
                                               uint16_t connection_handle,
@@ -272,15 +272,22 @@ static void read_request_finite_state_machine(void *ble_char_pointer,
     }
   }
 
+#if (BLUE_CORE == STM32WB05N)
+  ret = aci_gatt_srv_authorize_resp_nwk(connection_handle, 0x0004, handle,
+                                        operation_type, 0, attr_val_offset,
+                                        data_length, data);
+#else /* (BLUE_CORE == STM32WB05N) */
   ret = aci_gatt_srv_authorize_resp_nwk(connection_handle, handle,
                                         operation_type, 0, attr_val_offset,
                                         data_length, data);
+#endif /* (BLUE_CORE == STM32WB05N) */
+
   if (ret != BLE_STATUS_SUCCESS)
   {
     BLE_MANAGER_PRINTF("aci_gatt_srv_authorize_resp_nwk() failed: 0x%02x\r\n", ret);
   }
 }
-#endif /* (BLUE_CORE != BLUENRG_LP) */
+#endif /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
 
 /**************************************************
   * Callback function to manage the notify events *

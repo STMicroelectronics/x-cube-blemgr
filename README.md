@@ -30,8 +30,14 @@ This firmware package includes Components Device Drivers, Board Support Package 
 - NUCLEO-U575ZI-Q nucleo development board and expansion boards:
   - X-NUCLEO-BNRG2A1 Bluetooth Low energy expansion boards
   
-- STMicroelectronics STEVAL-MKBOXPRO (SensorTile.box-Pro)  evaluation board that contains the following component:
+- NUCLEO-U575ZI-Q nucleo development board and expansion boards:
+  - X-NUCLEO-WB05KN1 expansion board for STM32 Nucleo based on STM32WB05KN
+  
+- STMicroelectronics STEVAL-MKBOXPRO Rev A and Rev B (SensorTile.box-Pro) evaluation board that contains the following component:
   - BlueNRG-LP Bluetooth Low Energy System On Chip
+  
+- STMicroelectronics STEVAL-MKBOXPRO Rev C (SensorTile.box-Pro) evaluation board that contains the following component:
+  - STM32WB07KC Ultra-low-power Bluetooth
 
 [![The X-CUBE-BLEMGR package contents](_htmresc/X-CUBE-BLEMGR_Software_Architecture.png)]()
 
@@ -45,6 +51,7 @@ Here is the list of references to user documents:
 - NUCLEO-L476RG STM32 Nucleo-64 development board with STM32L476RG MCU, supports Arduino and ST morpho connectivity \[[NUCLEO-L476RG](https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-l476rg.html)\]
 - NUCLEO-U575ZI-Q STM32 Nucleo-144 development board with STM32U575ZIT6Q MCU, supports Arduino, ST Zio and morpho connectivity connectivity \[[NUCLEO-U575ZI-Q](https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-u575zi-q.html)\]
 - X-NUCLEO-BNRG2A1 Bluetooth Low Energy expansion board based on the BLUENRG-M2SP module for STM32 Nucleo \[[X-NUCLEO-BNRG2A1](https://www.st.com/en/ecosystems/x-nucleo-bnrg2a1.html)]
+- X-NUCLEO-WB05KN1 expansion board for STM32 Nucleo based on STM32WB05KN \[[X-NUCLEO-WB05KN1](https://www.st.com/en/evaluation-tools/x-nucleo-wb05kn1.html)]
 - STEVAL-MKBOXPRO (SensorTile.box PRO) discovery box with multi-sensors and wireless connectivity for any intelligent IoT node\[[STEVAL-MKBOXPRO](https://www.st.com/en/evaluation-tools/steval-mkboxpro.html)\]
 
 
@@ -52,7 +59,7 @@ Here is the list of references to user documents:
 
 -   IAR Embedded Workbench for ARM (EWARM) toolchain V9.20.1 + STLink/V2
 -   RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.38.0 + ST-LINK/V2
--   Integrated Development Environment for STM32 (STM32CubeIDE) V1.16.1 + ST-LINK
+-   Integrated Development Environment for STM32 (STM32CubeIDE) V1.17.0 + ST-LINK
 	
 ## Dependencies 
 

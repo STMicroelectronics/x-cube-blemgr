@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_gas_concentration.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.0.0
-  * @date    25-September-2024
+  * @version 2.1.0
+  * @date    11-March-2025
   * @brief   Add gas concentration info services using vendor specific profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -46,9 +46,9 @@ __weak void read_request_gas_concentration_function(uint32_t *gas);
 /* Private functions prototype -----------------------------------------------*/
 static void attr_mod_request_gas_concentration(void *ble_char_pointer, uint16_t attr_handle, uint16_t offset,
                                                uint8_t data_length, uint8_t *att_data);
-#if (BLUE_CORE != BLUENRG_LP)
+#if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N))
 static void read_request_gas_concentration(void *ble_char_pointer, uint16_t handle);
-#else /* (BLUE_CORE != BLUENRG_LP) */
+#else /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
 static void read_request_gas_concentration(void *ble_char_pointer,
                                            uint16_t handle,
                                            uint16_t connection_handle,
@@ -56,7 +56,7 @@ static void read_request_gas_concentration(void *ble_char_pointer,
                                            uint16_t attr_val_offset,
                                            uint8_t data_length,
                                            uint8_t data[]);
-#endif /* (BLUE_CORE != BLUENRG_LP) */
+#endif /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
 
 /* Exported functions ------------------------------------------------------- */
 /**
@@ -179,14 +179,14 @@ static void attr_mod_request_gas_concentration(void *void_char_pointer, uint16_t
   * @param  uint16_t handle Handle of the attribute
   * @retval None
   */
-#if (BLUE_CORE != BLUENRG_LP)
+#if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N))
 static void read_request_gas_concentration(void *void_char_pointer, uint16_t handle)
 {
   uint32_t gas;
   read_request_gas_concentration_function(&gas);
   BLE_GasConcentrationStatusUpdate(gas);
 }
-#else /* (BLUE_CORE != BLUENRG_LP) */
+#else /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
 static void read_request_gas_concentration(void *ble_char_pointer,
                                            uint16_t handle,
                                            uint16_t connection_handle,
@@ -219,15 +219,22 @@ static void read_request_gas_concentration(void *ble_char_pointer,
     }
   }
 
+#if (BLUE_CORE == STM32WB05N)
+  ret = aci_gatt_srv_authorize_resp_nwk(connection_handle, 0x0004, handle,
+                                        operation_type, 0, attr_val_offset,
+                                        data_length, data);
+#else /* (BLUE_CORE == STM32WB05N) */
   ret = aci_gatt_srv_authorize_resp_nwk(connection_handle, handle,
                                         operation_type, 0, attr_val_offset,
                                         data_length, data);
+#endif /* (BLUE_CORE == STM32WB05N) */
+
   if (ret != BLE_STATUS_SUCCESS)
   {
     BLE_MANAGER_PRINTF("aci_gatt_srv_authorize_resp_nwk() failed: 0x%02x\r\n", ret);
   }
 }
-#endif /* (BLUE_CORE != BLUENRG_LP) */
+#endif /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
 
 /**************************************************
   * Callback function to manage the notify events *

@@ -3,14 +3,14 @@
   ******************************************************************************
   * @file    main.h
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 4.0.0
-  * @date    11-October-2024
+  * @version 4.1.0
+  * @date    10-April-2025
   * @brief   Header for main.c file.
   *          This file contains the common defines of the application.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file

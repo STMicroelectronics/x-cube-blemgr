@@ -2,14 +2,14 @@
   ******************************************************************************
   * @file    ble_machine_learning_core.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.0.0
-  * @date    25-September-2024
+  * @version 2.1.0
+  * @date    11-March-2025
   * @brief   Add Machine Learning Core info services using vendor specific
   *          profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -49,9 +49,9 @@ __weak void read_request_machine_learning_core_function(uint8_t *mlc_out, uint8_
 static void attr_mod_request_machine_learning_core(void *ble_char_pointer, uint16_t attr_handle, uint16_t offset,
                                                    uint8_t data_length, uint8_t *att_data);
 
-#if (BLUE_CORE != BLUENRG_LP)
+#if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N))
 static void read_request_machine_learning_core(void *ble_char_pointer, uint16_t handle);
-#else /* (BLUE_CORE != BLUENRG_LP) */
+#else /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
 static void read_request_machine_learning_core(void *ble_char_pointer,
                                                uint16_t handle,
                                                uint16_t connection_handle,
@@ -59,7 +59,7 @@ static void read_request_machine_learning_core(void *ble_char_pointer,
                                                uint16_t attr_val_offset,
                                                uint8_t data_length,
                                                uint8_t data[]);
-#endif /* (BLUE_CORE != BLUENRG_LP) */
+#endif /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
 
 /* Exported functions ------------------------------------------------------- */
 /**
@@ -203,7 +203,7 @@ static void attr_mod_request_machine_learning_core(void *void_char_pointer, uint
   * @param  uint16_t handle Handle of the attribute
   * @retval None
   */
-#if (BLUE_CORE != BLUENRG_LP)
+#if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N))
 static void read_request_machine_learning_core(void *void_char_pointer, uint16_t handle)
 {
   uint8_t mlc_out[8];
@@ -211,7 +211,7 @@ static void read_request_machine_learning_core(void *void_char_pointer, uint16_t
   read_request_machine_learning_core_function(mlc_out, &mlc_status_mainpage);
   ble_machine_learning_core_update(mlc_out, &mlc_status_mainpage);
 }
-#else /* (BLUE_CORE != BLUENRG_LP) */
+#else /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
 static void read_request_machine_learning_core(void *ble_char_pointer,
                                                uint16_t handle,
                                                uint16_t connection_handle,
@@ -263,15 +263,22 @@ static void read_request_machine_learning_core(void *ble_char_pointer,
     }
   }
 
+#if (BLUE_CORE == STM32WB05N)
+  ret = aci_gatt_srv_authorize_resp_nwk(connection_handle, 0x0004, handle,
+                                        operation_type, 0, attr_val_offset,
+                                        data_length, data);
+#else /* (BLUE_CORE == STM32WB05N) */
   ret = aci_gatt_srv_authorize_resp_nwk(connection_handle, handle,
                                         operation_type, 0, attr_val_offset,
                                         data_length, data);
+#endif /* (BLUE_CORE == STM32WB05N) */
+
   if (ret != BLE_STATUS_SUCCESS)
   {
     BLE_MANAGER_PRINTF("aci_gatt_srv_authorize_resp_nwk() failed: 0x%02x\r\n", ret);
   }
 }
-#endif /* (BLUE_CORE != BLUENRG_LP) */
+#endif /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
 
 /**************************************************
   * Callback function to manage the notify events *

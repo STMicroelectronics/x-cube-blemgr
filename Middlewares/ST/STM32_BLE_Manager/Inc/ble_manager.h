@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_manager.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.0.0
-  * @date    25-September-2024
+  * @version 2.1.0
+  * @date    11-March-2025
   * @brief   BLE Manager services APIs
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -45,6 +45,8 @@ extern "C" {
 #define BLUENRG_MS      0x01
 #define BLUENRG_LP      0x02
 #define BLUE_WB         0x03
+#define STM32WB07_06    0x04
+#define STM32WB05N      0x05
 
 #if (BLUE_CORE == BLUENRG_MS)
 #include "hci.h"
@@ -76,6 +78,22 @@ extern "C" {
 #include "ble_gap_aci.h"
 #include "ble_hci_le.h"
 #include "ble_l2cap_aci.h"
+#elif (BLUE_CORE == STM32WB07_06)
+#include "stm32wb07_06_aci.h"
+#include "stm32wb07_06_hci_le.h"
+#include "stm32wb07_06_events.h"
+#include "hci_const.h"
+#include "hci_tl.h"
+#include "hci.h"
+#include "stm32wb07_06_utils.h"
+#elif (BLUE_CORE == STM32WB05N)
+#include "stm32wb05n_aci.h"
+#include "stm32wb05n_hci_le.h"
+#include "stm32wb05n_events.h"
+#include "hci_const.h"
+#include "hci_tl.h"
+#include "hci.h"
+#include "stm32wb_utils.h"
 #else /* BLUENRG_1_2 */
 #include "hci.h"
 #include "bluenrg1_hal_aci.h"
@@ -94,11 +112,11 @@ extern "C" {
 #define BLE_MANAGER_VERSION_PATCH '0'
 
 /* Length of AdvData in octets */
-#if (BLUE_CORE != BLUENRG_LP)
+#if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N))
 #define BLE_MANAGER_ADVERTISE_DATA_LENGHT 25
-#else /* (BLUE_CORE != BLUENRG_LP) */
+#else /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
 #define BLE_MANAGER_ADVERTISE_DATA_LENGHT 28
-#endif /* (BLUE_CORE != BLUENRG_LP) */
+#endif /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
 
 /* SDK value for used platform */
 #define BLE_MANAGER_STEVAL_WESU1_PLATFORM          0x01U
@@ -117,6 +135,7 @@ extern "C" {
 #define BLE_MANAGER_STSYS_SBU06_PLATFORM           0x10U
 #define BLE_MANAGER_SENSOR_TILE_BOX_PRO_B_PLATFORM 0x11U
 #define BLE_MANAGER_STEVAL_STWINBX1_B_PLATFORM     0x12U
+#define BLE_MANAGER_SENSOR_TILE_BOX_PRO_C_PLATFORM 0x13U
 #define BLE_MANAGER_NUCLEO_PLATFORM                0x80U
 #define BLE_MANAGER_STM32U5A5ZJ_NUCLEO_PLATFORM    0x7AU
 #define BLE_MANAGER_STM32U575ZI_NUCLEO_PLATFORM    0x7BU
@@ -124,23 +143,24 @@ extern "C" {
 #define BLE_MANAGER_STM32L053R8_NUCLEO_PLATFORM    0x7DU
 #define BLE_MANAGER_STM32L476RG_NUCLEO_PLATFORM    0x7EU
 #define BLE_MANAGER_STM32F401RE_NUCLEO_PLATFORM    0x7FU
+#define BLE_MANAGER_WB05N_PLATFORM                 0x8FU
 #define BLE_MANAGER_UNDEF_PLATFORM                 0xFFU
 
 #define BLE_MANAGER_CUSTOM_COMMAND_VALUE_NAN 0xDEADBEEF
 
 #define BLE_MANAGER_READ_CUSTOM_COMMAND "ReadCustomCommand"
 #ifdef BLE_MANAGER_SDKV2
-#if (BLUE_CORE != BLUENRG_LP)
+#if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N))
 #define BLE_MANAGER_CUSTOM_FIELD1 15
 #define BLE_MANAGER_CUSTOM_FIELD2 16
 #define BLE_MANAGER_CUSTOM_FIELD3 17
 #define BLE_MANAGER_CUSTOM_FIELD4 18
-#else /* (BLUE_CORE != BLUENRG_LP) */
+#else /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
 #define BLE_MANAGER_CUSTOM_FIELD1 18
 #define BLE_MANAGER_CUSTOM_FIELD2 19
 #define BLE_MANAGER_CUSTOM_FIELD3 20
 #define BLE_MANAGER_CUSTOM_FIELD4 21
-#endif /* (BLUE_CORE != BLUENRG_LP) */
+#endif /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
 #endif /* BLE_MANAGER_SDKV2 */
 
 #define COM_TYPE_ACC    1
@@ -223,9 +243,9 @@ typedef struct
 
   /* For creating a Random Connection PIN */
   uint8_t enable_random_secure_pin;
-#if (BLUE_CORE != BLUENRG_LP)
+#if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N))
   uint8_t advertising_filter;
-#endif /* (BLUE_CORE != BLUENRG_LP) */
+#endif /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
 
   /* Set to 1 for forcing a full BLE rescan for the Android/iOS "ST BLE Sensor" application */
   /* with the Secure connection it should not necessary because it will be managed directly by BLE Chip */
@@ -303,9 +323,9 @@ typedef struct
                               uint8_t data_length,
                               uint8_t *att_data);
   /* Read Request */
-#if (BLUE_CORE != BLUENRG_LP)
+#if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N))
   void (*read_request_cb)(void *ble_char_pointer, uint16_t handle);
-#else /* (BLUE_CORE != BLUENRG_LP) */
+#else /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
   void (*read_request_cb)(void *ble_char_pointer,
                           uint16_t handle,
                           uint16_t connection_handle,
@@ -313,7 +333,7 @@ typedef struct
                           uint16_t attr_val_offset,
                           uint8_t data_length,
                           uint8_t data[]);
-#endif /* (BLUE_CORE != BLUENRG_LP) */
+#endif /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
   /* Write Request */
   void (*write_request_cb)(void *ble_char_pointer,
                            uint16_t attr_handle,
@@ -413,10 +433,12 @@ extern ble_ext_custom_command_t *ext_config_custom_commands;
 extern ble_ext_custom_command_t *ext_config_last_custom_command;
 
 /* Exported Function prototypes --------------------------------------------- */
-#if (BLUE_CORE == BLUENRG_LP)
+#if ((BLUE_CORE == BLUENRG_LP) && (BLUE_CORE == STM32WB07_06))
 extern void init_ble_int_for_blue_nrglp(void);
-#endif /* (BLUE_CORE == BLUENRG_LP) */
-
+#endif /* (BLUE_CORE == BLUENRG_LP) && (BLUE_CORE == STM32WB07_06)) */
+#if (BLUE_CORE == STM32WB05N)
+extern void init_ble_int_for_stm32wb05n(void);
+#endif /* (BLUE_CORE == STM32WB05N) */
 /* Exported functions ------------------------------------------------------- */
 #if (BLUE_CORE == BLUE_WB)
 extern void hci_le_connection_complete_event(uint8_t status,

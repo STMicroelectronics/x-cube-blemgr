@@ -3,14 +3,14 @@
   ******************************************************************************
   * @file    app_blemgr.c
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 4.0.0
-  * @date    11-October-2024
+  * @version 4.1.0
+  * @date    10-April-2025
   * @brief   This file provides code for blemgr application.
   *
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -83,7 +83,7 @@ void MX_BLEMGR_Init(void)
   /* Initialize BLEMGR application */
 
   User_Init();
-  /* Initialize the BlueNRG stack and services */
+  /* Initialize the Bluetooth stack and services */
 
   bluetooth_init();
 
@@ -359,9 +359,9 @@ uint32_t debug_console_parsing(uint8_t *att_data, uint8_t data_length)
     SendBackData = 0;
 
     bytes_to_write = sprintf((char *)buffer_to_write, "Command:\r\n"
-                           "info-> System Info\r\n"
-                           "versionBle-> Ble Version\r\n"
-                           "uid-> STM32 UID value\r\n");
+                             "info-> System Info\r\n"
+                             "versionBle-> Ble Version\r\n"
+                             "uid-> STM32 UID value\r\n");
     term_update(buffer_to_write, bytes_to_write);
   }
   else if (!strncmp("info", (char *)(att_data), 4))
@@ -369,29 +369,29 @@ uint32_t debug_console_parsing(uint8_t *att_data, uint8_t data_length)
     SendBackData = 0;
 
     bytes_to_write = sprintf((char *)buffer_to_write, "\r\nSTMicroelectronics %s:\r\n"
-                           "\tVersion %c.%c.%c\r\n"
-                           "\t%s board"
-                           "\r\n",
-                           BLE_FW_PACKAGENAME,
-                           BLE_VERSION_FW_MAJOR, BLE_VERSION_FW_MINOR, BLE_VERSION_FW_PATCH,
-                           STM32_BOARD);
+                             "\tVersion %c.%c.%c\r\n"
+                             "\t%s board"
+                             "\r\n",
+                             BLE_FW_PACKAGENAME,
+                             BLE_VERSION_FW_MAJOR, BLE_VERSION_FW_MINOR, BLE_VERSION_FW_PATCH,
+                             STM32_BOARD);
 
     term_update(buffer_to_write, bytes_to_write);
 
     bytes_to_write = sprintf((char *)buffer_to_write, "\t(HAL %ld.%ld.%ld_%ld)\r\n"
-                           "\tCompiled %s %s"
+                             "\tCompiled %s %s"
 #if defined (__IAR_SYSTEMS_ICC__)
-                           " (IAR)\r\n",
+                             " (IAR)\r\n",
 #elif defined (__CC_ARM) || (defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)) /* For ARM Compiler 5 and 6 */
-                           " (KEIL)\r\n",
+                             " (KEIL)\r\n",
 #elif defined (__GNUC__)
-                           " (STM32CubeIDE)\r\n",
+                             " (STM32CubeIDE)\r\n",
 #endif /* IDE */
-                           HAL_GetHalVersion() >> 24,
-                           (HAL_GetHalVersion() >> 16) & 0xFF,
-                           (HAL_GetHalVersion() >> 8) & 0xFF,
-                           HAL_GetHalVersion()      & 0xFF,
-                           __DATE__, __TIME__);
+                             HAL_GetHalVersion() >> 24,
+                             (HAL_GetHalVersion() >> 16) & 0xFF,
+                             (HAL_GetHalVersion() >> 8) & 0xFF,
+                             HAL_GetHalVersion()      & 0xFF,
+                             __DATE__, __TIME__);
 
     term_update(buffer_to_write, bytes_to_write);
   }
@@ -402,10 +402,10 @@ uint32_t debug_console_parsing(uint8_t *att_data, uint8_t data_length)
     /* get the BlueNRG HW and FW versions */
     get_blue_nrg_version(&hwVersion, &fwVersion);
     bytes_to_write = sprintf((char *)buffer_to_write, "%s_%d.%d.%c\r\n",
-                           "BlueNRG2",
-                           (fwVersion >> 8) & 0xF,
-                           (fwVersion >> 4) & 0xF,
-                           ('a' + (fwVersion & 0xF)));
+                             "BlueNRG-2",
+                             (fwVersion >> 8) & 0xF,
+                             (fwVersion >> 4) & 0xF,
+                             ('a' + (fwVersion & 0xF)));
     term_update(buffer_to_write, bytes_to_write);
     SendBackData = 0;
   }
@@ -415,10 +415,10 @@ uint32_t debug_console_parsing(uint8_t *att_data, uint8_t data_length)
     uint8_t *uid = (uint8_t *)BLE_STM32_UUID;
     uint32_t MCU_ID = BLE_STM32_MCU_ID[0] & 0xFFF;
     bytes_to_write = sprintf((char *)buffer_to_write, "%.2X%.2X%.2X%.2X%.2X%.2X%.2X%.2X%.2X%.2X%.2X%.2X_%.3lX\r\n",
-                           uid[ 3], uid[ 2], uid[ 1], uid[ 0],
-                           uid[ 7], uid[ 6], uid[ 5], uid[ 4],
-                           uid[11], uid[ 10], uid[9], uid[8],
-                           MCU_ID);
+                             uid[ 3], uid[ 2], uid[ 1], uid[ 0],
+                             uid[ 7], uid[ 6], uid[ 5], uid[ 4],
+                             uid[11], uid[ 10], uid[9], uid[8],
+                             MCU_ID);
     term_update(buffer_to_write, bytes_to_write);
     SendBackData = 0;
   }
@@ -466,6 +466,7 @@ void write_request_config_function(uint8_t *att_data, uint8_t data_length)
           config_update(FEATURE_MASK_LED, Command, Data);
           break;
       }
+
       /* Update the LED feature */
       if (LedEnabled)
       {
@@ -602,4 +603,3 @@ void ext_config_info_command_callback(uint8_t *answer)
           HAL_GetHalVersion()      & 0xFF,
           __DATE__, __TIME__);
 }
-

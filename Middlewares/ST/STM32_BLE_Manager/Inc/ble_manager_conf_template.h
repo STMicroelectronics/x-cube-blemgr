@@ -9,7 +9,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -36,6 +36,8 @@ extern "C" {
  * BLUENRG_MS      0x01
  * BLUENRG_LP      0x02
  * BLUE_WB         0x03
+ * STM32WB07_06    0x04
+ * STM32WB05N      0x05
 */
 
 #define BLUE_CORE BLUENRG_LP

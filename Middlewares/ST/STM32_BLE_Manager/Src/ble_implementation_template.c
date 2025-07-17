@@ -9,7 +9,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -91,10 +91,10 @@ void bluetooth_init(void)
   /* For creating a Random Secure PIN */
   ble_stack_value.enable_random_secure_pin = ENABLE_RANDOM_SECURE_PIN;
 
-#if (BLUE_CORE != BLUENRG_LP)
+#if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N))
   /* Advertising policy for filtering (white list related) */
   ble_stack_value.advertising_filter = ADVERTISING_FILTER;
-#endif /* (BLUE_CORE != BLUENRG_LP)  */
+#endif /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N))  */
 
   /* Used platform */
   ble_stack_value.board_id = BLE_MANAGER_USED_PLATFORM;
@@ -112,7 +112,7 @@ void bluetooth_init(void)
   init_ble_manager();
 }
 
-#if (BLUE_CORE == BLUENRG_LP)
+#if ((BLUE_CORE == BLUENRG_LP) || (BLUE_CORE == STM32WB07_06))
 /**
   * @brief  Enable BlueNRG-LP Interrupt.
   * @param  None
@@ -125,7 +125,7 @@ void init_ble_int_for_blue_nrglp(void)
   HAL_NVIC_SetPriority(HCI_TL_SPI_EXTI_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(HCI_TL_SPI_EXTI_IRQn);
 }
-#endif /* (BLUE_CORE == BLUENRG_LP) */
+#endif /* ((BLUE_CORE == BLUENRG_LP) || (BLUE_CORE == STM32WB07_06)) */
 
 /**
   * @brief  Set Board Name.

@@ -9,7 +9,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -173,7 +173,7 @@ extern "C" {
 
 /* Package Version firmware */
 #define BLE_VERSION_FW_MAJOR  '4'
-#define BLE_VERSION_FW_MINOR  '0'
+#define BLE_VERSION_FW_MINOR  '1'
 #define BLE_VERSION_FW_PATCH  '0'
 
 /* Firmware Package Name */

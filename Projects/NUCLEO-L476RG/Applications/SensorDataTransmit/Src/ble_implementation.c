@@ -9,7 +9,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -40,13 +40,13 @@ __weak void reset_ble_manager(void);
 
 /* Private functions ---------------------------------------------------------*/
 
-/** @brief Initialize the BlueNRG stack and services
+/** @brief Initialize the Bluetooth stack and services
   * @param  None
   * @retval None
   */
 void bluetooth_init(void)
 {
-  /* BlueNRG stack setting */
+  /* Bluetooth stack setting */
   ble_stack_value.config_value_offsets                    = CONFIG_VALUE_OFFSETS;
   ble_stack_value.config_value_length                     = CONFIG_VALUE_LENGTH;
   ble_stack_value.gap_roles                               = GAP_ROLES;

@@ -76,7 +76,7 @@ In order to make the  program work, you must do the following:
 
 For IAR:
 
- - Open IAR toolchain (this firmware has been successfully tested with Embedded Workbench V9.20.1).
+ - Open IAR toolchain (this firmware has been successfully tested with Embedded Workbench V9.60.3).
  - Open the IAR project file EWARM\Project.eww
  - Rebuild all files 
 
@@ -88,7 +88,7 @@ For Keil µVision 5:
  
 For Integrated Development Environment for STM32:
 
- - Open STM32CubeIDE (this firmware has been successfully tested with Version 1.16.1).
+ - Open STM32CubeIDE (this firmware has been successfully tested with Version 1.18.0).
  - Set the default workspace proposed by the IDE (please be sure that there are not spaces in the workspace path).
  - Press "File" -> "Import" -> "Existing Projects into Workspace"; press "Browse" in the "Select root directory" and choose the path where the System
    Workbench project is located (it should be STM32CubeIDE). 
@@ -100,7 +100,7 @@ SRA Application Team
 
 ### <b>License</b>
 
-Copyright (c) 2024 STMicroelectronics.
+Copyright (c) 2025 STMicroelectronics.
 All rights reserved.
 
 This software is licensed under terms that can be found in the LICENSE file

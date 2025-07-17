@@ -9,7 +9,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -30,9 +30,7 @@ extern "C" {
 #endif
 
 /* Exported define ------------------------------------------------------------*/
-/* Comment/Uncomment the following define for enabling/disabling Cube2 middleware uses case */
-
-#ifndef CUBE_MX_2
+/* Code style compatibility with middlewares version for Cube2 */
 #define ble_status_t tBleStatus
 
 #define service_uuid_t Service_UUID_t
@@ -45,7 +43,6 @@ extern "C" {
 #define hci_vendor_specific_events_table_type_t hci_vendor_specific_events_table_type
 #define hci_events_table_type_t hci_events_table_type
 #define bonded_device_entry_t Bonded_Device_Entry_t
-#endif /* CUBE_MX_2 */
 
 /* Select the used bluetooth core:
  *
@@ -53,6 +50,8 @@ extern "C" {
  * BLUENRG_MS      0x01
  * BLUENRG_LP      0x02
  * BLUE_WB         0x03
+ * STM32WB07_06    0x04
+ * STM32WB05N      0x05
 */
 #define BLUE_CORE BLUENRG_1_2
 

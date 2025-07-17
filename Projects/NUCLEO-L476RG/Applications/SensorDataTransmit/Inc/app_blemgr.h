@@ -3,13 +3,13 @@
   ******************************************************************************
   * @file    app_blemgr.h
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 4.0.0
-  * @date    11-October-2024
+  * @version 4.1.0
+  * @date    10-April-2025
   * @brief   Header file for app_blemgr.c
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -34,7 +34,7 @@ extern "C" {
 #include "stm32l4xx_hal_exti.h"
 #include "stm32l4xx_nucleo.h"
 
-#include "SensorDataTransmit_config.h"
+#include "sensor_data_transmit_config.h"
 
 /* Exported macro ------------------------------------------------------------*/
 #define MCR_BLUEMS_F2I_1D(in, out_int, out_dec) {out_int = (int32_t)in; out_dec= (int32_t)((in-out_int)*10);};
