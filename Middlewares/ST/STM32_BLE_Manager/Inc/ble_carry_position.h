@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_carry_position.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Carry Position info service APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -41,25 +41,23 @@ typedef enum
 
 /* Exported functions ------------------------------------------------------- */
 /**
-  * @brief  Init Carry Position info service
-  * @param  None
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for Carry Position info service
+  * @brief  Init Carry Position service
+  * @retval *ble_char_pointer: Data structure pointer for Carry Position service
   */
 extern ble_char_object_t *ble_init_carry_position_service(void);
 
 #ifndef BLE_MANAGER_SDKV2
 /**
   * @brief  Setting Carry Position Advertise Data
-  * @param  uint8_t *manuf_data: Advertise Data
-  * @retval None
+  * @param  *manuf_data: Advertise Data
   */
 extern void ble_set_carry_position_advertise_data(uint8_t *manuf_data);
 #endif /* BLE_MANAGER_SDKV2 */
 
 /**
   * @brief  Update Carry Position characteristic
-  * @param  ble_cp_output_t carry_position_code Carry Position Recognized
-  * @retval ble_status_t   Status
+  * @param  carry_position_code Carry Position Recognized
+  * @retval status
   */
 extern ble_status_t ble_carry_position_update(ble_cp_output_t carry_position_code);
 

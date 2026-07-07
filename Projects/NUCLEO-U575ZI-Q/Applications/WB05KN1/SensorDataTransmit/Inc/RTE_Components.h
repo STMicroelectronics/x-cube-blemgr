@@ -22,14 +22,14 @@
 #define  __RTE_COMPONENTS_H__
 
 /* Defines ------------------------------------------------------------------*/
-/* STMicroelectronics.X-CUBE-BLEMGR.4.1.0 */
+/* STMicroelectronics.X-CUBE-BLEMGR.4.2.0 */
 #define USE_PARSON
 #define BLE_MANAGER_ENVIRONMENTAL
 #define BLE_MANAGER_LED
 #define BLE_MANAGER_SENSOR_FUSION
 #define SENSOR_DATA_TRANSMIT
 #define STM32WB05N
-/* STMicroelectronics.X-CUBE-WB05N.2.0.0 */
+/* STMicroelectronics.X-CUBE-WB05N.2.1.0 */
 #define USE_SPI
 #define HCI_TL
 #define HCI_TL_INTERFACE

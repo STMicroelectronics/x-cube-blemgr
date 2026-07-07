@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_general_purpose.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   General Purpose info services APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -38,17 +38,17 @@ extern "C" {
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init General Purpose Service
-  * @brief  uint8_t ble_char_uuid Number of General Purpose Char (UUID[14] byte)
-  * @param  uint8_t size Dimensions of the BLE chars without counting the 2 bytes used for TimeStamp
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for General Purpose info service
+  * @param  ble_char_uuid Number of General Purpose Char (UUID[14] byte)
+  * @param  size Dimensions of the BLE chars without counting the 2 bytes used for TimeStamp
+  * @retval *ble_char_pointer: Data structure pointer for General Purpose info service
   */
 extern ble_char_object_t *ble_init_general_purpose_service(uint8_t ble_char_uuid, uint8_t size);
 
 /**
   * @brief  Update General Purpose characteristic value
-  * @param  uint8_t ble_char_uuid Number of General Purpose Char (UUID[14] byte)
-  * @param  uint8_t *data data to Update
-  * @retval ble_status_t   Status
+  * @param  ble_char_uuid Number of General Purpose Char (UUID[14] byte)
+  * @param  *data Data to Update
+  * @retval status
   */
 extern ble_status_t ble_general_purpose_status_update(uint8_t ble_char_uuid, uint8_t *data);
 

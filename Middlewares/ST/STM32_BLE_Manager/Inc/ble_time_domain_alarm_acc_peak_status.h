@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_time_domain_alarm_acc_peak_status.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Time Domain Alarm Acc Peak Status info services APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -61,16 +61,15 @@ typedef struct
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init FFT Alarm Acc Peak Status info service
-  * @param  None
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for FFT Alarm Acc Peak Status info service
+  * @retval *ble_char_pointer: Data structure pointer for FFT Alarm Acc Peak Status info service
   */
 extern ble_char_object_t *ble_init_td_alarm_acc_peak_status_service(void);
 
 /*
  * @brief  Update FFT Alarm Acc Peak status value
- * @param  ble_manager_td_alarm_acc_peak_status_alarm_t            alarm
- * @param  ble_manager_td_alarm_acc_peak_status_generic_value_t      acc_peak
- * @retval ble_status_t   Status
+ * @param  alarm
+ * @param  acc_peak
+ * @retval status
  */
 extern ble_status_t ble_td_alarm_acc_peak_status_update(ble_manager_td_alarm_acc_peak_status_alarm_t alarm,
                                                         ble_manager_td_alarm_acc_peak_status_generic_value_t acc_peak);

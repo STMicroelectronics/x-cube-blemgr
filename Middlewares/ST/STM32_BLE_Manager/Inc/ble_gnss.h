@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_gnss.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Gnss info services APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -29,19 +29,18 @@ extern "C" {
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init gnss info service
-  * @param  None
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for gnss info service
+  * @retval *ble_char_pointer: Data structure pointer for gnss info service
   */
 extern ble_char_object_t *ble_init_gnss_service(void);
 
 /**
   * @brief  Update Gnss characteristic
-  * @param  int32_t  latitude    Gnss latitude
-  * @param  int32_t  longitude   Gnss longitude
-  * @param  uint32_t altitude    Gnss altitude
-  * @param  uint8_t  number_sat  Number of satellites in view
-  * @param  uint8_t  sig_quality Signal quality indicator
-  * @retval ble_status_t   Status
+  * @param  latitude    Gnss latitude
+  * @param  longitude   Gnss longitude
+  * @param  altitude    Gnss altitude
+  * @param  number_sat  Number of satellites in view
+  * @param  sig_quality Signal quality indicator
+  * @retval status
   */
 extern ble_status_t ble_gnss_update(int32_t latitude, int32_t longitude, uint32_t altitude, uint8_t number_sat,
                                     uint8_t sig_quality);

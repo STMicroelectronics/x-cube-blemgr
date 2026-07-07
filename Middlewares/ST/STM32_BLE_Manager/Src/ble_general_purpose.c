@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_general_purpose.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Add General Purpose info services using vendor specific profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -48,9 +48,9 @@ static void attr_mod_request_general_purpose(void *ble_char_pointer, uint16_t at
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init General Purpose Service
-  * @brief  uint8_t ble_char_uuid Number of General Purpose Char (UUID[14] byte)
-  * @param  uint8_t size Dimensions of the BLE chars without counting the 2 bytes used for TimeStamp
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for General Purpose info service
+  * @param  ble_char_uuid Number of General Purpose Char (UUID[14] byte)
+  * @param  size Dimensions of the BLE chars without counting the 2 bytes used for TimeStamp
+  * @retval *ble_char_pointer: Data structure pointer for General Purpose info service
   */
 extern ble_char_object_t *ble_init_general_purpose_service(uint8_t ble_char_uuid, uint8_t size)
 {
@@ -91,9 +91,9 @@ extern ble_char_object_t *ble_init_general_purpose_service(uint8_t ble_char_uuid
 
 /**
   * @brief  Update General Purpose characteristic value
-  * @param  uint8_t ble_char_uuid Number of General Purpose Char (UUID[14] byte)
-  * @param  uint8_t *data Data to Update
-  * @retval ble_status_t   Status
+  * @param  ble_char_uuid Number of General Purpose Char (UUID[14] byte)
+  * @param  *data Data to Update
+  * @retval status
   */
 ble_status_t ble_general_purpose_status_update(uint8_t ble_char_uuid, uint8_t *data)
 {
@@ -148,16 +148,15 @@ ble_status_t ble_general_purpose_status_update(uint8_t ble_char_uuid, uint8_t *d
 /**
   * @brief  This function is called when there is a change on the gatt attribute
   *         With this function it's possible to understand if led is subscribed or not to the one service
-  * @param  void *void_char_pointer
-  * @param  uint16_t attr_handle Handle of the attribute
-  * @param  uint16_t offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
-  *                          - Bits 0-14: offset of the reported value inside the attribute.
-  *                          - Bit 15: if the entire value of the attribute does not fit inside a single
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
-  * @param  uint8_t data_length length of the data
-  * @param  uint8_t *att_data attribute data
-  * @retval None
+  * @param  *void_char_pointer
+  * @param  attr_handle Handle of the attribute
+  * @param  offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
+  *                 - Bits 0-14: offset of the reported value inside the attribute.
+  *                 - Bit 15: if the entire value of the attribute does not fit inside a single
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
+  * @param  data_length length of the data
+  * @param  *att_data attribute data
   */
 static void attr_mod_request_general_purpose(void *void_char_pointer, uint16_t attr_handle, uint16_t offset,
                                              uint8_t data_length, uint8_t *att_data)
@@ -232,8 +231,8 @@ static void attr_mod_request_general_purpose(void *void_char_pointer, uint16_t a
   *************************************************/
 /**
   * @brief  Callback Function for Un/Subscription Feature
-  * @param  ble_notify_event_t event Sub/Unsub
-  * @retval None
+  * @param  ble_char_uuid Number of General Purpose Char (UUID[14] byte)
+  * @param  event Sub/Unsub
   */
 __weak void notify_event_general_purpose(uint8_t ble_char_uuid, ble_notify_event_t event)
 {

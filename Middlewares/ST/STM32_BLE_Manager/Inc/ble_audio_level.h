@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_audio_level.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Audio level info services APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -29,25 +29,24 @@ extern "C" {
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init audio level info service
-  * @param  uint8_t audio_level_number: Number of audio level features (up to 4 audio level are supported)
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for audio level info service
+  * @param  audio_level_number: Number of audio level features (up to 4 audio level are supported)
+  * @retval *ble_char_pointer: Data structure pointer for audio level info service
   */
 extern ble_char_object_t *ble_init_audio_level_service(uint8_t audio_level_number);
 
 #ifndef BLE_MANAGER_SDKV2
 /**
   * @brief  Setting Environmental Advertise Data
-  * @param  uint8_t *manuf_data: Advertise Data
-  * @retval None
+  * @param  *manuf_data: Advertise Data
   */
 extern void ble_set_audio_level_advertise_data(uint8_t *manuf_data);
 #endif /* BLE_MANAGER_SDKV2 */
 
 /**
   * @brief  Update audio level characteristic values
-  * @param  uint16_t *audio_level_data:    SNR dB audio level array
-  * @param  uint8_t audio_level_number:    Number of audio level features (up to 4 audio level are supported)
-  * @retval ble_status_t   Status
+  * @param  *audio_level_data:    SNR dB audio level array
+  * @param  audio_level_number:   Number of audio level features (up to 4 audio level are supported)
+  * @retval status
   */
 extern ble_status_t ble_audio_level_update(uint16_t *audio_level_data, uint8_t audio_level_number);
 

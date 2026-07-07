@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -34,10 +34,11 @@
 /* UART timeout values */
 #define BLE_UART_SHORT_TIMEOUT      30
 #define BLE_UART_LONG_TIMEOUT       300
+#define UART_ARRAY_SIZE             532U
 
 /* Private variables ---------------------------------------------------------*/
 EXTI_HandleTypeDef hexti3;
-uint8_t RxBuffer;
+uint8_t  RxBuffer[UART_ARRAY_SIZE];
 /* Private function prototypes -----------------------------------------------*/
 
 static void HCI_TL_SPI_Enable_IRQ(void);
@@ -379,18 +380,3 @@ void init_ble_int_for_stm32wb05n(void)
   HAL_NVIC_SetPriority(EXTI3_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI3_IRQn);
 }
-#ifdef USE_UART
-/**
-  * @brief  UART interrupt callback.*
-  * @param  huart handle
-  * @retval None
-  */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-  if (huart == &UART_INSTANCE)
-  {
-    hci_input_event(&RxBuffer, 1);
-    HAL_UART_Receive_IT(&UART_INSTANCE, &RxBuffer, HCI_TYPE_SIZE);
-  }
-}
-#endif /* USE_UART */

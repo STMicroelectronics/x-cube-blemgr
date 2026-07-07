@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_neai_anomaly_detection.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Add Anomaly Detection info services using vendor specific profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -53,6 +53,10 @@ static void write_request_ad(void *ble_char_pointer, uint16_t handle, uint16_t o
                              uint8_t *att_data);
 
 /* Exported functions ------------------------------------------------------- */
+/**
+  * @brief  Init NeaiAnomalyDetection info service
+  * @retval *ble_char_pointer: Data structure pointer for environmental info service
+  */
 ble_char_object_t *ble_init_ad_service(void)
 {
   /* Data structure pointer for BLE service */
@@ -81,7 +85,7 @@ ble_char_object_t *ble_init_ad_service(void)
 
 /**
   * @brief  Update NEAI AD characteristic value
-  * @param  ble_ad_output_t output contains info about:
+  * @param  output contains info about:
   * - phase = (idle=0x00) | (learning=0x01) | (detecting=0x02)
   * - state = (NEAI_OK=0x00) | .....
   * - progress = from 0x00 to 0x64 (completion percentage)
@@ -91,7 +95,7 @@ ble_char_object_t *ble_init_ad_service(void)
   * ONLY THE PHASE FIELD IS MANDATORY
   * if you don't want use one of the others info, you can put NEAI_AD_ESCAPE
   *
-  * @retval ble_status_t:          Status
+  * @retval status
   */
 ble_status_t ble_neai_anomaly_detection_update(ble_ad_output_t output)
 {
@@ -133,16 +137,15 @@ ble_status_t ble_neai_anomaly_detection_update(ble_ad_output_t output)
 /**
   * @brief  This function is called when there is a change on the gatt attribute
   *         With this function it's possible to understand if Piano is subscribed or not to the one service
-  * @param  void *void_char_pointer
-  * @param  uint16_t attr_handle Handle of the attribute
-  * @param  uint16_t offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
-  *                          - Bits 0-14: offset of the reported value inside the attribute.
-  *                          - Bit 15: if the entire value of the attribute does not fit inside a single
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
-  * @param  uint8_t data_length length of the data
-  * @param  uint8_t *att_data attribute data
-  * @retval None
+  * @param  *void_char_pointer
+  * @param  attr_handle Handle of the attribute
+  * @param  offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
+  *                 - Bits 0-14: offset of the reported value inside the attribute.
+  *                 - Bit 15: if the entire value of the attribute does not fit inside a single
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
+  * @param  data_length length of the data
+  * @param  *att_data attribute data
   */
 
 static void attr_mod_request_ad(void *void_char_pointer, uint16_t attr_handle, uint16_t offset, uint8_t data_length,
@@ -174,16 +177,15 @@ static void attr_mod_request_ad(void *void_char_pointer, uint16_t attr_handle, u
 
 /**
   * @brief  This event is given when a write request is received by the server from the client.
-  * @param  void *ble_char_pointer
-  * @param  uint16_t handle Handle of the attribute
-  * @param  uint16_t offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
-  *                          - Bits 0-14: offset of the reported value inside the attribute.
-  *                          - Bit 15: if the entire value of the attribute does not fit inside a single
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
-  * @param  uint8_t data_length length of the data
-  * @param  uint8_t *att_data attribute data
-  * @retval None
+  * @param  *ble_char_pointer
+  * @param  handle Handle of the attribute
+  * @param  offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
+  *                 - Bits 0-14: offset of the reported value inside the attribute.
+  *                 - Bit 15: if the entire value of the attribute does not fit inside a single
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
+  * @param  data_length length of the data
+  * @param  *att_data attribute data
   */
 static void write_request_ad(void *ble_char_pointer, uint16_t handle, uint16_t offset, uint8_t data_length,
                              uint8_t *att_data)
@@ -196,8 +198,7 @@ static void write_request_ad(void *ble_char_pointer, uint16_t handle, uint16_t o
   *************************************************/
 /**
   * @brief  Callback Function for Un/Subscription Feature
-  * @param  ble_notify_event_t Event Sub/Unsub
-  * @retval None
+  * @param  event Sub/Unsub
   */
 __weak void notify_event_neai_anomaly_detection(ble_notify_event_t event)
 {
@@ -219,9 +220,8 @@ __weak void notify_event_neai_anomaly_detection(ble_notify_event_t event)
   *******************************************************/
 /**
   * @brief  Callback Function for Neai Anomaly Detection write request.
-  * @param  uint8_t *att_data
-  * @param  uint8_t data_length
-  * @retval None
+  * @param  *att_data
+  * @param  data_length
   */
 __weak void write_request_neai_anomaly_detection_function(uint8_t *att_data, uint8_t data_length)
 {

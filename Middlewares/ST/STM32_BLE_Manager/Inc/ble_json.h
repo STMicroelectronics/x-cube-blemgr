@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_json.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   BLE_Json info services APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -44,16 +44,15 @@ extern char *json_answer;
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init Json info service
-  * @param  None
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for Json info service
+  * @retval *ble_char_pointer: Data structure pointer for Json info service
   */
 extern ble_char_object_t *ble_init_json_service(void);
 
 /**
-  * @brief  Json send buffer
-  * @param  uint8_t* buffer
-  * @param  uint32_t len
-  * @retval ble_status_t Status
+  * @brief  Json Send Buffer
+  * @param  *buffer
+  * @param  len
+  * @retval status
   */
 extern ble_status_t ble_json_update(uint8_t *buffer, uint32_t len);
 

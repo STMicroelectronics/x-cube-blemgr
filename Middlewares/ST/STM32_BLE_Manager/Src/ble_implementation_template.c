@@ -9,7 +9,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -40,9 +40,8 @@ __weak void reset_ble_manager(void);
 
 /* Private functions ---------------------------------------------------------*/
 
-/** @brief Initialize the BlueNRG stack and services
-  * @param  None
-  * @retval None
+/**
+  * @brief Initialize the BlueNRG stack and services
   */
 void bluetooth_init(void)
 {
@@ -115,8 +114,6 @@ void bluetooth_init(void)
 #if ((BLUE_CORE == BLUENRG_LP) || (BLUE_CORE == STM32WB07_06))
 /**
   * @brief  Enable BlueNRG-LP Interrupt.
-  * @param  None
-  * @retval None
   */
 void init_ble_int_for_blue_nrglp(void)
 {
@@ -129,8 +126,6 @@ void init_ble_int_for_blue_nrglp(void)
 
 /**
   * @brief  Set Board Name.
-  * @param  None
-  * @retval None
   */
 __weak void set_board_name(void)
 {
@@ -142,8 +137,6 @@ __weak void set_board_name(void)
 
 /**
   * @brief  Enable/Disable Extended Configuration Command.
-  * @param  None
-  * @retval None
   */
 __weak void enable_extended_configuration_commad(void)
 {
@@ -176,8 +169,6 @@ __weak void enable_extended_configuration_commad(void)
 
 /**
   * @brief  Custom Service Initialization.
-  * @param  None
-  * @retval None
   */
 void ble_init_custom_service(void)
 {
@@ -280,8 +271,7 @@ void ble_init_custom_service(void)
 
 /**
   * @brief  Set Custom Advertize Data.
-  * @param  uint8_t *manuf_data: Advertize Data
-  * @retval None
+  * @param  *manuf_data: Advertize Data
   */
 __weak void ble_set_custom_advertise_data(uint8_t *manuf_data)
 {
@@ -304,8 +294,6 @@ __weak void ble_set_custom_advertise_data(uint8_t *manuf_data)
 #if (BLUE_CORE != BLUE_WB)
 /**
   * @brief  reset_ble_manager
-  * @param  None
-  * @retval None
   */
 __weak void reset_ble_manager(void)
 {

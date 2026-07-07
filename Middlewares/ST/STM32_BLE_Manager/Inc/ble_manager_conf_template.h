@@ -9,7 +9,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -38,9 +38,25 @@ extern "C" {
  * BLUE_WB         0x03
  * STM32WB07_06    0x04
  * STM32WB05N      0x05
+ * STM32WBA        0x06
 */
 
 #define BLUE_CORE BLUENRG_LP
+
+#if ((BLUE_CORE == BLUENRG_1_2) || (BLUE_CORE == BLUENRG_MS) || (BLUE_CORE == STM32WB05N) || (BLUE_CORE == STM32WBA))
+/* Code style compatibility with middlewares version for Cube2 */
+#if (BLUE_CORE != STM32WB05N)
+#define ble_status_t tBleStatus
+#endif /* (BLUE_CORE != STM32WB05N) */
+
+#define service_uuid_t Service_UUID_t
+#define service_uuid_128 Service_UUID_128
+
+#define char_uuid_t Char_UUID_t
+#define char_uuid_128 Char_UUID_128
+
+#define bonded_device_entry_t Bonded_Device_Entry_t
+#endif /* ((BLUE_CORE == BLUENRG_1_2/BLUENRG_MS/STM32WB05N/STM32WBA)) */
 
 /* Comment this define if do not use parson */
 #define BLE_MANAGER_USE_PARSON
@@ -131,10 +147,6 @@ extern "C" {
 #ifdef BLE_MANAGER_DEBUG
 /**
   * User can change here printf with a custom implementation.
-  * For example:
-  * #include "STBOX1_config.h"
-  * #include "main.h"
-  * #define BLE_MANAGER_PRINTF  STBOX1_PRINTF
   */
 
 #include <stdio.h>

@@ -31,7 +31,7 @@ vertical-align: middle;
 <p>Application for STEVAL-MKBOXPRO Rev A&B board.</p>
 <p>Example Description:</p>
 <p>The SensorDataTransmit is a sample application to help the user to
-set and configure bluetooth connectivity from board to mobile
+set and configure Bluetooth connectivity from the board to a mobile
 application (such as ST BLE Sensor) according to STM32_BLE_Manager
 middleware.</p>
 <p>The Example application initizializes all the Components and Library
@@ -39,24 +39,22 @@ creating 3 Custom Bluetooth services:</p>
 <ul>
 <li>The first service exposes:
 <ul>
-<li>the HW characteristics related to randomly Temperature, Humidity,
+<li>the HW characteristics related to randomly generated Temperature, Humidity,
 Pressure values and LED status.</li>
-<li>the SW characteristic: the quaternions randomly generated</li>
+<li>the SW characteristic: the randomly generated quaternions</li>
 </ul></li>
-<li>The second Service exposes the console services where we have
+<li>The second service exposes the console services where we have
 stdin/stdout and stderr capabilities</li>
-<li>The last Service is used for configuration purpose The example
-application allows the user to control the initialization phase via
+<li>The last service is used for configuration purpose</li></ul>
+<p>The example application allows the user to control the initialization phase via
 UART. Launch a terminal application and set the UART port to 115200 bps,
-8 bit, No Parity, 1 stop bit.</li>
-</ul>
+8 bit, No Parity, 1 stop bit.</p>
+
 <p>This example must be used with the related ST BLE Sensor Android or
-iOS application available on Play/itune store, in order to read the sent
-information by Bluetooth Low Energy protocol</p>
+iOS application available on Play/iTune Store, in order to read the information sent over Bluetooth Low Energy protocol</p>
 <h3 id="required-stm32cubemx-settings"><b>Required STM32CubeMX settings</b></h3>
 <p>Before code generation in Project Manager:</p>
 <ul>
-<li>for toolchain/IDE EWARM set Min Version to 8.50 (default is 9.20).</li>
 <li>for toolchain/IDE MKD-ARM set Min Version to 5.32 (default is 5.39).</li>
 </ul>
 <p>Without this setting the code will be building but the flashing on board will fail.</p>
@@ -85,10 +83,10 @@ Energy protocol</li>
 <h3 id="dependencies"><b>Dependencies</b></h3>
 <p>STM32Cube packages:</p>
 <ul>
-<li>STM32U5xx drivers from STM32CubeU5 V1.7.0</li>
+<li>STM32U5xx drivers from STM32CubeU5 V1.8.0</li>
 </ul>
 <h3 id="how-to-use-it"><b>How to use it?</b></h3>
-<p>This package contains projects for 3 IDEs viz. IAR, Keil µVision 5
+<p>This package contains projects for 3 IDEs IAR, Keil µVision 5
 and Integrated Development Environment for STM32. In order to make the
 program work, you must do the following:</p>
 <ul>
@@ -113,7 +111,7 @@ tested with MDK-ARM Professional Version: 5.38.0).</li>
 <p>For Integrated Development Environment for STM32:</p>
 <ul>
 <li>Open STM32CubeIDE (this firmware has been successfully tested with
-Version 1.18.0).</li>
+Version 2.1.1).</li>
 <li>Set the default workspace proposed by the IDE (please be sure that
 there are not spaces in the workspace path).</li>
 <li>Press “File” -&gt; “Import” -&gt; “Existing Projects into
@@ -125,7 +123,7 @@ STM32CubeIDE).</li>
 <h3 id="author"><b>Author</b></h3>
 <p>SRA Application Team</p>
 <h3 id="license"><b>License</b></h3>
-<p>Copyright (c) 2025 STMicroelectronics. All rights reserved.</p>
+<p>Copyright (c) 2026 STMicroelectronics. All rights reserved.</p>
 <p>This software is licensed under terms that can be found in the
 LICENSE file in the root directory of this software component. If no
 LICENSE file comes with this software, it is provided AS-IS.</p>

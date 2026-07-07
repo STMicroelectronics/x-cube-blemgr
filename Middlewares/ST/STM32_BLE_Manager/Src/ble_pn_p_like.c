@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_pn_p_like.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Add PnPLike info services using vendor specific profile.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -56,8 +56,7 @@ static void write_request_pn_p_like(void *ble_char_pointer, uint16_t handle, uin
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init PnPLike info service
-  * @param  None
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for PnPLike info service
+  * @retval *ble_char_pointer: Data structure pointer for PnPLike info service
   */
 ble_char_object_t *ble_init_pn_p_like_service(void)
 {
@@ -85,9 +84,9 @@ ble_char_object_t *ble_init_pn_p_like_service(void)
 
 /**
   * @brief  PnPLike Send Buffer
-  * @param  uint8_t* buffer
-  * @param  uint32_t len
-  * @retval ble_status_t Status
+  * @param  *buffer
+  * @param  len
+  * @retval status
   */
 ble_status_t ble_pn_p_like_update(uint8_t *buffer, uint8_t len)
 {
@@ -100,8 +99,7 @@ ble_status_t ble_pn_p_like_update(uint8_t *buffer, uint8_t len)
 
 /**
   * @brief  PnPLike Set Max Char Length
-  * @param  uint16_t max_char_length
-  * @retval none
+  * @param  max_char_length
   */
 void ble_pn_p_like_set_max_char_length(uint16_t max_char_length)
 {
@@ -110,8 +108,7 @@ void ble_pn_p_like_set_max_char_length(uint16_t max_char_length)
 
 /**
   * @brief  PnPLike Get Max Char Length
-  * @param  None
-  * @retval uint16_t max_char_length
+  * @retval max_char_length
   */
 uint16_t ble_pn_p_like_get_max_char_length(void)
 {
@@ -120,8 +117,6 @@ uint16_t ble_pn_p_like_get_max_char_length(void)
 
 /**
   * @brief  PnPLike Reset Status
-  * @param  None
-  * @retval None
   */
 void ble_pn_p_like_reset(void)
 {
@@ -136,16 +131,15 @@ void ble_pn_p_like_reset(void)
 /**
   * @brief  This function is called when there is a change on the GATT attribute
   *         With this function it's possible to understand if PnPLike is subscribed or not to the one service
-  * @param  void *void_char_pointer
-  * @param  uint16_t attr_handle Handle of the attribute
-  * @param  uint16_t offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
-  *                          - Bits 0-14: offset of the reported value inside the attribute.
-  *                          - Bit 15: if the entire value of the attribute does not fit inside a single
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
-  * @param  uint8_t data_length length of the data
-  * @param  uint8_t *att_data attribute data
-  * @retval None
+  * @param  *void_char_pointer
+  * @param  attr_handle Handle of the attribute
+  * @param  offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
+  *                 - Bits 0-14: offset of the reported value inside the attribute.
+  *                 - Bit 15: if the entire value of the attribute does not fit inside a single
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
+  * @param  data_length length of the data
+  * @param  *att_data attribute data
   */
 static void attr_mod_request_pn_p_like(void *void_char_pointer, uint16_t attr_handle, uint16_t offset,
                                        uint8_t data_length,
@@ -177,16 +171,15 @@ static void attr_mod_request_pn_p_like(void *void_char_pointer, uint16_t attr_ha
 
 /**
   * @brief  This event is given when a write request is received by the server from the client.
-  * @param  void *ble_char_pointer
-  * @param  uint16_t handle Handle of the attribute
-  * @param  uint16_t offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
-  *                          - Bits 0-14: offset of the reported value inside the attribute.
-  *                          - Bit 15: if the entire value of the attribute does not fit inside a single
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
-  * @param  uint8_t data_length length of the data
-  * @param  uint8_t *att_data attribute data
-  * @retval None
+  * @param  *ble_char_pointer
+  * @param  handle Handle of the attribute
+  * @param  offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
+  *                 - Bits 0-14: offset of the reported value inside the attribute.
+  *                 - Bit 15: if the entire value of the attribute does not fit inside a single
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
+  * @param  data_length length of the data
+  * @param  *att_data attribute data
   */
 static void write_request_pn_p_like(void *ble_char_pointer, uint16_t handle, uint16_t offset, uint8_t data_length,
                                     uint8_t *att_data)
@@ -213,8 +206,7 @@ static void write_request_pn_p_like(void *ble_char_pointer, uint16_t handle, uin
   *************************************************/
 /**
   * @brief  Callback Function for Un/Subscription Feature
-  * @param  ble_notify_event_t Event Sub/Unsub
-  * @retval None
+  * @param  event Sub/Unsub
   */
 __weak void notify_event_pn_p_like(ble_notify_event_t event)
 {
@@ -236,9 +228,8 @@ __weak void notify_event_pn_p_like(ble_notify_event_t event)
   *******************************************************/
 /**
   * @brief  Callback Function for PnP Like write request.
-  * @param  uint8_t *received_msg
-  * @param  uint8_t msg_length
-  * @retval None
+  * @param  *received_msg
+  * @param  msg_length
   */
 __weak void write_request_pn_p_like_function(uint8_t *received_msg, uint32_t msg_length)
 {

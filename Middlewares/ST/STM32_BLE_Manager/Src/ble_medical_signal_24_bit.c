@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_medical_signal_24_bit.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Add Medical Signal 24 Bits service using vendor specific profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -40,8 +40,8 @@ static void attr_mod_request_medical_signal_24_bit(void *ble_char_pointer, uint1
 
 /**
   * @brief  Init Medical Signal 24 Bits info service
-  * @param  uint16_t max_lenght Max Char Length
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for Normalization info service
+  * @param  max_lenght Max Char Length
+  * @retval *ble_char_pointer: Data structure pointer for Normalization info service
   */
 extern ble_char_object_t *ble_init_medical_signal_24_bit_service(uint16_t max_lenght)
 {
@@ -54,7 +54,7 @@ extern ble_char_object_t *ble_init_medical_signal_24_bit_service(uint16_t max_le
   ble_char_pointer->attr_mod_request_cb = attr_mod_request_medical_signal_24_bit;
   COPY_MEDICAL_SIGNAL_24BIT_CHAR_UUID((ble_char_pointer->uuid));
   ble_char_pointer->char_uuid_type = UUID_TYPE_128;
-  ble_char_pointer->char_uuid_type = max_lenght;
+  ble_char_pointer->char_value_length = max_lenght;
   ble_char_pointer->char_properties = ((uint8_t)CHAR_PROP_NOTIFY);
   ble_char_pointer->security_permissions = ATTR_PERMISSION_NONE;
   ble_char_pointer->gatt_evt_mask = GATT_NOTIFY_READ_REQ_AND_WAIT_FOR_APPL_RESP;
@@ -71,20 +71,20 @@ extern ble_char_object_t *ble_init_medical_signal_24_bit_service(uint16_t max_le
 
 /**
   * @brief  Update Medical Signal 24 Bits characteristic
-  * @param  ble_medical_signal_24_bit_t data_type_id Signal Data Type ID
-  * @param  uint32_t time_stamp time_stamp
-  * @param  int32_t sample_data_size Total Number of Values
-  * @param  int32_t *sample_data  Values array
-  * @retval ble_status_t   Status
+  * @param  data_type_id Signal Data Type ID
+  * @param  time_stamp time_stamp
+  * @param  sample_data_size Total Number of Values
+  * @param  *sample_data  Values array
+  * @retval status
   */
 ble_status_t ble_medical_signal_24_bit_update(ble_medical_signal_24_bit_t data_type_id, uint32_t time_stamp,
-                                              int32_t sample_data_size,
+                                              uint32_t sample_data_size,
                                               int32_t *sample_data)
 {
   ble_status_t ret;
   uint8_t buff[DEFAULT_MAX_MEDICAL_SIGNAL_24BIT_CHAR_LEN];
-  int32_t counter;
-  int32_t total_size = sample_data_size * 3 /*3 == 24/8 */ + 4 /* TimeStamp */ + 1 /* data_type_id */;
+  uint32_t counter;
+  uint32_t total_size = (sample_data_size * 3U) /*3 == 24/8 */ + 4U /* TimeStamp */ + 1U /* data_type_id */;
 
   if (total_size > medical_signal_24_bit_max_char_length)
   {
@@ -98,10 +98,10 @@ ble_status_t ble_medical_signal_24_bit_update(ble_medical_signal_24_bit_t data_t
 
   for (counter = 0; counter < sample_data_size; counter++)
   {
-    STORE_LE_24(buff + 5 + (counter * 3), sample_data[counter]);
+    STORE_LE_24(buff + 5U + (counter * 3U), sample_data[counter]);
   }
 
-  ret = ACI_GATT_UPDATE_CHAR_VALUE(&ble_medical_signal_24_bit, 0, total_size, buff);
+  ret = ACI_GATT_UPDATE_CHAR_VALUE(&ble_medical_signal_24_bit, 0, (uint8_t)total_size, buff);
 
   if (ret != (ble_status_t)BLE_STATUS_SUCCESS)
   {
@@ -121,8 +121,7 @@ ble_status_t ble_medical_signal_24_bit_update(ble_medical_signal_24_bit_t data_t
 
 /**
   * @brief  Medical Signal 24 Bits Get Max Char Length
-  * @param  None
-  * @retval uint16_t max_char_length
+  * @retval max_char_length
   */
 uint16_t ble_medical_signal_24_bit_get_max_char_length(void)
 {
@@ -131,8 +130,7 @@ uint16_t ble_medical_signal_24_bit_get_max_char_length(void)
 
 /**
   * @brief  Medical Signal 24 Bits Set Max Char Length
-  * @param  uint16_t max_char_length
-  * @retval none
+  * @param  max_char_length
   */
 void ble_medical_signal_24_bit_set_max_char_length(uint16_t max_char_length)
 {
@@ -142,16 +140,15 @@ void ble_medical_signal_24_bit_set_max_char_length(uint16_t max_char_length)
 /**
   * @brief  This function is called when there is a change on the gatt attribute
   *         With this function it's possible to understand if E-Compass is subscribed or not to the one service
-  * @param  void *void_char_pointer
-  * @param  uint16_t attr_handle Handle of the attribute
-  * @param  uint16_t offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
-  *                          - Bits 0-14: offset of the reported value inside the attribute.
-  *                          - Bit 15: if the entire value of the attribute does not fit inside a single
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
-  * @param  uint8_t data_length length of the data
-  * @param  uint8_t *att_data attribute data
-  * @retval None
+  * @param  *void_char_pointer
+  * @param  attr_handle Handle of the attribute
+  * @param  offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
+  *                 - Bits 0-14: offset of the reported value inside the attribute.
+  *                 - Bit 15: if the entire value of the attribute does not fit inside a single
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
+  * @param  data_length length of the data
+  * @param  *att_data attribute data
   */
 static void attr_mod_request_medical_signal_24_bit(void *void_char_pointer, uint16_t attr_handle, uint16_t offset,
                                                    uint8_t data_length, uint8_t *att_data)
@@ -185,10 +182,9 @@ static void attr_mod_request_medical_signal_24_bit(void *void_char_pointer, uint
   ***********************************************************/
 /**
   * @brief  Callback Function for Un/Subscription Feature
-  * @param  ble_notify_event_t Event Sub/Unsub
-  * @retval None
+  * @param  event Sub/Unsub
   */
-void notify_event_medical_signal_24_bit(ble_notify_event_t event)
+__weak void notify_event_medical_signal_24_bit(ble_notify_event_t event)
 {
   /* Prevent unused argument(s) compilation warning */
   BLE_UNUSED(event);

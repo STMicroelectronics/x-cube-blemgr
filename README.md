@@ -57,9 +57,9 @@ Here is the list of references to user documents:
 
 ## Development Toolchains and Compilers
 
--   IAR Embedded Workbench for ARM (EWARM) toolchain V9.20.1 + STLink/V2
+-   IAR Embedded Workbench for ARM (EWARM) toolchain V9.60.3 + STLink/V2
 -   RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.38.0 + ST-LINK/V2
--   Integrated Development Environment for STM32 (STM32CubeIDE) V1.17.0 + ST-LINK
+-   Integrated Development Environment for STM32 (STM32CubeIDE) V2.1.1 + ST-LINK
 	
 ## Dependencies 
 

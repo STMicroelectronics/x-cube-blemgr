@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_piano.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   BLE_Pianoinfo services APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -33,16 +33,15 @@ extern "C" {
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init Piano info service
-  * @param  None
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for High Speed Data Log info service
+  * @retval *ble_char_pointer: Data structure pointer for Piano info service
   */
 extern ble_char_object_t *ble_init_piano_service(void);
 
 /**
   * @brief  Piano Send Buffer
-  * @param  uint8_t* buffer
-  * @param  uint32_t len
-  * @retval ble_status_t   Status
+  * @param  *buffer
+  * @param  len
+  * @retval status
   */
 extern ble_status_t ble_piano_send_buffer(uint8_t *buffer, uint32_t len);
 

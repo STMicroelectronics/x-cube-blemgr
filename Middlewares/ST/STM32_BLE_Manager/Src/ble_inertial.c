@@ -1,14 +1,14 @@
 /**
   ******************************************************************************
-  * @file    BLE_Inertial.c
+  * @file    ble_inertial.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Add inertial info services using vendor specific profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -58,10 +58,10 @@ static void attr_mod_request_inertial(void *ble_char_pointer, uint16_t attr_hand
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init inertial info service
-  * @param  uint8_t acc_enable:   1 for enabling the BLE accelerometer feature, 0 otherwise.
-  * @param  uint8_t gyro_enable:  1 for enabling the BLE gyroscope feature, 0 otherwise.
-  * @param  uint8_t mag_enable:  1 for esabling the BLE magnetometer feature, 0 otherwise.
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for environmental info service
+  * @param  acc_enable:   1 for enabling the BLE accelerometer feature, 0 otherwise.
+  * @param  gyro_enable:  1 for enabling the BLE gyroscope feature, 0 otherwise.
+  * @param  mag_enable:  1 for esabling the BLE magnetometer feature, 0 otherwise.
+  * @retval *ble_char_pointer: Data structure pointer for environmental info service
   */
 ble_char_object_t *ble_init_inertial_service(uint8_t acc_enable, uint8_t gyro_enable, uint8_t mag_enable)
 {
@@ -135,8 +135,7 @@ ble_char_object_t *ble_init_inertial_service(uint8_t acc_enable, uint8_t gyro_en
 #ifndef BLE_MANAGER_SDKV2
 /**
   * @brief  Setting Inertial Advertise Data
-  * @param  uint8_t *manuf_data: Advertise Data
-  * @retval None
+  * @param  *manuf_data: Advertise Data
   */
 void ble_set_inertial_advertise_data(uint8_t *manuf_data)
 {
@@ -162,10 +161,10 @@ void ble_set_inertial_advertise_data(uint8_t *manuf_data)
 
 /**
   * @brief  Update acceleration/Gryoscope and Magneto characteristics value
-  * @param  ble_manager_inertial_axes_t acc:     Structure containing acceleration value in mg
-  * @param  ble_manager_inertial_axes_t gyro:    Structure containing Gyroscope value
-  * @param  ble_manager_inertial_axes_t mag:     Structure containing magneto value
-  * @retval ble_status_t      Status
+  * @param  *acc:     Structure containing acceleration value in mg
+  * @param  *gyro:    Structure containing Gyroscope value
+  * @param  *mag:     Structure containing magneto value
+  * @retval status
   */
 ble_status_t ble_acc_gyro_mag_update(ble_manager_inertial_axes_t *acc,
                                      ble_manager_inertial_axes_t *gyro,
@@ -243,16 +242,15 @@ ble_status_t ble_acc_gyro_mag_update(ble_manager_inertial_axes_t *acc,
 /**
   * @brief  This function is called when there is a change on the gatt attribute
   *         With this function it's possible to understand if inertial is subscribed or not to the one service
-  * @param  void *void_char_pointer
-  * @param  uint16_t attr_handle Handle of the attribute
-  * @param  uint16_t offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
-  *                          - Bits 0-14: offset of the reported value inside the attribute.
-  *                          - Bit 15: if the entire value of the attribute does not fit inside a single
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
-  * @param  uint8_t data_length length of the data
-  * @param  uint8_t *att_data attribute data
-  * @retval None
+  * @param  void_char_pointer
+  * @param  attr_handle Handle of the attribute
+  * @param  offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
+  *                  - Bits 0-14: offset of the reported value inside the attribute.
+  *                  - Bit 15: if the entire value of the attribute does not fit inside a single
+  *                    ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
+  *                    ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
+  * @param  data_length length of the data
+  * @param  att_data attribute data
   */
 static void attr_mod_request_inertial(void *void_char_pointer, uint16_t attr_handle, uint16_t offset,
                                       uint8_t data_length,
@@ -287,8 +285,7 @@ static void attr_mod_request_inertial(void *void_char_pointer, uint16_t attr_han
   *************************************************/
 /**
   * @brief  Callback Function for Un/Subscription Feature
-  * @param  ble_notify_event_t Event Sub/Unsub
-  * @retval None
+  * @param  event Sub/Unsub
   */
 __weak void notify_event_inertial(ble_notify_event_t event)
 {

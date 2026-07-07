@@ -3,13 +3,15 @@
   ******************************************************************************
   * @file    ble_implementation.h
   * @author  System Research & Applications Team - Catania Lab.
+  * @version 4.2.0
+  * @date    30-April-2026
   * @brief   BLE Implementation header template file.
   *          This file should be copied to the application folder and renamed
   *          to ble_implementation.h.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -137,7 +139,7 @@ extern "C" {
 
 /* Package Version firmware */
 #define BLE_VERSION_FW_MAJOR  '4'
-#define BLE_VERSION_FW_MINOR  '1'
+#define BLE_VERSION_FW_MINOR  '2'
 #define BLE_VERSION_FW_PATCH  '0'
 
 /* Firmware Package Name */

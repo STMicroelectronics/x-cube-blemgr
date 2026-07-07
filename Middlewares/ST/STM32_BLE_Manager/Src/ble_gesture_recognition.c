@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_gesture_recognition.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Add Gesture Recognition service using vendor specific profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -60,9 +60,8 @@ static void read_request_gesture_recognition(void *ble_char_pointer,
 
 /* Exported functions ------------------------------------------------------- */
 /**
-  * @brief  Init Gesture Recognition service
-  * @param  None
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for Gesture Recognition service
+  * @brief  Init Gesture Recognition info service
+  * @retval *ble_char_pointer: Data structure pointer for Gesture Recognition info service
   */
 ble_char_object_t *ble_init_gesture_recognition_service(void)
 {
@@ -91,8 +90,7 @@ ble_char_object_t *ble_init_gesture_recognition_service(void)
 #ifndef BLE_MANAGER_SDKV2
 /**
   * @brief  Setting Gesture Recognition Advertise Data
-  * @param  uint8_t *manuf_data: Advertise Data
-  * @retval None
+  * @param  *manuf_data: Advertise Data
   */
 void ble_set_gesture_recognition_advertise_data(uint8_t *manuf_data)
 {
@@ -102,8 +100,8 @@ void ble_set_gesture_recognition_advertise_data(uint8_t *manuf_data)
 
 /**
   * @brief  Update Gesture Recognition characteristic
-  * @param  ble_gr_output_t gesture_recognition_code Gesture Recognition Recognized
-  * @retval ble_status_t   Status
+  * @param  gesture_recognition_code Gesture Recognition Recognized
+  * @retval status
   */
 ble_status_t ble_gesture_recognition_update(ble_gr_output_t gesture_recognition_code)
 {
@@ -135,16 +133,15 @@ ble_status_t ble_gesture_recognition_update(ble_gr_output_t gesture_recognition_
   * @brief  This function is called when there is a change on the gatt attribute
   *         With this function it's possible to understand if Gesture Recognition is subscribed
   *         or not to the one service
-  * @param  void *void_char_pointer
-  * @param  uint16_t attr_handle Handle of the attribute
-  * @param  uint16_t offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
-  *                          - Bits 0-14: offset of the reported value inside the attribute.
-  *                          - Bit 15: if the entire value of the attribute does not fit inside a single
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
-  * @param  uint8_t data_length length of the data
-  * @param  uint8_t *att_data attribute data
-  * @retval None
+  * @param  *void_char_pointer
+  * @param  attr_handle Handle of the attribute
+  * @param  offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
+  *                 - Bits 0-14: offset of the reported value inside the attribute.
+  *                 - Bit 15: if the entire value of the attribute does not fit inside a single
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
+  * @param  data_length length of the data
+  * @param  *att_data attribute data
   */
 static void attr_mod_request_gesture_recognition(void *void_char_pointer, uint16_t attr_handle, uint16_t offset,
                                                  uint8_t data_length, uint8_t *att_data)
@@ -175,9 +172,8 @@ static void attr_mod_request_gesture_recognition(void *void_char_pointer, uint16
 
 /**
   * @brief  This event is given when a read request is received by the server from the client.
-  * @param  void *void_char_pointer
-  * @param  uint16_t handle Handle of the attribute
-  * @retval None
+  * @param  *void_char_pointer
+  * @param  handle Handle of the attribute
   */
 #if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N))
 static void read_request_gesture_recognition(void *void_char_pointer, uint16_t handle)
@@ -241,8 +237,7 @@ static void read_request_gesture_recognition(void *ble_char_pointer,
   *************************************************/
 /**
   * @brief  Callback Function for Un/Subscription Feature
-  * @param  ble_notify_event_t Event Sub/Unsub
-  * @retval None
+  * @param  event Sub/Unsub
   */
 __weak void notify_event_gesture_recognition(ble_notify_event_t event)
 {
@@ -264,8 +259,7 @@ __weak void notify_event_gesture_recognition(ble_notify_event_t event)
   *******************************************************/
 /**
   * @brief  Callback Function for Gesture Recognition read request.
-  * @param  ble_gr_output_t *gesture_recognition_code
-  * @retval None
+  * @param  *gesture_recognition_code
   */
 __weak void read_request_gesture_recognition_function(ble_gr_output_t *gesture_recognition_code)
 {

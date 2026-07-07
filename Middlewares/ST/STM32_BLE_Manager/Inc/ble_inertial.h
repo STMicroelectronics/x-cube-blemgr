@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_inertial.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Inertial info services APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -45,28 +45,27 @@ typedef struct
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init inertial info service
-  * @param  uint8_t acc_enable:   1 for enabling the BLE accelerometer feature, 0 otherwise.
-  * @param  uint8_t gyro_enable:  1 for enabling the BLE gyroscope feature, 0 otherwise.
-  * @param  uint8_t mag_enable:  1 for esabling the BLE magnetometer feature, 0 otherwise.
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for environmental info service
+  * @param  acc_enable:   1 for enabling the BLE accelerometer feature, 0 otherwise.
+  * @param  gyro_enable:  1 for enabling the BLE gyroscope feature, 0 otherwise.
+  * @param  mag_enable:  1 for esabling the BLE magnetometer feature, 0 otherwise.
+  * @retval *ble_char_pointer: Data structure pointer for environmental info service
   */
 extern ble_char_object_t *ble_init_inertial_service(uint8_t acc_enable, uint8_t gyro_enable, uint8_t mag_enable);
 
 #ifndef BLE_MANAGER_SDKV2
 /**
   * @brief  Setting Inertial Advertise Data
-  * @param  uint8_t *manuf_data: Advertise Data
-  * @retval None
+  * @param  *manuf_data: Advertise Data
   */
 extern void ble_set_inertial_advertise_data(uint8_t *manuf_data);
 #endif /* BLE_MANAGER_SDKV2 */
 
 /**
   * @brief  Update acceleration/Gryoscope and Magneto characteristics value
-  * @param  ble_manager_inertial_axes_t acc:     Structure containing acceleration value in mg
-  * @param  ble_manager_inertial_axes_t gyro:    Structure containing Gyroscope value
-  * @param  ble_manager_inertial_axes_t mag:     Structure containing magneto value
-  * @retval ble_status_t      Status
+  * @param  *acc:     Structure containing acceleration value in mg
+  * @param  *gyro:    Structure containing Gyroscope value
+  * @param  *mag:     Structure containing magneto value
+  * @retval status
   */
 extern ble_status_t ble_acc_gyro_mag_update(ble_manager_inertial_axes_t *acc,
                                             ble_manager_inertial_axes_t *gyro,

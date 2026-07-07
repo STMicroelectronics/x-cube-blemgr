@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_pn_p_like.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   ble_pn_p_like info services APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -34,38 +34,32 @@ extern "C" {
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init PnPLike info service
-  * @param  None
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for PnPLike info service
+  * @retval *ble_char_pointer: Data structure pointer for PnPLike info service
   */
 extern ble_char_object_t *ble_init_pn_p_like_service(void);
 
 /**
-  * @brief  PnPLike send buffer
-  * @param  uint8_t* buffer
-  * @param  uint32_t len
-  * @retval ble_status_t Status
+  * @brief  PnPLike Send Buffer
+  * @param  *buffer
+  * @param  len
+  * @retval status
   */
 extern ble_status_t ble_pn_p_like_update(uint8_t *buffer, uint8_t len);
 
-
 /**
   * @brief  PnPLike Set Max Char Length
-  * @param  uint16_t max_char_length
-  * @retval none
+  * @param  max_char_length
   */
 extern void ble_pn_p_like_set_max_char_length(uint16_t max_char_length);
 
 /**
   * @brief  PnPLike Get Max Char Length
-  * @param  None
-  * @retval uint16_t max_char_length
+  * @retval max_char_length
   */
 extern uint16_t ble_pn_p_like_get_max_char_length(void);
 
 /**
   * @brief  PnPLike Reset Status
-  * @param  None
-  * @retval None
   */
 extern void ble_pn_p_like_reset(void);
 

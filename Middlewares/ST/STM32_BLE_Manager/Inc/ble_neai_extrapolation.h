@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_neai_extrapolation.h
   * @author  System Research & Applications Team - System LAB DU.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   NEAI Extrapolation info services APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -89,14 +89,22 @@ typedef enum
 
 /**
   * @brief  Init extrapolation info service
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for extrapolation info service
+  * @retval *ble_char_pointer: Data structure pointer for extrapolation info service
   */
 extern ble_char_object_t *ble_init_neai_extrapolation_service(void);
 
 /**
-  * @brief  Update extrapolation characteristic value according to extrapolation library output
-  * @param  ble_e_output_t    output
-  * @retval ble_status_t        status
+  * @brief  Update NEAI Extrapolation Characteristic Value
+  * @param  output contains info about:
+  * - phase = (IDLE=0x00) | (EXTRAPOLATION=0x01) | (BUSY=0x02)
+  * - state = (NEAI_OK=0x00) | (NEAI_NOINIT=0x01) | ...
+  * - extrapolated_value = ...
+  * - measurement_unit = ...
+  * - timestamp = ...
+  *
+  * ONLY THE PHASE FIELD IS MANDATORY
+  *
+  * @retval status
   */
 extern ble_status_t ble_neai_extrapolation_update(ble_e_output_t output);
 

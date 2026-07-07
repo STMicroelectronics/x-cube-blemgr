@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_e_compass.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   E-Compass info service APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -33,24 +33,22 @@ extern "C" {
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init E-Compass info service
-  * @param  None
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for E-Compass info service
+  * @retval *ble_char_pointer: Data structure pointer for E-Compass info service
   */
 extern ble_char_object_t *ble_init_e_compass_service(void);
 
 #ifndef BLE_MANAGER_SDKV2
 /**
   * @brief  Setting E-Compass Advertise Data
-  * @param  uint8_t *manuf_data: Advertise Data
-  * @retval None
+  * @param  *manuf_data: Advertise Data
   */
 extern void ble_set_e_compass_advertise_data(uint8_t *manuf_data);
 #endif /* BLE_MANAGER_SDKV2 */
 
 /**
   * @brief  Update E-Compass characteristic
-  * @param  uint16_t angle measured
-  * @retval ble_status_t   Status
+  * @param  angle measured
+  * @retval status
   */
 extern ble_status_t ble_e_compass_update(uint16_t angle);
 

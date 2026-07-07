@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_objects_detection.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Object detection info services APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -29,16 +29,15 @@ extern "C" {
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init Object Detection info service
-  * @param  None
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for object detection info service
+  * @retval *ble_char_pointer: Data structure pointer for object detection info service
   */
 extern ble_char_object_t *ble_init_objects_detection_service(void);
 
 /**
   * @brief  Update number of the objects and related distance value detection (by ToF sensor)
-  * @param  uint16_t distances Distance of the detected objects
-  * @param  uint8_t  human_presence Detected object inside fixed distance range
-  * @retval ble_status_t   Status
+  * @param  distances Distance of the detected objects
+  * @param  human_presence Detected object inside fixed distance range
+  * @retval status
   */
 extern ble_status_t ble_objects_detection_status_update(uint16_t *distances, uint8_t human_presence);
 

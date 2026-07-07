@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_machine_learning_core.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Machine Learning Core info services APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -36,16 +36,16 @@ typedef enum
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init Machine Learning Core info service
-  * @param  ble_machine_learning_core_num_reg_t num_reg Number MLC registers
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for Machine Learning Core info service
+  * @param  num_reg Number MLC registers
+  * @retval *ble_char_pointer: Data structure pointer for Machine Learning Core info service
   */
 extern ble_char_object_t *ble_init_machine_learning_core_service(ble_machine_learning_core_num_reg_t num_reg);
 
 /**
   * @brief  Update Machine Learning Core output registers characteristic
-  * @param  uint8_t *mlc_out pointers to 8 MLC register
-  * @param  uint8_t *mlc_status_mainpage pointer to the MLC status bits from 1 to 8
-  * @retval ble_status_t Status
+  * @param  *mlc_out pointers to 8 MLC register
+  * @param  *mlc_status_mainpage pointer to the MLC status bits from 1 to 8
+  * @retval status
   */
 extern ble_status_t ble_machine_learning_core_update(uint8_t *mlc_out, uint8_t *mlc_status_mainpage);
 

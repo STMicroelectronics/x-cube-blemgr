@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_manager.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   BLE Manager services APIs
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -30,6 +30,15 @@ extern "C" {
 #include <stdlib.h>
 #include <stdint.h>
 
+/* Bluetooth core supported */
+#define BLUENRG_1_2     0x00
+#define BLUENRG_MS      0x01
+#define BLUENRG_LP      0x02
+#define BLUE_WB         0x03
+#define STM32WB07_06    0x04
+#define STM32WB05N      0x05
+#define STM32WBA        0x06
+
 #include "ble_manager_conf.h"
 
 #if !defined(BLE_UNUSED)
@@ -40,13 +49,7 @@ extern "C" {
 #include "parson.h"
 #endif /* BLE_MANAGER_NO_PARSON */
 
-/* Bluetooth core supported */
-#define BLUENRG_1_2     0x00
-#define BLUENRG_MS      0x01
-#define BLUENRG_LP      0x02
-#define BLUE_WB         0x03
-#define STM32WB07_06    0x04
-#define STM32WB05N      0x05
+
 
 #if (BLUE_CORE == BLUENRG_MS)
 #include "hci.h"
@@ -94,6 +97,15 @@ extern "C" {
 #include "hci_tl.h"
 #include "hci.h"
 #include "stm32wb_utils.h"
+#elif (BLUE_CORE == STM32WBA)
+#include "ble_gatt_aci.h"
+#include "ble_gap_aci.h"
+#include "ble_hal_aci.h"
+#include "ble_hci_le.h"
+#include "ble_events.h"
+#include "hci_const.h"
+#include "hci_tl.h"
+#include "hci.h"
 #else /* BLUENRG_1_2 */
 #include "hci.h"
 #include "bluenrg1_hal_aci.h"
@@ -112,11 +124,11 @@ extern "C" {
 #define BLE_MANAGER_VERSION_PATCH '0'
 
 /* Length of AdvData in octets */
-#if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N))
+#if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N) && (BLUE_CORE != STM32WBA))
 #define BLE_MANAGER_ADVERTISE_DATA_LENGHT 25
-#else /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
+#else /* ((BLUE_CORE != BLUENRG_LP/STM32WB07_06/STM32WB05N/STM32WBA)) */
 #define BLE_MANAGER_ADVERTISE_DATA_LENGHT 28
-#endif /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
+#endif /* ((BLUE_CORE != BLUENRG_LP/STM32WB07_06/STM32WB05N/STM32WBA)) */
 
 /* SDK value for used platform */
 #define BLE_MANAGER_STEVAL_WESU1_PLATFORM          0x01U
@@ -144,23 +156,24 @@ extern "C" {
 #define BLE_MANAGER_STM32L476RG_NUCLEO_PLATFORM    0x7EU
 #define BLE_MANAGER_STM32F401RE_NUCLEO_PLATFORM    0x7FU
 #define BLE_MANAGER_WB05N_PLATFORM                 0x8FU
+#define BLE_MANAGER_WBA_PLATFORM                  0x0DU
 #define BLE_MANAGER_UNDEF_PLATFORM                 0xFFU
 
 #define BLE_MANAGER_CUSTOM_COMMAND_VALUE_NAN 0xDEADBEEF
 
 #define BLE_MANAGER_READ_CUSTOM_COMMAND "ReadCustomCommand"
 #ifdef BLE_MANAGER_SDKV2
-#if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N))
+#if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N) && (BLUE_CORE != STM32WBA))
 #define BLE_MANAGER_CUSTOM_FIELD1 15
 #define BLE_MANAGER_CUSTOM_FIELD2 16
 #define BLE_MANAGER_CUSTOM_FIELD3 17
 #define BLE_MANAGER_CUSTOM_FIELD4 18
-#else /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
+#else /* ((BLUE_CORE != BLUENRG_LP/STM32WB07_06/STM32WB05N/STM32WBA)) */
 #define BLE_MANAGER_CUSTOM_FIELD1 18
 #define BLE_MANAGER_CUSTOM_FIELD2 19
 #define BLE_MANAGER_CUSTOM_FIELD3 20
 #define BLE_MANAGER_CUSTOM_FIELD4 21
-#endif /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
+#endif /* ((BLUE_CORE != BLUENRG_LP/STM32WB07_06/STM32WB05N/STM32WBA)) */
 #endif /* BLE_MANAGER_SDKV2 */
 
 #define COM_TYPE_ACC    1
@@ -189,6 +202,10 @@ extern "C" {
 
 #if (BLUE_CORE == BLUE_WB)
 #define BLE_ERROR_UNSPECIFIED ERR_UNSPECIFIED_ERROR
+#endif /* (BLUE_CORE == BLUE_WB) */
+
+#if (BLUE_CORE == STM32WBA)
+#define BLE_ERROR_UNSPECIFIED BLE_STATUS_ERROR
 #endif /* (BLUE_CORE == BLUE_WB) */
 
 /* Exported Macros -----------------------------------------------------------*/
@@ -423,7 +440,7 @@ extern uint8_t set_connectable;
 extern ble_stack_object_t ble_stack_value;
 extern ble_extended_configuration_object_t ble_extended_configuration_value;
 
-/* Manufacter Advertise data */
+/* Manufacturer Advertise data */
 extern uint8_t manuf_data[BLE_MANAGER_ADVERTISE_DATA_LENGHT];
 
 extern uint8_t max_ble_char_std_out_len;
@@ -514,13 +531,19 @@ extern void send_error(char *message);
 extern void send_info(char *message);
 #endif /* BLE_MANAGER_NO_PARSON */
 
+/**
+  * @brief  Get hardware and firmware version
+  * @param  hw_version Hardware version
+  * @param  fw_version Firmware version
+  * @retval Status
+  */
 extern uint8_t get_blue_nrg_version(uint8_t *hw_version, uint16_t *fw_version);
 
 /**
   * @brief
-  * @param  uint8_t* buffer
-  * @param  uint8_t len
-  * @retval ble_status_t   Status
+  * @param *buffer Buffer to send
+  * @param  len    Length of the buffer
+  * @retval status
   */
 extern ble_status_t ble_std_out_send_buffer(uint8_t *buffer, uint8_t len);
 
@@ -545,6 +568,12 @@ extern uint32_t ble_command_tp_parse(uint8_t **buffer_out, uint8_t *buffer_in, u
 extern uint32_t ble_command_tp_encapsulate(uint8_t *buffer_out, uint8_t *buffer_in, uint32_t len,
                                            uint32_t byte_packet_size);
 
+/**
+  * @brief  Update Extended Configuration characteristic value
+  * @param  *data string to write
+  * @param  length length of string to write
+  * @retval status
+  */
 extern ble_status_t ble_ext_configuration_update(uint8_t *data, uint32_t length);
 
 extern ble_custom_commad_result_t *parse_custom_command(ble_ext_custom_command_t *loc_custom_commands,
@@ -585,7 +614,7 @@ extern void write_request_config_function(uint8_t *att_data, uint8_t data_length
 /***********************************************************************************************
   * Callback functions prototypes to manage the extended configuration characteristic commands *
   **********************************************************************************************/
-extern void ext_ext_config_uid_command_callback(uint8_t **uid);
+extern void ext_ext_config_uid_command_callback(uint32_t **uid);
 extern void ext_config_version_fw_command_callback(uint8_t *answer);
 extern void ext_config_info_command_callback(uint8_t *answer);
 extern void ext_config_help_command_callback(uint8_t *answer);

@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_time_domain_alarm_speed_rms_status.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Time Domain Alarm Speed RMS Status info services APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -61,17 +61,16 @@ typedef struct
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init Time Domain Alarm Speed RMS Status info service
-  * @param  None
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for
-  *                                              Time Domain Alarm Speed RMS Status info service
+  * @retval *ble_char_pointer: Data structure pointer for
+  *                            Time Domain Alarm Speed RMS Status info service
   */
 extern ble_char_object_t *ble_init_td_alarm_speed_rms_status_service(void);
 
 /*
  * @brief  Update Time Domain Alarm Speed RMS status value
- * @param  ble_td_alarm_speed_rms_status_t              alarm
- * @param  ble_td_alarm_speed_rms_status_generic_value_t        speed_rms_value
- * @retval ble_status_t   Status
+ * @param  alarm
+ * @param  speed_rms_value
+ * @retval status
  */
 extern ble_status_t ble_td_alarm_speed_rms_status_update(ble_td_alarm_speed_rms_status_t alarm,
                                                          ble_td_alarm_speed_rms_status_generic_value_t speed_rms_value);

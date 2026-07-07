@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_acc_event.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Acceleromenter HW Event service APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -49,25 +49,23 @@ typedef enum
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init HW Acceleromenter Event info service
-  * @param  None
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for HW Acceleromenter Event info service
+  * @retval *ble_char_pointer: Data structure pointer for HW Acceleromenter Event info service
   */
 extern ble_char_object_t *ble_init_acc_env_service(void);
 
 #ifndef BLE_MANAGER_SDKV2
 /**
   * @brief  Setting HW Acceleromenter Event Advertise Data
-  * @param  uint8_t *manuf_data: Advertise Data
-  * @retval None
+  * @param  *manuf_data: Advertise Data
   */
 extern void ble_set_acc_env_advertise_data(uint8_t *manuf_data);
 #endif /* BLE_MANAGER_SDKV2 */
 
 /**
-  * @brief  Update HW Acceleromenter Event characteristic value
-  * @param  uint8_t acc_events
-  * @param  uint16_t num_steps
-  * @retval ble_status_t: Status
+  * @brief  Update  HW Acceleromenter Event characteristic
+  * @param  acc_events
+  * @param  num_steps
+  * @retval status
   */
 extern ble_status_t ble_acc_env_update(uint8_t acc_events, uint16_t num_steps);
 

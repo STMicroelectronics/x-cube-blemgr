@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_sensor_fusion.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Sensor Fusion info service APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -48,25 +48,24 @@ typedef struct
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init Sensor Fusion info service
-  * @param  uint8_t number_quaternions_to_send  Number of quaternions send (1,2,3)
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for Sensor Fusion info service
+  * @param  number_quaternions_to_send  Number of quaternions send (1,2,3)
+  * @retval *ble_char_pointer: Data structure pointer for Sensor Fusion info service
   */
 extern ble_char_object_t *ble_init_sensor_fusion_service(uint8_t number_quaternions_to_send);
 
 #ifndef BLE_MANAGER_SDKV2
 /**
   * @brief  Setting Sensor Fusion Advertise Data
-  * @param  uint8_t *manuf_data: Advertise Data
-  * @retval None
+  * @param  *manuf_data: Advertise Data
   */
 extern void ble_set_sensor_fusion_advertise_data(uint8_t *manuf_data);
 #endif /* BLE_MANAGER_SDKV2 */
 
 /**
   * @brief  Update quaternions characteristic value
-  * @param  ble_motion_sensor_axes_t *data Structure containing the quaterions
-  * @param  uint8_t number_quaternions_to_send  Number of quaternions send (1,2,3)
-  * @retval ble_status_t      Status
+  * @param  *data Structure containing the quaterions
+  * @param  number_quaternions_to_send  Number of quaternions send (1,2,3)
+  * @retval status
   */
 extern ble_status_t ble_sensor_fusion_update(ble_motion_sensor_axes_t *data, uint8_t number_quaternions_to_send);
 

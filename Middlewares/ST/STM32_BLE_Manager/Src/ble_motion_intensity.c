@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_motion_intensity.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Add Motion Intensity service using vendor specific profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -60,9 +60,8 @@ static void read_request_motion_intensity(void *ble_char_pointer,
 
 /* Exported functions ------------------------------------------------------- */
 /**
-  * @brief  Init Motion Intensity service
-  * @param  None
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for Motion Intensity service
+  * @brief  Init Motion Intensity info service
+  * @retval *ble_char_pointer: Data structure pointer for Motion Intensity info service
   */
 ble_char_object_t *ble_init_motion_intensity_service(void)
 {
@@ -91,8 +90,7 @@ ble_char_object_t *ble_init_motion_intensity_service(void)
 #ifndef BLE_MANAGER_SDKV2
 /**
   * @brief  Setting Motion Intensity Advertise Data
-  * @param  uint8_t *manuf_data: Advertise Data
-  * @retval None
+  * @param  *manuf_data: Advertise Data
   */
 void ble_set_motion_intensity_advertise_data(uint8_t *manuf_data)
 {
@@ -102,8 +100,8 @@ void ble_set_motion_intensity_advertise_data(uint8_t *manuf_data)
 
 /**
   * @brief  Update Motion Intensity characteristic
-  * @param  ble_id_output_t motion_intensity_code Motion Intensity Recognized
-  * @retval ble_status_t   Status
+  * @param  motion_intensity_code Motion Intensity Recognized
+  * @retval status
   */
 ble_status_t ble_motion_intensity_update(ble_id_output_t motion_intensity_code)
 {
@@ -134,16 +132,15 @@ ble_status_t ble_motion_intensity_update(ble_id_output_t motion_intensity_code)
 /**
   * @brief  This function is called when there is a change on the gatt attribute
   *         With this function it's possible to understand if Motion Intensity is subscribed or not to the one service
-  * @param  void *void_char_pointer
-  * @param  uint16_t attr_handle Handle of the attribute
-  * @param  uint16_t offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
-  *                          - Bits 0-14: offset of the reported value inside the attribute.
-  *                          - Bit 15: if the entire value of the attribute does not fit inside a single
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
-  * @param  uint8_t data_length length of the data
-  * @param  uint8_t *att_data attribute data
-  * @retval None
+  * @param  *void_char_pointer
+  * @param  attr_handle Handle of the attribute
+  * @param  offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
+  *                 - Bits 0-14: offset of the reported value inside the attribute.
+  *                 - Bit 15: if the entire value of the attribute does not fit inside a single
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
+  * @param  data_length length of the data
+  * @param  *att_data attribute data
   */
 static void attr_mod_request_motion_intensity(void *void_char_pointer, uint16_t attr_handle, uint16_t offset,
                                               uint8_t data_length, uint8_t *att_data)
@@ -174,9 +171,8 @@ static void attr_mod_request_motion_intensity(void *void_char_pointer, uint16_t 
 
 /**
   * @brief  This event is given when a read request is received by the server from the client.
-  * @param  void *void_char_pointer
-  * @param  uint16_t handle Handle of the attribute
-  * @retval None
+  * @param  *void_char_pointer
+  * @param  handle Handle of the attribute
   */
 #if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N))
 static void read_request_motion_intensity(void *void_char_pointer, uint16_t handle)
@@ -240,8 +236,7 @@ static void read_request_motion_intensity(void *ble_char_pointer,
   *************************************************/
 /**
   * @brief  Callback Function for Un/Subscription Feature
-  * @param  ble_notify_event_t Event Sub/Unsub
-  * @retval None
+  * @param  event Sub/Unsub
   */
 __weak void notify_event_motion_intensity(ble_notify_event_t event)
 {
@@ -263,8 +258,7 @@ __weak void notify_event_motion_intensity(ble_notify_event_t event)
   *******************************************************/
 /**
   * @brief  Callback Function for Motion Intensity read request.
-  * @param  ble_id_output_t *motion_intensity_code Motion Intensity Type Code
-  * @retval None
+  * @param  *motion_intensity_code Motion Intensity Type Code
   */
 __weak void read_request_motion_intensity_function(ble_id_output_t *motion_intensity_code)
 {

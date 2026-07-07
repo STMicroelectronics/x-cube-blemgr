@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_neai_n_class_classification.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   NEAI Classification info services APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -101,21 +101,34 @@ typedef enum
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init classification info service
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for N-Class Classification info service
+  * @retval *ble_char_pointer: Data structure pointer for N-Class Classification info service
   */
 extern ble_char_object_t *ble_init_neai_classification_service(void);
 
 /**
   * @brief  Update classification characteristic value with 1-Class library output
-  * @param  ble_ncc_output_t    output:
-  * @retval ble_status_t:         Status
+  * @param  output contains info about:
+  * - phase = (idle=0x00) | (classification=0x01)
+  * - state = (NEAI_OK=0x00) | .....
+  * - is_outlier = 0x01 if it is an outlier, 0x00 otherwise
+  *
+  * ONLY THE PHASE FIELD IS MANDATORY
+  *
+  * @retval status
   */
 extern ble_status_t ble_neai_1_class_classification_update(ble_1cc_output_t output);
 
 /**
-  * @brief  Update classification characteristic value with N-Class library output
-  * @param  ble_ncc_output_t    output:
-  * @retval ble_status_t:         Status
+  * @brief  Update NEAI Classification Characteristic Value
+  * @param  output contains info about:
+  * - phase = (idle=0x00) | (classification=0x01)
+  * - state = (NEAI_OK=0x00) | .....
+  * - major class = from 0x00 to CLASS_NUMBER_NCC
+  * - probabilities = array with size equals to CLASS_NUMBER_NCC that contains class probabilities
+  *
+  * ONLY THE PHASE FIELD IS MANDATORY
+  *
+  * @retval status
   */
 extern ble_status_t ble_neai_n_class_classification_update(ble_ncc_output_t output);
 

@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_fft_alarm_subrange_status.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   FFT Alarm Subrange Status info services APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -61,17 +61,16 @@ typedef struct
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init FFT Alarm Subrange Status info service
-  * @param  None
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for FFT Alarm Subrange Status info service
+  * @retval *ble_char_pointer: Data structure pointer for FFT Alarm Subrange Status info service
   */
 extern ble_char_object_t *ble_init_fft_alarm_subrange_status_service(void);
 
 /*
  * @brief  Update FFT Alarm Subrange RMS status value
- * @param  ble_fft_alarm_subrange_status_t alarm_status
- * @param  ble_fft_alarm_subrange_value_t subrange_max_value
- * @param  ble_fft_alarm_subrange_value_t subrange_freq_max_value
- * @retval ble_status_t   Status
+ * @param  alarm_status
+ * @param  subrange_max_value
+ * @param  subrange_freq_max_value
+ * @retval status
  */
 extern ble_status_t ble_fft_alarm_subrange_status_update(ble_fft_alarm_subrange_status_t alarm_status,
                                                          ble_fft_alarm_subrange_value_t subrange_max_value,

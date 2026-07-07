@@ -9,7 +9,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -52,6 +52,7 @@ extern "C" {
  * BLUE_WB         0x03
  * STM32WB07_06    0x04
  * STM32WB05N      0x05
+ * STM32WBA        0x06
 */
 #define BLUE_CORE BLUENRG_1_2
 
@@ -102,7 +103,7 @@ extern "C" {
 #define DEFAULT_MAX_STDOUT_CHAR_LEN     DEFAULT_MAX_CHAR_LEN
 #define DEFAULT_MAX_EXTCONFIG_CHAR_LEN  DEFAULT_MAX_CHAR_LEN
 
-/* For enabling the capability to handle BlueNRG Congestion */
+/* For enabling the capability to handle Bluetooth Congestion */
 #define ACC_BLUENRG_CONGESTION
 
 /* USER CODE END 1 */

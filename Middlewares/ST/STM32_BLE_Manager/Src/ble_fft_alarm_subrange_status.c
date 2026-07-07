@@ -2,14 +2,14 @@
   ******************************************************************************
   * @file    ble_fft_alarm_subrange_status.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Add BLE FFT Alarm Subrange Status info services using vendor
   *          specific profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -45,8 +45,7 @@ static void attr_mod_request_fft_alarm_subrange_status(void *ble_char_pointer, u
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init FFT Alarm Subrange Status info service
-  * @param  None
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for FFT Alarm Subrange Status info service
+  * @retval *ble_char_pointer: Data structure pointer for FFT Alarm Subrange Status info service
   */
 ble_char_object_t *ble_init_fft_alarm_subrange_status_service(void)
 {
@@ -73,10 +72,10 @@ ble_char_object_t *ble_init_fft_alarm_subrange_status_service(void)
 
 /*
  * @brief  Update FFT Alarm Subrange RMS status value
- * @param  ble_fft_alarm_subrange_status_t              alarm_status
- * @param  ble_fft_alarm_subrange_value_t        subrange_max_value
- * @param  ble_fft_alarm_subrange_value_t        subrange_freq_max_value
- * @retval ble_status_t   Status
+ * @param  alarm_status
+ * @param  subrange_max_value
+ * @param  subrange_freq_max_value
+ * @retval status
  */
 ble_status_t ble_fft_alarm_subrange_status_update(ble_fft_alarm_subrange_status_t          alarm_status,
                                                   ble_fft_alarm_subrange_value_t    subrange_max_value,
@@ -146,16 +145,15 @@ ble_status_t ble_fft_alarm_subrange_status_update(ble_fft_alarm_subrange_status_
   * @brief  This function is called when there is a change on the gatt attribute
   *         With this function it's possible to understand if FFT Alarm Subrange Status is subscribed
   *         or not to the one service
-  * @param  void *void_char_pointer
-  * @param  uint16_t attr_handle Handle of the attribute
-  * @param  uint16_t offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
-  *                          - Bits 0-14: offset of the reported value inside the attribute.
-  *                          - Bit 15: if the entire value of the attribute does not fit inside a single
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
-  * @param  uint8_t data_length length of the data
-  * @param  uint8_t *att_data attribute data
-  * @retval None
+  * @param  *void_char_pointer
+  * @param  attr_handle Handle of the attribute
+  * @param  offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
+  *                 - Bits 0-14: offset of the reported value inside the attribute.
+  *                 Bit 15: if the entire value of the attribute does not fit inside a single
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
+  * @param  data_length length of the data
+  * @param  *att_data attribute data
   */
 static void attr_mod_request_fft_alarm_subrange_status(void *void_char_pointer, uint16_t attr_handle, uint16_t offset,
                                                        uint8_t data_length, uint8_t *att_data)
@@ -189,8 +187,7 @@ static void attr_mod_request_fft_alarm_subrange_status(void *void_char_pointer, 
   *************************************************/
 /**
   * @brief  Callback Function for Un/Subscription Feature
-  * @param  ble_notify_event_t event Sub/Unsub
-  * @retval None
+  * @param  event Sub/Unsub
   */
 __weak void notify_event_fft_alarm_subrange_status(ble_notify_event_t event)
 {

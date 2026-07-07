@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_sensor_fusion.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Add Sensor Fusion service using vendor specific profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -45,8 +45,8 @@ static void attr_mod_request_sensor_fusion(void *ble_char_pointer, uint16_t attr
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init Sensor Fusion info service
-  * @param  uint8_t number_quaternions_to_send  Number of quaternions send (1,2,3)
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for Sensor Fusion info service
+  * @param  number_quaternions_to_send  Number of quaternions send (1,2,3)
+  * @retval *ble_char_pointer: Data structure pointer for Sensor Fusion info service
   */
 ble_char_object_t *ble_init_sensor_fusion_service(uint8_t number_quaternions_to_send)
 {
@@ -84,8 +84,7 @@ ble_char_object_t *ble_init_sensor_fusion_service(uint8_t number_quaternions_to_
 #ifndef BLE_MANAGER_SDKV2
 /**
   * @brief  Setting Sensor Fusion Advertise Data
-  * @param  uint8_t *manuf_data: Advertise Data
-  * @retval None
+  * @param  *manuf_data: Advertise Data
   */
 void ble_set_sensor_fusion_advertise_data(uint8_t *manuf_data)
 {
@@ -95,9 +94,9 @@ void ble_set_sensor_fusion_advertise_data(uint8_t *manuf_data)
 
 /**
   * @brief  Update quaternions characteristic value
-  * @param  ble_motion_sensor_axes_t *data Structure containing the quaterions
-  * @param  uint8_t number_quaternions_to_send  Number of quaternions send (1,2,3)
-  * @retval ble_status_t      Status
+  * @param  *data Structure containing the quaterions
+  * @param  number_quaternions_to_send  Number of quaternions send (1,2,3)
+  * @retval status
   */
 ble_status_t ble_sensor_fusion_update(ble_motion_sensor_axes_t *data, uint8_t number_quaternions_to_send)
 {
@@ -157,16 +156,15 @@ ble_status_t ble_sensor_fusion_update(ble_motion_sensor_axes_t *data, uint8_t nu
 /**
   * @brief  This function is called when there is a change on the gatt attribute
   *         With this function it's possible to understand if Sensor Fusion is subscribed or not to the one service
-  * @param  void *void_char_pointer
-  * @param  uint16_t attr_handle Handle of the attribute
-  * @param  uint16_t offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
-  *                          - Bits 0-14: offset of the reported value inside the attribute.
-  *                          - Bit 15: if the entire value of the attribute does not fit inside a single
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
-  * @param  uint8_t data_length length of the data
-  * @param  uint8_t *att_data attribute data
-  * @retval None
+  * @param  *void_char_pointer
+  * @param  attr_handle Handle of the attribute
+  * @param  offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
+  *                 - Bits 0-14: offset of the reported value inside the attribute.
+  *                 - Bit 15: if the entire value of the attribute does not fit inside a single
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
+  * @param  data_length length of the data
+  * @param  *att_data attribute data
   */
 static void attr_mod_request_sensor_fusion(void *void_char_pointer, uint16_t attr_handle, uint16_t offset,
                                            uint8_t data_length, uint8_t *att_data)
@@ -200,8 +198,7 @@ static void attr_mod_request_sensor_fusion(void *void_char_pointer, uint16_t att
   *************************************************/
 /**
   * @brief  Callback Function for Un/Subscription Feature
-  * @param  BLE_NotifyEvent_t Event Sub/Unsub
-  * @retval None
+  * @param  event Sub/Unsub
   */
 __weak void notify_event_sensor_fusion(ble_notify_event_t event)
 {

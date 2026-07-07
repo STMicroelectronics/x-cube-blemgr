@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_neai_anomaly_detection.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   NEAI(Cartesiam) Anomaly Detection info services APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -78,18 +78,23 @@ typedef enum
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init NeaiAnomalyDetection info service
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for environmental info service
+  * @retval *ble_char_pointer: Data structure pointer for environmental info service
   */
 extern ble_char_object_t *ble_init_ad_service(void);
 
 /**
-  * @brief  Update NeaiAnomalyDetection characteristic value
-  * @param  uint8_t phase:        0 when AI lib is stopped, 1 when learning occurred, 2 when detection occurred
-  * @param  uint8_t state:        library result of current phase
-  * @param  uint8_t completion_percentage:
-  * @param  ble_ad_output_t output:
-  * @param  uint8_t similarity:
-  * @retval ble_status_t:           Status
+  * @brief  Update NEAI AD characteristic value
+  * @param  output contains info about:
+  * - phase = (idle=0x00) | (learning=0x01) | (detecting=0x02)
+  * - state = (NEAI_OK=0x00) | .....
+  * - progress = from 0x00 to 0x64 (completion percentage)
+  * - status = (normal=0x00) | (anomaly=0x01)
+  * - similarity = from 0x00 to 0x64 (inference probability)
+  *
+  * ONLY THE PHASE FIELD IS MANDATORY
+  * if you don't want use one of the others info, you can put NEAI_AD_ESCAPE
+  *
+  * @retval status
   */
 extern ble_status_t ble_neai_anomaly_detection_update(ble_ad_output_t output);
 

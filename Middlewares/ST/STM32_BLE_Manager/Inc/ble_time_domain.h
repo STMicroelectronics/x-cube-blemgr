@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_time_domain.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Time Domain info services APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -40,16 +40,15 @@ typedef struct
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init Time Domain info service
-  * @param  None
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for Time Domain info service
+  * @retval *ble_char_pointer: Data structure pointer for Time Domain info service
   */
 extern ble_char_object_t *ble_init_time_domain_service(void);
 
 /*
  * @brief  Update Time Domain characteristic value
- * @param  ble_manager_time_domain_generic_value_t peak_value
- * @param  ble_manager_time_domain_generic_value_t speed_rms_value
- * @retval ble_status_t   Status
+ * @param  peak_value
+ * @param  speed_rms_value
+ * @retval status
  */
 extern ble_status_t ble_time_domain_update(ble_manager_time_domain_generic_value_t peak_value,
                                            ble_manager_time_domain_generic_value_t speed_rms_value);

@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_normalization.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Event Counter info service APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -28,16 +28,15 @@ extern "C" {
 
 /* Exported functions ------------------------------------------------------- */
 /**
-  * @brief  Init Event Counter info service
-  * @param  None
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for normalization info service
+  * @brief  Init Event Counter service
+  * @retval *ble_char_pointer: Data structure pointer for char service
   */
 extern ble_char_object_t *ble_init_normalization_service(void);
 
 /**
   * @brief  Update Event Counter characteristic
-  * @param float Event Counter Number
-  * @retval ble_status_t   Status
+  * @param  normalization Counter Number
+  * @retval status
   */
 extern ble_status_t ble_normalization_update(float normalization);
 

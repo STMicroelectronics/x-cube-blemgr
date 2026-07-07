@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_motion_intensity.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Motion Intensity info service APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -45,24 +45,22 @@ typedef enum
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init Motion Intensity info service
-  * @param  None
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for Motion Intensity info service
+  * @retval *ble_char_pointer: Data structure pointer for Motion Intensity info service
   */
 extern ble_char_object_t *ble_init_motion_intensity_service(void);
 
 #ifndef BLE_MANAGER_SDKV2
 /**
   * @brief  Setting Motion Intensity Advertise Data
-  * @param  uint8_t *manuf_data: Advertise Data
-  * @retval None
+  * @param  *manuf_data: Advertise Data
   */
 extern void ble_set_motion_intensity_advertise_data(uint8_t *manuf_data);
 #endif /* BLE_MANAGER_SDKV2 */
 
 /**
   * @brief  Update Motion Intensity characteristic
-  * @param  ble_id_output_t motion_intensity_code Motion Intensity Recognized
-  * @retval ble_status_t   Status
+  * @param  motion_intensity_code Motion Intensity Recognized
+  * @retval status
   */
 extern ble_status_t ble_motion_intensity_update(ble_id_output_t motion_intensity_code);
 

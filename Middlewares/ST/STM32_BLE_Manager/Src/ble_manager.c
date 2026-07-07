@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_manager.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Add bluetooth services using vendor specific profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -27,6 +27,10 @@
 #include "ble_manager_control.h"
 
 /* Private define ------------------------------------------------------------*/
+
+/* Disable/Enable advertising values */
+#define ADV_DISABLE 0
+#define ADV_ENABLE  1
 
 /* Max Number of Bonded Devices */
 #define BLE_MANAGER_MAX_BONDED_DEVICES 3
@@ -125,7 +129,7 @@ uint16_t custom_command_page_level = 0;
 ble_stack_object_t ble_stack_value = {0};
 ble_extended_configuration_object_t ble_extended_configuration_value = {0};
 
-/* Manufacter Advertise data */
+/* Manufacturer Advertise data */
 uint8_t manuf_data[BLE_MANAGER_ADVERTISE_DATA_LENGHT];
 
 /*************************** Bluetooth Communication **************************/
@@ -158,7 +162,7 @@ __weak void write_request_config_function(uint8_t *att_data, uint8_t data_length
   * Callback functions prototypes to manage the extended configuration characteristic commands *
   **********************************************************************************************/
 /* For UID Command */
-__weak void ext_ext_config_uid_command_callback(uint8_t **uid);
+__weak void ext_ext_config_uid_command_callback(uint32_t **uid);
 /* For VersionFw Command */
 __weak void ext_config_version_fw_command_callback(uint8_t *answer);
 /* For Info Command */
@@ -363,8 +367,7 @@ static void clear_single_command(ble_ext_custom_command_t *command);
 /* Private functions ------------------------------------------------------------*/
 /**
   * @brief  Add the Config service using a vendor specific profile
-  * @param  None
-  * @retval ble_status_t Status
+  * @retval status
   */
 static ble_status_t ble_manager_add_config_service(void)
 {
@@ -428,8 +431,7 @@ end_label:
 
 /**
   * @brief  Add the Console service using a vendor specific profile
-  * @param  None
-  * @retval ble_status_t Status
+  * @retval status
   */
 static ble_status_t ble_manager_add_console_service(void)
 {
@@ -528,9 +530,9 @@ end_label:
 
 /**
   * @brief  Update Stdout characteristic value (when length is <=MaxBLECharLen)
-  * @param  uint8_t *data string to write
-  * @param  uint8_t length length of string to write
-  * @retval ble_status_t      Status
+  * @param  *data string to write
+  * @param  length length of string to write
+  * @retval status
   */
 static ble_status_t update_term_std_out(uint8_t *data, uint8_t length)
 {
@@ -544,9 +546,9 @@ static ble_status_t update_term_std_out(uint8_t *data, uint8_t length)
 
 /**
   * @brief  Update Stderr characteristic value (when length is <=MaxBLECharLen)
-  * @param  uint8_t *data string to write
-  * @param  uint8_t length length of string to write
-  * @retval ble_status_t      Status
+  * @param  *data string to write
+  * @param  length length of string to write
+  * @retval status
   */
 static ble_status_t update_term_std_err(uint8_t *data, uint8_t length)
 {
@@ -561,8 +563,7 @@ static ble_status_t update_term_std_err(uint8_t *data, uint8_t length)
 #if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N))
 /**
   * @brief  Update Stderr characteristic value after a read request
-  * @param None
-  * @retval ble_status_t Status
+  * @retval status
   */
 static ble_status_t std_err_update_after_read(ble_char_object_t *ble_char_pointer)
 {
@@ -573,8 +574,7 @@ static ble_status_t std_err_update_after_read(ble_char_object_t *ble_char_pointe
 
 /**
   * @brief  Update Terminal characteristic value after a read request
-  * @param None
-  * @retval ble_status_t Status
+  * @retval status
   */
 static ble_status_t term_update_after_read(void *ble_char_pointer)
 {
@@ -597,9 +597,8 @@ static ble_status_t term_update_after_read(void *ble_char_pointer)
 
 /**
   * @brief  This event is given when a read request is received by the server from the client.
-  * @param  void *void_char_pointer
-  * @param  uint16_t handle Handle of the attribute
-  * @retval None
+  * @param  *void_char_pointer
+  * @param  handle Handle of the attribute
   */
 static void read_request_term(void *void_char_pointer, uint16_t handle)
 {
@@ -614,9 +613,8 @@ static void read_request_term(void *void_char_pointer, uint16_t handle)
 
 /**
   * @brief  This event is given when a read request is received by the server from the client.
-  * @param  void *void_char_pointer
-  * @param  uint16_t handle Handle of the attribute
-  * @retval None
+  * @param  *void_char_pointer
+  * @param  handle Handle of the attribute
   */
 static void read_request_std_err(void *void_char_pointer, uint16_t handle)
 {
@@ -631,14 +629,13 @@ static void read_request_std_err(void *void_char_pointer, uint16_t handle)
 #else /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
 /**
   * @brief  This event is given when a read request is received by the server from the client.
-  * @param  void *void_char_pointer
-  * @param  uint16_t handle Handle of the attribute
-  * @param  uint16_t connection_handle Connection handle
-  * @param  uint8_t operation_type see aci_gatt_srv_authorize_nwk_event
-  * @param  uint16_t attr_val_offset ffset from which the value needs to be read or write
-  * @param  uint8_t data_length Length of Data field
-  * @param  uint8_t data[] The data that the client has requested to write
-  * @retval None
+  * @param  *void_char_pointer
+  * @param  handle Handle of the attribute
+  * @param  connection_handle Connection handle
+  * @param  operation_type see aci_gatt_srv_authorize_nwk_event
+  * @param  attr_val_offset ffset from which the value needs to be read or write
+  * @param  data_length Length of Data field
+  * @param  data[] The data that the client has requested to write
   */
 static void read_request_term(void *void_char_pointer,
                               uint16_t handle,
@@ -670,14 +667,13 @@ static void read_request_term(void *void_char_pointer,
 
 /**
   * @brief  This event is given when a read request is received by the server from the client.
-  * @param  void *void_char_pointer
-  * @param  uint16_t handle Handle of the attribute
-  * @param  uint16_t connection_handle Connection handle
-  * @param  uint8_t operation_type see aci_gatt_srv_authorize_nwk_event
-  * @param  uint16_t attr_val_offset ffset from which the value needs to be read or write
-  * @param  uint8_t data_length Length of Data field
-  * @param  uint8_t data[] The data that the client has requested to write
-  * @retval None
+  * @param  *void_char_pointer
+  * @param  handle Handle of the attribute
+  * @param  connection_handle Connection handle
+  * @param  operation_type see aci_gatt_srv_authorize_nwk_event
+  * @param  attr_val_offset ffset from which the value needs to be read or write
+  * @param  data_length Length of Data field
+  * @param  data[] The data that the client has requested to write
   */
 static void read_request_std_err(void *void_char_pointer,
                                  uint16_t handle,
@@ -704,16 +700,15 @@ static void read_request_std_err(void *void_char_pointer,
 /**
   * @brief  This function is called when there is a change on the gatt attribute
   *         With this function it's possible to understand if config is subscribed or not to the one service
-  * @param  void *void_char_pointer
-  * @param  uint16_t attr_handle Handle of the attribute
-  * @param  uint16_t offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
-  *                          - Bits 0-14: offset of the reported value inside the attribute.
-  *                          - Bit 15: if the entire value of the attribute does not fit inside a single
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
-  * @param  uint8_t data_length length of the data
-  * @param  uint8_t *att_data attribute data
-  * @retval None
+  * @param  *void_char_pointer
+  * @param  attr_handle Handle of the attribute
+  * @param  offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
+  *                 - Bits 0-14: offset of the reported value inside the attribute.
+  *                 - Bit 15: if the entire value of the attribute does not fit inside a single
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
+  * @param  data_length length of the data
+  * @param  *att_data attribute data
   */
 static void attr_mod_request_config(void *void_char_pointer, uint16_t attr_handle, uint16_t offset, uint8_t data_length,
                                     uint8_t *att_data)
@@ -750,16 +745,15 @@ static void attr_mod_request_config(void *void_char_pointer, uint16_t attr_handl
 /**
   * @brief  This function is called when there is a change on the gatt attribute as consequence of write request
   *         for the Config service
-  * @param  void *void_char_pointer
-  * @param  uint16_t attr_handle Handle of the attribute
-  * @param  uint16_t offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
-  *                          - Bits 0-14: offset of the reported value inside the attribute.
-  *                          - Bit 15: if the entire value of the attribute does not fit inside a single
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
-  * @param  uint8_t data_length length of the data
-  * @param  uint8_t *att_data attribute data
-  * @retval None
+  * @param  *void_char_pointer
+  * @param  attr_handle Handle of the attribute
+  * @param  offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
+  *                 - Bits 0-14: offset of the reported value inside the attribute.
+  *                 - Bit 15: if the entire value of the attribute does not fit inside a single
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
+  * @param  data_length length of the data
+  * @param  *att_data attribute data
   */
 static void write_request_config(void *void_char_pointer, uint16_t attr_handle, uint16_t offset, uint8_t data_length,
                                  uint8_t *att_data)
@@ -774,16 +768,15 @@ static void write_request_config(void *void_char_pointer, uint16_t attr_handle, 
 /**
   * @brief  This function is called when there is a change on the gatt attribute
   *         With this function it's possible to understand if Std Err is subscribed or not to the one service
-  * @param  void *void_char_pointer
-  * @param  uint16_t attr_handle Handle of the attribute
-  * @param  uint16_t offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
-  *                          - Bits 0-14: offset of the reported value inside the attribute.
-  *                          - Bit 15: if the entire value of the attribute does not fit inside a single
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
-  * @param  uint8_t data_length length of the data
-  * @param  uint8_t *att_data attribute data
-  * @retval None
+  * @param  *void_char_pointer
+  * @param  attr_handle Handle of the attribute
+  * @param  offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
+  *                 - Bits 0-14: offset of the reported value inside the attribute.
+  *                 - Bit 15: if the entire value of the attribute does not fit inside a single
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
+  * @param  data_length length of the data
+  * @param  *att_data attribute data
   */
 static void attr_mod_request_std_err(void *void_char_pointer, uint16_t attr_handle, uint16_t offset,
                                      uint8_t data_length,
@@ -802,16 +795,15 @@ static void attr_mod_request_std_err(void *void_char_pointer, uint16_t attr_hand
 /**
   * @brief  This function is called when there is a change on the gatt attribute
   *         With this function it's possible to understand if Term is subscribed or not to the one service
-  * @param  void *void_char_pointer
-  * @param  uint16_t attr_handle Handle of the attribute
-  * @param  uint16_t offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
-  *                          - Bits 0-14: offset of the reported value inside the attribute.
-  *                          - Bit 15: if the entire value of the attribute does not fit inside a single
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
-  * @param  uint8_t data_length length of the data
-  * @param  uint8_t *att_data attribute data
-  * @retval None
+  * @param  *void_char_pointer
+  * @param  attr_handle Handle of the attribute
+  * @param  offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
+  *                 - Bits 0-14: offset of the reported value inside the attribute.
+  *                 - Bit 15: if the entire value of the attribute does not fit inside a single
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
+  * @param  data_length length of the data
+  * @param  *att_data attribute data
   */
 static void attr_mod_request_term(void *void_char_pointer, uint16_t attr_handle, uint16_t offset, uint8_t data_length,
                                   uint8_t *att_data)
@@ -831,16 +823,15 @@ static void attr_mod_request_term(void *void_char_pointer, uint16_t attr_handle,
   * @brief  This function is called when there is a change on the gatt attribute
   *         With this function it's possible to understand if Extended Configuration
   *         characteristic value is subscribed or not to the one service
-  * @param  void *void_char_pointer
-  * @param  uint16_t attr_handle Handle of the attribute
-  * @param  uint16_t offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
-  *                          - Bits 0-14: offset of the reported value inside the attribute.
-  *                          - Bit 15: if the entire value of the attribute does not fit inside a single
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
-  * @param  uint8_t data_length length of the data
-  * @param  uint8_t *att_data attribute data
-  * @retval None
+  * @param  *void_char_pointer
+  * @param  attr_handle Handle of the attribute
+  * @param  offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
+  *                 - Bits 0-14: offset of the reported value inside the attribute.
+  *                 - Bit 15: if the entire value of the attribute does not fit inside a single
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
+  * @param  data_length length of the data
+  * @param  *att_data attribute data
   */
 static void attr_mod_request_ext_config(void *void_char_pointer, uint16_t attr_handle, uint16_t offset,
                                         uint8_t data_length,
@@ -859,16 +850,15 @@ static void attr_mod_request_ext_config(void *void_char_pointer, uint16_t attr_h
 /**
   * @brief  This function is called when there is a change on the gatt attribute as consequence of write request
   *         for the Extended Configuration characteristic value service
-  * @param  void *void_char_pointer
-  * @param  uint16_t attr_handle Handle of the attribute
-  * @param  uint16_t offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
-  *                          - Bits 0-14: offset of the reported value inside the attribute.
-  *                          - Bit 15: if the entire value of the attribute does not fit inside a single
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
-  * @param  uint8_t data_length length of the data
-  * @param  uint8_t *att_data attribute data
-  * @retval None
+  * @param  *void_char_pointer
+  * @param  attr_handle Handle of the attribute
+  * @param  offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
+  *                 - Bits 0-14: offset of the reported value inside the attribute.
+  *                 - Bit 15: if the entire value of the attribute does not fit inside a single
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
+  * @param  data_length length of the data
+  * @param  *att_data attribute data
   */
 static void write_request_ext_config(void *void_char_pointer, uint16_t attr_handle, uint16_t offset,
                                      uint8_t data_length,
@@ -1016,16 +1006,14 @@ static void write_request_ext_config(void *void_char_pointer, uint16_t attr_hand
           JSON_Object *temp_json_obj = json_value_get_object(temp_json);
           char *json_string_command = NULL;
           uint32_t json_size = 0;
-          uint8_t *uid;
+          uint32_t *uid;
 
           BLE_MANAGER_PRINTF("Command UID\r\n");
 
           ext_ext_config_uid_command_callback(&uid);
 
-          sprintf((char *)local_buffer_to_write, "%.2X%.2X%.2X%.2X%.2X%.2X%.2X%.2X%.2X%.2X%.2X%.2X",
-                  uid[ 3], uid[ 2], uid[ 1], uid[ 0],
-                  uid[ 7], uid[ 6], uid[ 5], uid[ 4],
-                  uid[11], uid[ 10], uid[9], uid[8]);
+          sprintf((char *)local_buffer_to_write, "%.8X%.8X%.8X",
+                  (uint8_t)uid[0], (uint8_t)uid[1], (uint8_t)uid[2]);
           json_object_dotset_string(temp_json_obj, "UID", (char *)local_buffer_to_write);
 
           /* convert to a json string and write as string */
@@ -1384,9 +1372,8 @@ static void write_request_ext_config(void *void_char_pointer, uint16_t attr_hand
 
 /**
   * @brief  This function Try to search if there is a valid Custom Command
-  * @param  ble_ext_custom_command_t *loc_custom_commands Pointer to the Custom Commands List
-  * @param  uint8_t *hs_command_buffer pointer to json formatted string
-  * @retval None
+  * @param  *loc_custom_commands Pointer to the Custom Commands List
+  * @param  *hs_command_buffer pointer to json formatted string
   */
 ble_custom_commad_result_t *parse_custom_command(ble_ext_custom_command_t *loc_custom_commands,
                                                  uint8_t *hs_command_buffer)
@@ -1511,9 +1498,8 @@ ble_custom_commad_result_t *parse_custom_command(ble_ext_custom_command_t *loc_c
 
 /**
   * @brief  Clear the Custom Command List
-  * @param  ble_ext_custom_command_t **loc_custom_commands Custom Commands Table
-  * @param  ble_ext_custom_command_t **loc_last_custom_command Pointer to last Custom Command
-  * @retval None
+  * @param  **loc_custom_commands Custom Commands Table
+  * @param  **loc_last_custom_command Pointer to last Custom Command
   */
 void generic_clear_custom_commands_list(ble_ext_custom_command_t **loc_custom_commands,
                                         ble_ext_custom_command_t **loc_last_custom_command)
@@ -1531,8 +1517,7 @@ void generic_clear_custom_commands_list(ble_ext_custom_command_t **loc_custom_co
 
 /**
   * @brief  Clear One Single Custom Command
-  * @param  ble_ext_custom_command_t *next_command Pointer to the next Custom Commands
-  * @retval None
+  * @param  *command Pointer to the Custom Commands
   */
 static void clear_single_command(ble_ext_custom_command_t *command)
 {
@@ -1549,19 +1534,19 @@ static void clear_single_command(ble_ext_custom_command_t *command)
 
 /**
   * @brief  This function add a Custom Command
-  * @param  ble_ext_custom_command_t **loc_custom_commands Pointer to Custom Commands Table
-  * @param  ble_ext_custom_command_t **loc_last_custom_command Pointer to Pointer to slast Custom Command
-  * @param  char *command_name Command Name
-  * @param  ble_custom_command_types_t command_type Command Type
-  * @param  int32_t default_value (for BLE_CUSTOM_COMMAND_INTEGER, BLE_CUSTOM_COMMAND_ENUM_INTEGER,
+  * @param  **loc_custom_commands Pointer to Custom Commands Table
+  * @param  **loc_last_custom_command Pointer to Pointer to slast Custom Command
+  * @param  *command_name Command Name
+  * @param  command_type Command Type
+  * @param  default_value (for BLE_CUSTOM_COMMAND_INTEGER, BLE_CUSTOM_COMMAND_ENUM_INTEGER,
   *                                BLE_CUSTOM_COMMAND_ENUM_STRING or BLE_CUSTOM_COMMAND_BOOLEAN)
-  * @param  int32_t min  Optional Minim value (BLE_MANAGER_CUSTOM_COMMAND_VALUE_NAN if not needed)
-  * @param  int32_t max Max value
-  * @param  int32_t *valid_values_int array of Valid Integer Values (NULL if not needed)
-  * @param  char **valid_values_string array of Valid String Values (NULL if not needed)
-  * @param  char *short_desc Optionally Short Description (NULL if not needed)
-  * @param  JSON_Array *json_sensor_array
-  * @retval uint8_t Valid/NotValid Command (1/0)
+  * @param  min  Optional Minim value (BLE_MANAGER_CUSTOM_COMMAND_VALUE_NAN if not needed)
+  * @param  max Max value
+  * @param  *valid_values_int array of Valid Integer Values (NULL if not needed)
+  * @param  **valid_values_string array of Valid String Values (NULL if not needed)
+  * @param  *short_desc Optionally Short Description (NULL if not needed)
+  * @param  *json_sensor_array
+  * @retval Valid/NotValid Command (1/0)
   */
 uint8_t generic_add_custom_command(ble_ext_custom_command_t **loc_custom_commands,
                                    ble_ext_custom_command_t **loc_last_custom_command,
@@ -1732,8 +1717,6 @@ uint8_t generic_add_custom_command(ble_ext_custom_command_t **loc_custom_command
 
 /**
   * @brief  Send a new List of Custom Commands for Extended Configuration
-  * @param  None
-  * @retval None
   */
 void send_new_custom_command_list(void)
 {
@@ -1762,8 +1745,7 @@ void send_new_custom_command_list(void)
 
 /**
   * @brief  Send one error message
-  * @param  char *message error message
-  * @retval None
+  * @param  *message error message
   */
 extern void send_error(char *message)
 {
@@ -1787,8 +1769,7 @@ extern void send_error(char *message)
 
 /**
   * @brief  Send one Info message
-  * @param  char *message Info message
-  * @retval None
+  * @param  *message Info message
   */
 void send_info(char *message)
 {
@@ -1814,16 +1795,15 @@ void send_info(char *message)
 /**
   * @brief  This function is called when there is a change on the gatt attribute as consequence of
   *         write request for the Term service
-  * @param  void *void_char_pointer
-  * @param  uint16_t attr_handle Handle of the attribute
-  * @param  uint16_t offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
-  *                          - Bits 0-14: offset of the reported value inside the attribute.
-  *                          - Bit 15: if the entire value of the attribute does not fit inside a single
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
-  * @param  uint8_t data_length length of the data
-  * @param  uint8_t *att_data attribute data
-  * @retval None
+  * @param  *void_char_pointer
+  * @param  attr_handle Handle of the attribute
+  * @param  offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
+  *                 - Bits 0-14: offset of the reported value inside the attribute.
+  *                 - Bit 15: if the entire value of the attribute does not fit inside a single
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
+  * @param  data_length length of the data
+  * @param  *att_data attribute data
   */
 static void write_request_term(void *void_char_pointer, uint16_t attr_handle, uint16_t offset, uint8_t data_length,
                                uint8_t *att_data)
@@ -1846,8 +1826,7 @@ static void write_request_term(void *void_char_pointer, uint16_t attr_handle, ui
 
 /**
   * @brief  Add the HW Features service using a vendor specific profile
-  * @param  None
-  * @retval ble_status_t Status
+  * @retval status
   */
 static ble_status_t ble_manager_add_features_service(void)
 {
@@ -1939,7 +1918,7 @@ static int32_t breath = 0;
   * @param  char_val_offset The offset of the characteristic
   * @param  char_value_len The length of the characteristic
   * @param  char_value The pointer to the characteristic
-  * @retval ble_status_t Status
+  * @retval status
   */
 ble_status_t safe_aci_gatt_update_char_value(ble_char_object_t *ble_char_pointer,
                                              uint8_t char_val_offset,
@@ -1949,13 +1928,13 @@ ble_status_t safe_aci_gatt_update_char_value(ble_char_object_t *ble_char_pointer
   ble_status_t ret = BLE_STATUS_INSUFFICIENT_RESOURCES;
   if (breath == 0)
   {
-#if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N))
+#if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N) && (BLUE_CORE != STM32WBA))
     ret = aci_gatt_update_char_value(ble_char_pointer->service_handle,
                                      ble_char_pointer->attr_handle,
                                      char_val_offset,
                                      char_value_len,
                                      char_value);
-#else /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
+#else /* ((BLUE_CORE != BLUENRG_LP/STM32WB07_06/STM32WB05N/STM32WBA)) */
 #if (BLUE_CORE == STM32WB05N)
     ret = aci_gatt_srv_notify(global_connection_handle,
                               0x0004,
@@ -1963,6 +1942,14 @@ ble_status_t safe_aci_gatt_update_char_value(ble_char_object_t *ble_char_pointer
                               GATT_NOTIFICATION,
                               char_value_len,
                               char_value);
+#elif (BLUE_CORE == STM32WBA)
+    ret = aci_gatt_update_char_value_ext(global_connection_handle,
+                                         ble_char_pointer->service_handle,
+                                         ble_char_pointer->attr_handle,
+                                         1,
+                                         char_value_len,
+                                         char_val_offset,
+                                         char_value_len, char_value);
 #else /* (BLUE_CORE == STM32WB05N) */
     ret = aci_gatt_srv_notify(global_connection_handle,
                               ble_char_pointer->attr_handle + 1,
@@ -1993,8 +1980,8 @@ ble_status_t safe_aci_gatt_update_char_value(ble_char_object_t *ble_char_pointer
 #ifndef BLE_MANAGER_NO_PARSON
 /**
   * @brief Parse Ext Configuration Command Type
-  * @param  uint8_t *hs_command_buffer
-  * @retval ble_ext_config_command_t
+  * @param *hs_command_buffer
+  * @retval return_code
   */
 static ble_ext_config_command_t ble_ext_config_extract_command_type(uint8_t *hs_command_buffer)
 {
@@ -2026,8 +2013,8 @@ static ble_ext_config_command_t ble_ext_config_extract_command_type(uint8_t *hs_
 
 /**
   * @brief Parse Configuration Command Type
-  * @param  uint8_t *hs_command_buffer
-  * @retval ble_custom_commad_result_t *command_result
+  * @param *hs_command_buffer
+  * @retval *command_result
   */
 ble_custom_commad_result_t *ask_generic_custom_commands(uint8_t *hs_command_buffer)
 {
@@ -2073,9 +2060,9 @@ ble_custom_commad_result_t *ask_generic_custom_commands(uint8_t *hs_command_buff
 
 /**
   * @brief  Update Extended Configuration characteristic value (when length is <=MaxBLECharLen)
-  * @param  uint8_t *data string to write
-  * @param  uint8_t length length of string to write
-  * @retval ble_status_t      Status
+  * @param  *data string to write
+  * @param  length length of string to write
+  * @retval status
  -*/
 static ble_status_t ble_update_ext_conf(uint8_t *data, uint8_t length)
 {
@@ -2105,9 +2092,9 @@ static ble_status_t ble_update_ext_conf(uint8_t *data, uint8_t length)
 #ifndef BLE_MANAGER_NO_PARSON
 /**
   * @brief  Update Extended Configuration characteristic value
-  * @param  uint8_t *data string to write
-  * @param  uint32_t length length of string to write
-  * @retval ble_status_t      Status
+  * @param  *data string to write
+  * @param  length length of string to write
+  * @retval status
   */
 ble_status_t ble_ext_configuration_update(uint8_t *data, uint32_t length)
 {
@@ -2156,14 +2143,29 @@ ble_status_t ble_ext_configuration_update(uint8_t *data, uint32_t length)
 #endif /* BLE_MANAGER_NO_PARSON */
 
 /**
-  * @brief Each time BLE FW stack raises the error code @ref ble_status_insufficient_resources (0x64),
-the @ref aci_gatt_tx_pool_available_event event is generated as soon as the available buffer size
-is greater than maximum ATT MTU (on stack versions below v2.1 this event is generated when at least 2 packets
-with MTU of 23 bytes are available).
+  * @brief Each time BLE FW stack raises the error code BLE_STATUS_INSUFFICIENT_RESOURCES,
+  *        the @ref aci_gatt_tx_pool_available_event event is generated as soon as the available buffer size is
+  *        greater than maximum ATT MTU (on stack versions below v2.1 this event is generated when at least 2 packets
+  *        with MTU of 23 bytes are available).
   * @param connection_handle Connection handle related to the request
   * @param Available_Buffers Not used.
-  * @retval None
   */
+#if (BLUE_CORE == STM32WBA)
+ble_status_t aci_gatt_tx_pool_available_event(uint16_t connection_handle,
+                                              uint16_t Available_Buffers)
+{
+#if (BLE_DEBUG_LEVEL>1)
+  BLE_MANAGER_PRINTF("aci_gatt_tx_pool_available_event\r\n");
+#endif /* (BLE_DEBUG_LEVEL>1) */
+
+#ifdef ACC_BLUENRG_CONGESTION
+  breath = 0;
+#endif /* ACC_BLUENRG_CONGESTION */
+
+  aci_gatt_tx_pool_available_event_function();
+  return BLE_STATUS_SUCCESS;
+}
+#else /* (BLUE_CORE == STM32WBA) */
 void aci_gatt_tx_pool_available_event(uint16_t connection_handle,
                                       uint16_t Available_Buffers)
 {
@@ -2177,6 +2179,7 @@ void aci_gatt_tx_pool_available_event(uint16_t connection_handle,
 
   aci_gatt_tx_pool_available_event_function();
 }
+#endif /* (BLUE_CORE == STM32WBA) */
 
 /**
   * @brief  Update the value of a characteristic
@@ -2184,7 +2187,7 @@ void aci_gatt_tx_pool_available_event(uint16_t connection_handle,
   * @param  char_val_offset The offset of the characteristic
   * @param  char_value_len The length of the characteristic
   * @param  char_value The pointer to the characteristic
-  * @retval ble_status_t Status
+  * @retval status
   */
 ble_status_t aci_gatt_update_char_value_wrapper(ble_char_object_t *ble_char_pointer,
                                                 uint8_t char_val_offset,
@@ -2192,13 +2195,13 @@ ble_status_t aci_gatt_update_char_value_wrapper(ble_char_object_t *ble_char_poin
                                                 uint8_t *char_value)
 {
   ble_status_t ret = BLE_STATUS_INSUFFICIENT_RESOURCES;
-#if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N))
+#if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N) && (BLUE_CORE != STM32WBA))
   ret = aci_gatt_update_char_value(ble_char_pointer->service_handle,
                                    ble_char_pointer->attr_handle,
                                    char_val_offset,
                                    char_value_len,
                                    char_value);
-#else /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
+#else /* ((BLUE_CORE != BLUENRG_LP/STM32WB07_06/STM32WB05N/STM32WBA)) */
 #if (BLUE_CORE == STM32WB05N)
   ret = aci_gatt_srv_notify(global_connection_handle,
                             0x0004,
@@ -2206,6 +2209,14 @@ ble_status_t aci_gatt_update_char_value_wrapper(ble_char_object_t *ble_char_poin
                             GATT_NOTIFICATION,
                             char_value_len,
                             char_value);
+#elif (BLUE_CORE == STM32WBA)
+  ret = aci_gatt_update_char_value_ext(global_connection_handle,
+                                       ble_char_pointer->service_handle,
+                                       ble_char_pointer->attr_handle,
+                                       1,
+                                       char_value_len,
+                                       char_val_offset,
+                                       char_value_len, char_value);
 #else /* (BLUE_CORE == STM32WB05N) */
   ret = aci_gatt_srv_notify(global_connection_handle,
                             ble_char_pointer->attr_handle + 1,
@@ -2226,9 +2237,9 @@ ble_status_t aci_gatt_update_char_value_wrapper(ble_char_object_t *ble_char_poin
 
 /**
   * @brief  Update Stderr characteristic value
-  * @param  uint8_t *data string to write
-  * @param  uint8_t length length of string to write
-  * @retval ble_status_t      Status
+  * @param  *data string to write
+  * @param  length length of string to write
+  * @retval status
   */
 ble_status_t std_err_update(uint8_t *data, uint8_t length)
 {
@@ -2271,33 +2282,36 @@ ble_status_t std_err_update(uint8_t *data, uint8_t length)
 
 /**
   * @brief
-  * @param  uint8_t* buffer
-  * @param  uint8_t len
-  * @retval ble_status_t   Status
+  * @param *buffer Buffer to send
+  * @param  len    Length of the buffer
+  * @retval status
   */
 ble_status_t ble_std_out_send_buffer(uint8_t *buffer, uint8_t len)
 {
   ble_status_t ret;
 
-#if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N))
+#if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N) && (BLUE_CORE != STM32WBA))
   ret = aci_gatt_update_char_value(ble_char_std_out.service_handle, ble_char_std_out.attr_handle, 0, len, buffer);
-#else /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
+#else /* ((BLUE_CORE != BLUENRG_LP/STM32WB07_06/STM32WB05N/STM32WBA)) */
 #if (BLUE_CORE == STM32WB05N)
   ret = aci_gatt_srv_notify(global_connection_handle, 0x0004,
                             ble_char_std_out.attr_handle + 1, GATT_NOTIFICATION, len, buffer);
+#elif (BLUE_CORE == STM32WBA)
+  ret = aci_gatt_update_char_value_ext(global_connection_handle, ble_char_std_out.service_handle,
+                                       ble_char_std_out.attr_handle, 1, len, 0, len, buffer);
 #else /* (BLUE_CORE == STM32WB05N) */
   ret = aci_gatt_srv_notify(global_connection_handle, ble_char_std_out.attr_handle + 1, GATT_NOTIFICATION, len, buffer);
 #endif /* (BLUE_CORE == STM32WB05N) */
-#endif /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
+#endif /* ((BLUE_CORE != BLUENRG_LP/STM32WB07_06/STM32WB05N/STM32WBA)) */
 
   return ret;
 }
 
 /**
   * @brief  Update Terminal characteristic value
-  * @param  uint8_t *data string to write
-  * @param  uint8_t length length of string to write
-  * @retval ble_status_t      Status
+  * @param  *data string to write
+  * @param  length length of string to write
+  * @retval status
   */
 ble_status_t term_update(uint8_t *data, uint8_t length)
 {
@@ -2340,12 +2354,13 @@ ble_status_t term_update(uint8_t *data, uint8_t length)
   return BLE_STATUS_SUCCESS;
 }
 
-/* @brief  Send a BLE notification for answering to a configuration command for Accelerometer events
-* @param  uint32_t feature Feature type
-* @param  uint8_t Command Replay to this Command
-* @param  uint8_t data result to send back
-* @retval ble_status_t Status
-*/
+/**
+  *@brief  Send a BLE notification for answering to a configuration command for Accelerometer events
+  * @param  feature Feature type
+  * @param  command Replay to this Command
+  * @param  data result to send back
+  * @retval status
+  */
 ble_status_t config_update(uint32_t feature, uint8_t command, uint8_t data)
 {
   uint8_t buff[2 + 4 + 1 + 1];
@@ -2364,12 +2379,13 @@ ble_status_t config_update(uint32_t feature, uint8_t command, uint8_t data)
 
 }
 
-/* @brief  Send a BLE notification for answering to a configuration command for Accelerometer events
-* @param  uint32_t feature Feature type
-* @param  uint8_t command Replay to this Command
-* @param  uint32_t data result to send back
-* @retval ble_status_t Status
-*/
+/**
+  *@brief  Send a BLE notification for answering to a configuration command for Accelerometer events
+  * @param  feature Feature type
+  * @param  command Replay to this Command
+  * @param  data result to send back
+  * @retval status
+  */
 ble_status_t config_update_32(uint32_t feature, uint8_t command, uint32_t data)
 {
   uint8_t buff[2 + 4 + 1 + 4];
@@ -2391,15 +2407,13 @@ ble_status_t config_update_32(uint32_t feature, uint8_t command, uint32_t data)
 }
 
 
-#if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N))
+#if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N) && (BLUE_CORE != STM32WBA))
 /**
   * @brief  Update the Advertise Data
-  * @param  None
-  * @retval None
   */
-void update_adv_data()
+void update_adv_data(void)
 {
-  /* Filling Manufacter Advertise data */
+  /* Filling Manufacturer Advertise data */
   manuf_data[0 ] = 8U;
   manuf_data[1 ] = 0x09U;
   manuf_data[2 ] = (uint8_t)ble_stack_value.board_name[0];/* Complete Name */
@@ -2411,7 +2425,7 @@ void update_adv_data()
   manuf_data[8 ] = (uint8_t)ble_stack_value.board_name[6];
   manuf_data[9 ] = 15U;
   manuf_data[10] = 0xFFU;
-  manuf_data[11] = 0x30U;/* STM Manufacter AD */
+  manuf_data[11] = 0x30U;/* STM Manufacturer AD */
   manuf_data[12] = 0x00U;
 #ifdef BLE_MANAGER_SDKV2
   manuf_data[13] = 0x02U;
@@ -2449,8 +2463,6 @@ void update_adv_data()
 
 /**
   * @brief  Puts the device in connectable mode.
-  * @param  None
-  * @retval None
   */
 void set_connectable_ble(void)
 {
@@ -2533,12 +2545,10 @@ void set_connectable_ble(void)
 end_label:
   return;
 }
-#else /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
+#else /* ((BLUE_CORE != BLUENRG_LP/STM32WB07_06/STM32WB05N/STM32WBA)) */
 #if (BLUE_CORE == STM32WB05N)
 /**
   * @brief  Puts the device in connectable mode.
-  * @param  None
-  * @retval None
   */
 void set_connectable_ble(void)
 {
@@ -2560,7 +2570,7 @@ void set_connectable_ble(void)
   manuf_data[12] = 15;
   manuf_data[13] = 0xFF;
   manuf_data[14] = 0x30;
-  manuf_data[15] = 0x00; /* STM Manufacter AD */
+  manuf_data[15] = 0x00; /* STM Manufacturer AD */
   manuf_data[16] = 0x02; /* SDK version */
   manuf_data[17] = ble_stack_value.board_id; /* BoardType*/
   manuf_data[18] = 0x00; /* Fw ID*/
@@ -2621,8 +2631,8 @@ void set_connectable_ble(void)
   advertising_set_parameters[0].Duration = 0;
   advertising_set_parameters[0].Max_Extended_Advertising_Events = 0;
 
-  /* enable advertising */
-  ret = aci_gap_set_advertising_enable(ENABLE, 1, advertising_set_parameters);
+  /* Enable advertising */
+  ret = aci_gap_set_advertising_enable(ADV_ENABLE, 1, advertising_set_parameters);
   if (ret != BLE_STATUS_SUCCESS)
   {
     BLE_MANAGER_PRINTF("aci_gap_set_advertising_enable failed: 0x%02x\r\n", ret);
@@ -2638,11 +2648,9 @@ end_label:
 
 /**
   * @brief  Update Advertise Data
-  * @param  None
-  * @retval None
   */
 
-void update_adv_data()
+void update_adv_data(void)
 {
   ble_status_t ret;
   /* Set the Custom BLE Advertise Data */
@@ -2660,11 +2668,124 @@ void update_adv_data()
 
   return;
 }
+#elif (BLUE_CORE == STM32WBA)
+/**
+  * @brief  Update the Advertise Data
+  */
+void update_adv_data()
+{
+
+  /* Set the Custom BLE Advertise Data */
+  ble_set_custom_advertise_data(manuf_data);
+
+  tBleStatus ret_status = aci_gap_adv_set_adv_data(0, 0x03, 1, BLE_MANAGER_ADVERTISE_DATA_LENGHT, manuf_data);
+  if (ret_status != (tBleStatus)BLE_STATUS_SUCCESS)
+  {
+    BLE_MANAGER_PRINTF("Error: aci_gap_update_adv_data [%x]\r\n", ret_status);
+  }
+  else
+  {
+    BLE_MANAGER_PRINTF("aci_gap_update_adv_data OK\r\n");
+  }
+}
+
+/**
+  * @brief  Puts the device in connectable mode.
+  */
+void set_connectable_ble(void)
+{
+  tBleStatus ret;
+  Adv_Set_t Adv_Set[1];
+
+  manuf_data[0 ] = 0x02;
+  manuf_data[1 ] = AD_TYPE_FLAGS;
+  manuf_data[2 ] = FLAG_BIT_LE_GENERAL_DISCOVERABLE_MODE | FLAG_BIT_BR_EDR_NOT_SUPPORTED;
+  manuf_data[3 ] = 8;
+  manuf_data[4 ] = 0x09;
+  manuf_data[5 ] = ble_stack_value.board_name[0]; /* Complete Name */
+  manuf_data[6 ] = ble_stack_value.board_name[1];
+  manuf_data[7 ] = ble_stack_value.board_name[2];
+  manuf_data[8 ] = ble_stack_value.board_name[3];
+  manuf_data[9 ] = ble_stack_value.board_name[4];
+  manuf_data[10] = ble_stack_value.board_name[5];
+  manuf_data[11] = ble_stack_value.board_name[6];
+  manuf_data[12] = 15;
+  manuf_data[13] = 0xFF;
+  manuf_data[14] = 0x30;
+  manuf_data[15] = 0x00; /* STM Manufacturer AD */
+  manuf_data[16] = 0x02; /* SDK version */
+  manuf_data[17] = ble_stack_value.board_id; /* BoardType*/
+  manuf_data[18] = 0x00; /* Fw ID*/
+  manuf_data[19] = 0x00; /* Second Custom Byte -> Not Used */
+  manuf_data[20] = 0x00; /* Third  Custom Byte -> Not Used */
+  manuf_data[21] = 0x00; /* Fourth Custom Byte -> Not Used */
+  manuf_data[22] = ble_stack_value.ble_mac_address[5]; /* BLE MAC start - MSB first - */
+  manuf_data[23] = ble_stack_value.ble_mac_address[4];
+  manuf_data[24] = ble_stack_value.ble_mac_address[3];
+  manuf_data[25] = ble_stack_value.ble_mac_address[2];
+  manuf_data[26] = ble_stack_value.ble_mac_address[1];
+  manuf_data[27] = ble_stack_value.ble_mac_address[0]; /* BLE MAC stop */
+
+  /* Set the Custom BLE Advertise Data */
+  ble_set_custom_advertise_data(manuf_data);
+
+  uint8_t dummy[6] = {0};
+  ret = aci_gap_adv_set_configuration
+        (0, 0,
+         HCI_ADV_EVENT_PROP_CONNECTABLE | HCI_ADV_EVENT_PROP_SCANNABLE | HCI_ADV_EVENT_PROP_LEGACY,
+         ADV_INTERV_MIN, ADV_INTERV_MAX,
+         ADV_CH_37 | ADV_CH_38 | ADV_CH_39,
+         GAP_PUBLIC_ADDR, 0, dummy,
+         HCI_ADV_FILTER_NO,
+         0, /* 0 dBm */
+         0, /* 0 skips */
+         HCI_PRIMARY_ADV_PHY_LE_1M, /* Secondary advertising PHY.
+                                                  Not used with legacy advertising. */
+         0, /* SID */
+         0 /* No scan request notifications */);
+
+  if (ret != BLE_STATUS_SUCCESS)
+  {
+    BLE_MANAGER_PRINTF("aci_gap_set_advertising_configuration failed: 0x%02x\r\n", ret);
+    goto end_label;
+  }
+  else
+  {
+    BLE_MANAGER_PRINTF("aci_gap_set_advertising_configuration\r\n");
+  }
+
+  ret = aci_gap_adv_set_adv_data(0, 0x03, 1, BLE_MANAGER_ADVERTISE_DATA_LENGHT, manuf_data);
+  if (ret != BLE_STATUS_SUCCESS)
+  {
+    BLE_MANAGER_PRINTF("aci_gap_set_advertising_data_nwk failed: 0x%02x\r\n", ret);
+    goto end_label;
+  }
+  else
+  {
+    BLE_MANAGER_PRINTF("aci_gap_set_advertising_data_nwk\r\n");
+  }
+
+  Adv_Set[0].Advertising_Handle = 0;
+  Adv_Set[0].Duration = 0;
+  Adv_Set[0].Max_Extended_Advertising_Events = 0;
+
+  /* enable advertising */
+  ret = aci_gap_adv_set_enable(ENABLE, 1, Adv_Set);
+  if (ret != BLE_STATUS_SUCCESS)
+  {
+    BLE_MANAGER_PRINTF("aci_gap_set_advertising_enable failed: 0x%02x\r\n", ret);
+  }
+  else
+  {
+    BLE_MANAGER_PRINTF("aci_gap_set_advertising_enable\r\n");
+  }
+
+end_label:
+  return;
+}
 #else /* (BLUE_CORE == STM32WB05N) */
 /**
   * @brief  Puts the device in connectable mode.
-  * @param  None
-  * @retval None
   */
 void set_connectable_ble(void)
 {
@@ -2686,7 +2807,7 @@ void set_connectable_ble(void)
   manuf_data[12] = 15;
   manuf_data[13] = 0xFF;
   manuf_data[14] = 0x30;
-  manuf_data[15] = 0x00; /* STM Manufacter AD */
+  manuf_data[15] = 0x00; /* STM Manufacturer AD */
   manuf_data[16] = 0x02; /* SDK version */
   manuf_data[17] = ble_stack_value.board_id; /* BoardType*/
   manuf_data[18] = 0x00; /* Fw ID*/
@@ -2744,8 +2865,8 @@ void set_connectable_ble(void)
   advertising_set_parameters[0].duration = 0;
   advertising_set_parameters[0].max_extended_advertising_events = 0;
 
-  /* enable advertising */
-  ret = aci_gap_set_advertising_enable(ENABLE, 1, advertising_set_parameters);
+  /* Enable advertising */
+  ret = aci_gap_set_advertising_enable(ADV_ENABLE, 1, advertising_set_parameters);
   if (ret != BLE_STATUS_SUCCESS)
   {
     BLE_MANAGER_PRINTF("aci_gap_set_advertising_enable failed: 0x%02x\r\n", ret);
@@ -2761,11 +2882,9 @@ end_label:
 
 /**
   * @brief  Update Advertise Data
-  * @param  None
-  * @retval None
   */
 
-void update_adv_data()
+void update_adv_data(void)
 {
   ble_status_t ret;
   /* Set the Custom BLE Advertise Data */
@@ -2784,13 +2903,11 @@ void update_adv_data()
   return;
 }
 #endif /* (BLUE_CORE == STM32WB05N) */
-#endif /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
+#endif /* ((BLUE_CORE != BLUENRG_LP/STM32WB07_06/STM32WB05N/STM32WBA)) */
 
 #if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N))
 /**
   * @brief  Exits the device from connectable mode.
-  * @param  None
-  * @retval None
   */
 void set_not_connectable_ble(void)
 {
@@ -2807,7 +2924,7 @@ void set_not_connectable_ble(void)
   advertising_set_parameters[0].Max_Extended_Advertising_Events = 0;
 
   /* Disable advertising */
-  ret = aci_gap_set_advertising_enable(DISABLE, 1, advertising_set_parameters);
+  ret = aci_gap_set_advertising_enable(ADV_DISABLE, 1, advertising_set_parameters);
   if (ret != BLE_STATUS_SUCCESS)
   {
     BLE_MANAGER_PRINTF("aci_gap_set_advertising_enable failed: 0x%02x\r\n", ret);
@@ -2827,7 +2944,7 @@ void set_not_connectable_ble(void)
   advertising_set_parameters[0].max_extended_advertising_events = 0;
 
   /* Disable advertising */
-  ret = aci_gap_set_advertising_enable(DISABLE, 1, advertising_set_parameters);
+  ret = aci_gap_set_advertising_enable(ADV_DISABLE, 1, advertising_set_parameters);
   if (ret != BLE_STATUS_SUCCESS)
   {
     BLE_MANAGER_PRINTF("aci_gap_set_advertising_enable failed: 0x%02x\r\n", ret);
@@ -2842,7 +2959,7 @@ void set_not_connectable_ble(void)
 
 /**
   * @brief  Added BLE service
-  * @param  ble_char_object_t *ble_char: Data structure pointer for BLE service
+  * @param  *ble_char: Data structure pointer for BLE service
   * @retval 1 in case of success
   */
 int32_t ble_manager_add_char(ble_char_object_t *ble_char)
@@ -2864,8 +2981,7 @@ int32_t ble_manager_add_char(ble_char_object_t *ble_char)
 
 /**
   * @brief  Init Ble Manager
-  * @param  None
-  * @retval ble_status_t Status
+  * @retval status
   */
 ble_status_t init_ble_manager(void)
 {
@@ -2914,8 +3030,7 @@ ble_status_t init_ble_manager(void)
   * @brief  This function is called whenever there is an ACI event to be processed.
   * @note   Inside this function each event must be identified and correctly
   *         parsed.
-  * @param  void *pckt Pointer to the ACI packet
-  * @retval None
+  * @param  *pckt Pointer to the ACI packet
   */
 void hci_event_cb(void *pckt)
 {
@@ -3066,8 +3181,7 @@ void hci_event_cb(void *pckt)
 }
 
 /** @brief Initialize the BLE Stack
-  * @param None
-  * @retval ble_status_t
+  * @retval status
   */
 static ble_status_t init_ble_manager_ble_stack(void)
 {
@@ -3161,10 +3275,10 @@ static ble_status_t init_ble_manager_ble_stack(void)
   if (ble_stack_value.enable_secure_connection)
   {
     /* Set the I/O capability  Otherwise the Smartphone will propose a Pin
-    * that will be acepted without any control */
+    * that will be accepted without any control */
     if (aci_gap_set_io_capability(ble_stack_value.io_capabilities) == (ble_status_t)BLE_STATUS_SUCCESS)
     {
-      BLE_MANAGER_PRINTF("I/O Capability Configurated\r\n");
+      BLE_MANAGER_PRINTF("I/O Capability Configured\r\n");
     }
     else
     {
@@ -3247,11 +3361,10 @@ fail:
 }
 #else /* (BLUE_CORE == BLUENRG_MS) */
 
-#if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N))
+#if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N) && (BLUE_CORE != STM32WBA))
 #if (BLUE_CORE != BLUE_WB)
 /** @brief HCI Transport layer user function
-  * @param void *pData pointer to HCI event data
-  * @retval None
+  * @param *pData pointer to HCI event data
   */
 static void app_user_evt_rx(void *pData)
 {
@@ -3307,8 +3420,7 @@ static void app_user_evt_rx(void *pData)
   * @brief  Callback processing the ACI events
   * @note   Inside this function each event must be identified and correctly
   *         parsed
-  * @param  void* Pointer to the ACI packet
-  * @retval None
+  * @param  *Pointer to the ACI packet
   */
 static void app_user_evt_rx(void *pData)
 {
@@ -3370,13 +3482,20 @@ static void app_user_evt_rx(void *pData)
     }
   }
 }
+#elif (BLUE_CORE == STM32WBA)
+/** @brief HCI Transport layer user function
+  * @param *pData pointer to HCI event data
+  */
+static void app_user_evt_rx(void *pData)
+{
+  BLE_EventProcess(pData);
+}
 #else /* (BLUE_CORE == STM32WB05N) */
 /**
   * @brief  Callback processing the ACI events
   * @note   Inside this function each event must be identified and correctly
   *         parsed
-  * @param  void* Pointer to the ACI packet
-  * @retval None
+  * @param  *Pointer to the ACI packet
   */
 static void app_user_evt_rx(void *pData)
 {
@@ -3439,13 +3558,12 @@ static void app_user_evt_rx(void *pData)
   }
 }
 #endif /* (BLUE_CORE == STM32WB05N) */
-#endif /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
+#endif /* ((BLUE_CORE != BLUENRG_LP/STM32WB07_06/STM32WB05N/STM32WBA)) */
 
 #if ((BLUE_CORE != BLUE_WB)  && (BLUE_CORE != STM32WB05N))
 
 /** @brief Initialize the BLE Stack
-  * @param None
-  * @retval ble_status_t
+  * @retval status
   */
 static ble_status_t init_ble_manager_ble_stack(void)
 {
@@ -3453,7 +3571,9 @@ static ble_status_t init_ble_manager_ble_stack(void)
   uint16_t dev_name_char_handle;
   uint16_t appearance_char_handle;
   ble_status_t ret;
+#if (BLUE_CORE != STM32WBA)
   uint8_t data_len_out;
+#endif  /* (BLUE_CORE != STM32WBA) */
   uint8_t random_number[8];
   uint8_t  hw_version;
   uint16_t fw_version;
@@ -3483,6 +3603,7 @@ static ble_status_t init_ble_manager_ble_stack(void)
 
   /* we will let the BLE chip to use its Random MAC address */
 #define CONFIG_DATA_RANDOM_ADDRESS          (0x80) /**< Stored static random address. Read-only. */
+#if (BLUE_CORE != STM32WBA)
   ret = aci_hal_read_config_data(CONFIG_DATA_RANDOM_ADDRESS, &data_len_out, ble_stack_value.ble_mac_address);
 
   if (ret != BLE_STATUS_SUCCESS)
@@ -3497,6 +3618,7 @@ static ble_status_t init_ble_manager_ble_stack(void)
     BLE_MANAGER_PRINTF("\tStatic Random address not well formed\r\n");
     goto fail;
   }
+#endif /* (BLUE_CORE != STM32WBA) */
 
   /* Generate Random Key at every boot */
   if (ble_stack_value.enable_random_secure_pin)
@@ -3522,6 +3644,11 @@ static ble_status_t init_ble_manager_ble_stack(void)
     }
   }
 
+#if (BLUE_CORE == STM32WBA)
+  memcpy(ble_stack_value.ble_mac_address, (unsigned char[]) {0x12, 0x34, 0x00, 0xE1, 0x80, 0x02}, sizeof(
+           ble_stack_value.ble_mac_address));
+  ble_stack_value.config_value_length = sizeof(ble_stack_value.ble_mac_address);
+#endif /* (BLUE_CORE == STM32WBA) */
   ret = aci_hal_write_config_data(ble_stack_value.config_value_offsets,
                                   ble_stack_value.config_value_length,
                                   ble_stack_value.ble_mac_address);
@@ -3567,8 +3694,16 @@ static ble_status_t init_ble_manager_ble_stack(void)
   }
 
 #if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06))
-  ret = aci_gatt_update_char_value(local_service_handle, dev_name_char_handle, 0,
-                                   (uint8_t) strlen(ble_stack_value.board_name), (uint8_t *)ble_stack_value.board_name);
+#if (BLUE_CORE == STM32WBA)
+  ret = aci_gatt_update_char_value_ext(0, local_service_handle, dev_name_char_handle,
+                                       0, (uint8_t) strlen(ble_stack_value.board_name),
+                                       0, (uint8_t) strlen(ble_stack_value.board_name),
+                                       (uint8_t *) ble_stack_value.board_name);
+#else /* (BLUE_CORE == STM32WBA) */
+  ret = aci_gatt_update_char_value(local_service_handle, dev_name_char_handle,
+                                   0, (uint8_t) strlen(ble_stack_value.board_name),
+                                   (uint8_t *)ble_stack_value.board_name);
+#endif /* (BLUE_CORE == STM32WBA) */
 
   if (ret != BLE_STATUS_SUCCESS)
   {
@@ -3591,13 +3726,14 @@ static ble_status_t init_ble_manager_ble_stack(void)
   }
 #endif /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06)) */
 
+#if (BLUE_CORE != STM32WBA)
   if (ble_stack_value.enable_secure_connection)
   {
     /* Set the I/O capability  Otherwise the Smartphone will propose a Pin
-    * that will be acepted without any control */
+    * that will be accepted without any control */
     if (aci_gap_set_io_capability(ble_stack_value.io_capabilities) == BLE_STATUS_SUCCESS)
     {
-      BLE_MANAGER_PRINTF("I/O Capability Configurated\r\n");
+      BLE_MANAGER_PRINTF("I/O Capability Configured\r\n");
     }
     else
     {
@@ -3660,6 +3796,7 @@ static ble_status_t init_ble_manager_ble_stack(void)
     BLE_MANAGER_PRINTF("\r\nGAP setting Authentication failed\r\n");
     goto fail;
   }
+#endif /* (BLUE_CORE != STM32WBA) */
 
   BLE_MANAGER_PRINTF("\r\nSERVER: BLE Stack Initialized \r\n"
                      "\t\tBoardName= %s\r\n"
@@ -3688,6 +3825,10 @@ static ble_status_t init_ble_manager_ble_stack(void)
   BLE_MANAGER_PRINTF("\t\tSTM32WB07_06 HW ver%d.%d\r\n", ((hw_version >> 4) & 0x0FU), (hw_version & 0x0FU));
   BLE_MANAGER_PRINTF("\t\tSTM32WB07_06 FW ver%d.%d.%c\r\n\r\n", (fw_version >> 8) & 0xFU, (fw_version >> 4) & 0xFU,
                      ('a' + (fw_version & 0xFU)));
+#elif (BLUE_CORE == STM32WBA)
+  BLE_MANAGER_PRINTF("\t\tSTM32WBA HW ver%d.%d\r\n", ((hw_version >> 4) & 0x0FU), (hw_version & 0x0FU));
+  BLE_MANAGER_PRINTF("\t\tSTM32WBA FW ver%d.%d.%c\r\n\r\n", (fw_version >> 8) & 0xFU, (fw_version >> 4) & 0xFU,
+                     ('a' + (fw_version & 0xFU)));
 #endif /* (BLUE_CORE += BLUENRG_1_2) */
 
   if (ble_stack_value.enable_secure_connection)
@@ -3696,11 +3837,11 @@ static ble_status_t init_ble_manager_ble_stack(void)
 
     if (ble_stack_value.enable_random_secure_pin)
     {
-      BLE_MANAGER_PRINTF("\t\tRandom Key = %lu\r\n", ble_stack_value.secure_pin);
+      BLE_MANAGER_PRINTF("\t\tRandom Key = %lu\r\n", (long)ble_stack_value.secure_pin);
     }
     else
     {
-      BLE_MANAGER_PRINTF("\t\tFixed  Key = %lu\r\n", ble_stack_value.secure_pin);
+      BLE_MANAGER_PRINTF("\t\tFixed  Key = %lu\r\n", (long)ble_stack_value.secure_pin);
     }
   }
 
@@ -3727,8 +3868,7 @@ fail:
 #if (BLUE_CORE == STM32WB05N)
 
 /** @brief Initialize the BLE Stack
-  * @param None
-  * @retval ble_status_t
+  * @retval status
   */
 static ble_status_t init_ble_manager_ble_stack(void)
 {
@@ -3828,7 +3968,7 @@ static ble_status_t init_ble_manager_ble_stack(void)
     BLE_MANAGER_PRINTF("\r\nGAP_Init failed\r\n");
     goto fail;
   }
-  
+
   /* Wait some time for the BlueNRG to be fully operational after gap init */
 #ifndef  BLE_INITIAL_DELAY
   BLE_MANAGER_DELAY(2000);
@@ -3865,10 +4005,10 @@ static ble_status_t init_ble_manager_ble_stack(void)
   if (ble_stack_value.enable_secure_connection)
   {
     /* Set the I/O capability  Otherwise the Smartphone will propose a Pin
-    * that will be acepted without any control */
+    * that will be accepted without any control */
     if (aci_gap_set_io_capability(ble_stack_value.io_capabilities) == BLE_STATUS_SUCCESS)
     {
-      BLE_MANAGER_PRINTF("I/O Capability Configurated\r\n");
+      BLE_MANAGER_PRINTF("I/O Capability Configured\r\n");
     }
     else
     {
@@ -3902,10 +4042,10 @@ static ble_status_t init_ble_manager_ble_stack(void)
   else
   {
     /* Set the I/O capability  Otherwise the Smartphone will propose a Pin
-    * that will be acepted without any control */
+    * that will be accepted without any control */
     if (aci_gap_set_io_capability(ble_stack_value.io_capabilities) == BLE_STATUS_SUCCESS)
     {
-      BLE_MANAGER_PRINTF("I/O Capability Configurated\r\n");
+      BLE_MANAGER_PRINTF("I/O Capability Configured\r\n");
     }
     else
     {
@@ -3968,7 +4108,7 @@ static ble_status_t init_ble_manager_ble_stack(void)
 #else /* BLE_INITIAL_DELAY */
   BLE_INITIAL_DELAY(2000);
 #endif /* BLE_INITIAL_DELAY */
-  
+
   ret = hci_le_write_suggested_default_data_length(247, (247 + 14) * 8);
   if (ret != BLE_STATUS_SUCCESS)
   {
@@ -3985,9 +4125,8 @@ fail:
 #endif /* (BLUE_CORE == STM32WB05N) */
 /**
   * @brief  Get hardware and firmware version
-  *
-  * @param  Hardware version
-  * @param  Firmware version
+  * @param  hw_version Hardware version
+  * @param  fw_version Firmware version
   * @retval Status
   */
 uint8_t get_blue_nrg_version(uint8_t *hw_version, uint16_t *fw_version)
@@ -4015,8 +4154,7 @@ uint8_t get_blue_nrg_version(uint8_t *hw_version, uint16_t *fw_version)
 
 /**
   * @brief  Init Ble Manager Services
-  * @param  None
-  * @retval ble_status_t Status
+  * @retval status
   */
 static ble_status_t init_ble_manager_services(void)
 {
@@ -4398,6 +4536,42 @@ __weak void init_ble_int_for_stm32wb05n(void)
   * Output         : See file bluenrg1_events.h
   * Return         : See file bluenrg1_events.h
   *******************************************************************************/
+#if (BLUE_CORE == STM32WBA)
+tBleStatus hci_le_connection_complete_event(uint8_t status,
+                                            uint16_t connection_handle,
+                                            uint8_t role,
+                                            uint8_t peer_address_type,
+                                            const uint8_t *peer_address,
+                                            uint16_t conn_interval,
+                                            uint16_t conn_latency,
+                                            uint16_t supervision_timeout,
+                                            uint8_t master_clock_accuracy)
+{
+  global_connection_handle = connection_handle;
+
+  BLE_MANAGER_PRINTF(">>>>>>CONNECTED %x:%x:%x:%x:%x:%x\r\n", peer_address[5], peer_address[4], peer_address[3],
+                     peer_address[2], peer_address[1], peer_address[0]);
+  BLE_MANAGER_PRINTF("%d\r\n", connection_handle);
+
+
+  /* Start one Exchange configuration for understaning the maximum ATT_MTU */
+  tBleStatus RetStatus;
+  RetStatus = aci_gatt_exchange_config(global_connection_handle);
+  if (RetStatus != (tBleStatus)BLE_STATUS_SUCCESS)
+  {
+    BLE_MANAGER_PRINTF("Error: ACI GATT Exchange Config Failed (0x%x)\r\n", RetStatus);
+  }
+  else
+  {
+    BLE_MANAGER_PRINTF("aci_gatt_exchange_config SUCCESS\r\n");
+  }
+
+
+  connection_completed_function(global_connection_handle, peer_address_type, (uint8_t *)peer_address);
+
+  return BLE_STATUS_SUCCESS;
+}/* end hci_le_connection_complete_event() */
+#else /* (BLUE_CORE == STM32WBA) */
 void hci_le_connection_complete_event(uint8_t status,
                                       uint16_t connection_handle,
                                       uint8_t role,
@@ -4470,6 +4644,7 @@ void hci_le_connection_complete_event(uint8_t status,
 #endif /* (BLUE_CORE == BLUENRG_MS) */
 
 }/* end hci_le_connection_complete_event() */
+#endif /* (BLUE_CORE == STM32WBA) */
 
 /*******************************************************************************
   * Function Name  : hci_disconnection_complete_event.
@@ -4478,6 +4653,31 @@ void hci_le_connection_complete_event(uint8_t status,
   * Output         : See file bluenrg1_events.h
   * Return         : See file bluenrg1_events.h
   *******************************************************************************/
+#if (BLUE_CORE == STM32WBA)
+tBleStatus hci_disconnection_complete_event(uint8_t status,
+                                            uint16_t connection_handle,
+                                            uint8_t reason)
+{
+  /* No Device Connected */
+  global_connection_handle = 0;
+
+#ifndef BLE_MANAGER_NO_PARSON
+  /* Reset the BLE Parse State */
+  tot_len_ble_parse = 0;
+  status_ble_parse = BLE_COMM_TP_WAIT_START;
+#endif /* BLE_MANAGER_NO_PARSON */
+
+  BLE_MANAGER_PRINTF("<<<<<<DISCONNECTED\r\n");
+
+  /* Make the device connectable again. */
+  set_connectable = TRUE;
+
+  disconnection_completed_function();
+
+  return HCI_SUCCESS_ERR_CODE;
+}/* end hci_disconnection_complete_event() */
+
+#else /* (BLUE_CORE == STM32WBA) */
 void hci_disconnection_complete_event(uint8_t status,
                                       uint16_t connection_handle,
                                       uint8_t reason)
@@ -4499,8 +4699,9 @@ void hci_disconnection_complete_event(uint8_t status,
   disconnection_completed_function();
 
 }/* end hci_disconnection_complete_event() */
+#endif /* (BLUE_CORE == STM32WBA) */
 
-#if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N))
+#if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N) && (BLUE_CORE != STM32WBA))
 /*******************************************************************************
   * Function Name  : aci_gatt_read_permit_req_event.
   * Description    : This event is given when a read request is received
@@ -4533,7 +4734,33 @@ void aci_gatt_read_permit_req_event(uint16_t connection_handle,
     aci_gatt_allow_read(global_connection_handle);
   }
 }
-#else /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
+#elif (BLUE_CORE == STM32WBA)
+tBleStatus aci_gatt_read_permit_req_event(uint16_t connection_handle,
+                                          uint16_t attribute_handle,
+                                          uint16_t offset)
+{
+  uint32_t found_handle = 0;
+  uint8_t registered_handle;
+
+  /* Search inside all the registered handles */
+  for (registered_handle = 0; ((registered_handle < used_ble_chars) && (found_handle == 0U)); registered_handle++)
+  {
+    if (ble_chars_array[registered_handle]->read_request_cb != NULL)
+    {
+      if (attribute_handle == (ble_chars_array[registered_handle]->attr_handle + 1U))
+      {
+        ble_chars_array[registered_handle]->read_request_cb(ble_chars_array[registered_handle], attribute_handle);
+      }
+    }
+  }
+
+  if (global_connection_handle != 0U)
+  {
+    aci_gatt_permit_read(global_connection_handle, 0x00, 0x00, attribute_handle);
+  }
+  return BLE_STATUS_SUCCESS;
+}
+#else /* ((BLUE_CORE != BLUENRG_LP/STM32WB07_06/STM32WB05N/STM32WBA)) */
 void aci_gatt_srv_authorize_nwk_event(uint16_t connection_handle,
 #if (BLUE_CORE == STM32WB05N)
                                       uint16_t CID,
@@ -4566,7 +4793,7 @@ void aci_gatt_srv_authorize_nwk_event(uint16_t connection_handle,
     }
   }
 }
-#endif /* ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N)) */
+#endif /* ((BLUE_CORE != BLUENRG_LP/STM32WB07_06/STM32WB05N/STM32WBA)) */
 
 /*******************************************************************************
   * Function Name  : aci_gatt_attribute_modified_event.
@@ -4575,6 +4802,89 @@ void aci_gatt_srv_authorize_nwk_event(uint16_t connection_handle,
   * Output         : See file bluenrg1_events.h
   * Return         : See file bluenrg1_events.h
   *******************************************************************************/
+#if (BLUE_CORE == STM32WBA)
+tBleStatus Attribute_Modified_Request_CB(uint16_t connection_handle,
+                                         uint16_t attr_handle,
+                                         uint16_t offset,
+                                         uint16_t attr_data_length,
+                                         const uint8_t attr_data[])
+{
+  uint32_t found_handle = 0;
+  uint8_t registered_handle;
+
+  BLE_MANAGER_PRINTF("%d %d %d %d\r\n", connection_handle, attr_handle, offset, attr_data_length);
+
+  if (attr_handle == ((uint16_t)(0x0002 + 2)))
+  {
+    BLE_MANAGER_PRINTF("Notification on Service Change Characteristic\r\n");
+    found_handle = 1;
+    if (ble_stack_value.force_rescan)
+    {
+      /* Force one UUID rescan */
+      ble_status_t ret = BLE_STATUS_INSUFFICIENT_RESOURCES;
+      uint8_t buff[4];
+
+      /* Delete all the Handles from 0x0001 to 0xFFFF */
+      STORE_LE_16(buff, 0x0001U);
+      STORE_LE_16(buff + 2, 0xFFFFU);
+
+      ret = aci_gatt_update_char_value_ext(connection_handle, 1, 0x0002, 1, 4, offset, 4, buff);
+
+      if (ret == (ble_status_t)BLE_STATUS_SUCCESS)
+      {
+        BLE_MANAGER_PRINTF("\r\nUUID Rescan Forced\r\n");
+      }
+      else
+      {
+        BLE_MANAGER_PRINTF("\r\nError: Problem forcing UUID Rescan\r\n");
+      }
+    }
+  }
+
+  /* Search inside all the registered handles */
+  for (registered_handle = 0; ((registered_handle < used_ble_chars) && (found_handle == 0U)); registered_handle++)
+  {
+    /* Notification */
+    if (ble_chars_array[registered_handle]->attr_mod_request_cb != NULL)
+    {
+      if (attr_handle == (ble_chars_array[registered_handle]->attr_handle + 2U))
+      {
+        found_handle = 1U;
+        ble_chars_array[registered_handle]->attr_mod_request_cb(ble_chars_array[registered_handle], attr_handle, offset,
+                                                                attr_data_length, (uint8_t *)attr_data);
+      }
+    }
+
+    /* Write */
+    if (found_handle == 0U)
+    {
+      if (ble_chars_array[registered_handle]->write_request_cb != NULL)
+      {
+        if (attr_handle == (ble_chars_array[registered_handle]->attr_handle + 1U))
+        {
+          found_handle = 1U;
+          ble_chars_array[registered_handle]->write_request_cb(ble_chars_array[registered_handle], attr_handle, offset,
+                                                               attr_data_length, (uint8_t *)attr_data);
+        }
+      }
+    }
+  }
+
+  if (found_handle == 0U)
+  {
+    if (ble_std_err_service == BLE_SERV_ENABLE)
+    {
+      bytes_to_write = (uint8_t)sprintf((char *)buffer_to_write, "Notification UNKNOWN handle\n");
+      std_err_update(buffer_to_write, bytes_to_write);
+    }
+    else
+    {
+      BLE_MANAGER_PRINTF("Notification UNKNOWN handle =%d\r\n", attr_handle);
+    }
+  }
+  return HCI_SUCCESS_ERR_CODE;
+}
+#else /* (BLUE_CORE == STM32WBA) */
 void aci_gatt_attribute_modified_event(uint16_t connection_handle,
                                        uint16_t attr_handle,
                                        uint16_t offset,
@@ -4661,6 +4971,7 @@ void aci_gatt_attribute_modified_event(uint16_t connection_handle,
     }
   }
 }
+#endif /* (BLUE_CORE == STM32WBA) */
 
 #if ((BLUE_CORE == BLUENRG_LP) || (BLUE_CORE == STM32WB07_06) || (BLUE_CORE == STM32WB05N))
 /**
@@ -4713,8 +5024,202 @@ void aci_gatt_srv_attribute_modified_event(uint16_t connection_handle,
                                     attr_data_length,
                                     attr_data);
 }
+#elif (BLUE_CORE == STM32WBA)
+tBleStatus hci_le_enhanced_connection_complete_event(uint8_t Status,
+                                                     uint16_t Connection_Handle,
+                                                     uint8_t Role,
+                                                     uint8_t Peer_Address_Type,
+                                                     const uint8_t *Peer_Address,
+                                                     const uint8_t *Local_Resolvable_Private_Address,
+                                                     const uint8_t *Peer_Resolvable_Private_Address,
+                                                     uint16_t Conn_Interval,
+                                                     uint16_t Conn_Latency,
+                                                     uint16_t Supervision_Timeout,
+                                                     uint8_t Master_Clock_Accuracy)
+{
+  tBleStatus ret;
+
+  ret = hci_le_connection_complete_event(Status,
+                                         Connection_Handle,
+                                         Role,
+                                         Peer_Address_Type,
+                                         Peer_Address,
+                                         Conn_Interval,
+                                         Conn_Latency,
+                                         Supervision_Timeout,
+                                         Master_Clock_Accuracy);
+  return ret;
+}
+
+tBleStatus aci_gatt_attribute_modified_event(uint16_t Connection_Handle,
+                                             uint16_t Attr_Handle,
+                                             uint16_t Offset,
+                                             uint16_t Attr_Data_Length,
+                                             const uint8_t Attr_Data[])
+{
+  Attribute_Modified_Request_CB(Connection_Handle,
+                                Attr_Handle,
+                                Offset,
+                                Attr_Data_Length,
+                                Attr_Data);
+  return HCI_SUCCESS_ERR_CODE;
+}
 #endif /* ((BLUE_CORE == BLUENRG_LP) || (BLUE_CORE == STM32WB07_06) || (BLUE_CORE == STM32WB05N)) */
 
+#if (BLUE_CORE == STM32WBA)
+/*******************************************************************************
+  * Function Name  : aci_att_exchange_mtu_resp_event
+  * Description    : This event is generated in response to an Exchange MTU request
+  * Input          : See file bluenrg1_events.h
+  * Output         : See file bluenrg1_events.h
+  * Return         : See file bluenrg1_events.h
+  *******************************************************************************/
+tBleStatus aci_att_exchange_mtu_resp_event(uint16_t connection_handle,
+                                           uint16_t server_rx_mtu)
+{
+  if ((server_rx_mtu - 3U) < max_ble_char_std_out_len)
+  {
+    max_ble_char_std_out_len = (uint8_t)(server_rx_mtu - 3U);
+  }
+
+  if ((server_rx_mtu - 3U) < max_ble_char_std_err_len)
+  {
+    max_ble_char_std_err_len = (uint8_t)(server_rx_mtu - 3U);
+  }
+
+#if (BLE_DEBUG_LEVEL>2)
+  BLE_MANAGER_PRINTF("aci_att_exchange_mtu_resp_event server_rx_mtu=%d\r\n", server_rx_mtu);
+#endif /* (BLE_DEBUG_LEVEL>2) */
+
+  mtu_exchange_resp_event_function(server_rx_mtu - 3U);
+  return BLE_STATUS_SUCCESS;
+}
+
+tBleStatus aci_gap_pass_key_req_event(uint16_t connection_handle, uint8_t IO_Capability)
+{
+  ble_status_t status;
+#if (BLE_DEBUG_LEVEL>2)
+  BLE_MANAGER_PRINTF("aci_gap_pass_key_req_event [Requested pass_wd=%ld]\r\n", (long)ble_stack_value.secure_pin);
+#endif /* (BLE_DEBUG_LEVEL>2) */
+
+  status = aci_gap_pass_key_resp(global_connection_handle, ble_stack_value.secure_pin);
+
+  if (status != (uint8_t)BLE_STATUS_SUCCESS)
+  {
+    BLE_MANAGER_PRINTF("Error: aci_gap_pass_key_resp failed:0x%02x\r\n", status);
+#if (BLE_DEBUG_LEVEL>1)
+  }
+  else
+  {
+    BLE_MANAGER_PRINTF("aci_gap_pass_key_resp OK\r\n");
+#endif /* (BLE_DEBUG_LEVEL>1) */
+  }
+
+  return BLE_STATUS_SUCCESS;
+}
+
+/**
+  * @brief  This event is generated when the pairing process has completed successfully or a pairing
+  *         procedure timeout has occurred or the pairing has failed. This is to notify the application that
+  *         we have paired with a remote device so that it can take further actions or to notify that a
+  *         timeout has occurred so that the upper layer can decide to disconnect the link.
+  * @param connection_handle Connection handle on which the pairing procedure
+  *        completed
+  * @param status Pairing status. If 0x02, see reason code.
+  *        Values:
+  *        - 0x00: Success
+  *        - 0x01: Timeout
+  *        - 0x02: Pairing Failed
+  *        - 0x03: Encryption failed, LTK missing on local device
+  *        - 0x04: Encryption failed, LTK missing on peer device
+  *        - 0x05: Encryption not supported by remote device
+  * @param reason Pairing reason error code
+  *        Values:
+  *        - 0x00
+  *        - 0x01: PASSKEY_ENTRY_FAILED
+  *        - 0x02: OOB_NOT_AVAILABLE
+  *        - 0x03: AUTH_REQ_CANNOT_BE_MET
+  *        - 0x04: CONFIRM_VALUE_FAILED
+  *        - 0x05: PAIRING_NOT_SUPPORTED
+  *        - 0x06: INSUFF_ENCRYPTION_KEY_SIZE
+  *        - 0x07: CMD_NOT_SUPPORTED
+  *        - 0x08: UNSPECIFIED_REASON
+  *        - 0x09: VERY_EARLY_NEXT_ATTEMPT
+  *        - 0x0A: SM_INVALID_PARAMS
+  *        - 0x0B: SMP_SC_DHKEY_CHECK_FAILED
+  *        - 0x0C: SMP_SC_NUMCOMPARISON_FAILED
+  */
+tBleStatus aci_gap_pairing_complete_event(uint16_t connection_handle, uint8_t status, uint8_t reason)
+{
+  char *status_string[] =
+  {
+    /* 0x00 */ "Success",
+    /* 0x01 */ "Timeout",
+    /* 0x02 */ "Pairing Failed",
+    /* 0x03 */ "Encryption failed, LTK missing on local device",
+    /* 0x04 */ "Encryption failed, LTK missing on peer device",
+    /* 0x05 */ "Encryption not supported by remote device"
+  };
+
+  char *reason_string[] =
+  {
+    /* 0x00 */ "NaN",
+    /* 0x01 */ "PASSKEY_ENTRY_FAILED",
+    /* 0x02 */ "OOB_NOT_AVAILABLE",
+    /* 0x03 */ "AUTH_REQ_CANNOT_BE_MET",
+    /* 0x04 */ "CONFIRM_VALUE_FAILED",
+    /* 0x05 */ "PAIRING_NOT_SUPPORTED",
+    /* 0x06 */ "INSUFF_ENCRYPTION_KEY_SIZE",
+    /* 0x07 */ "CMD_NOT_SUPPORTED",
+    /* 0x08 */ "UNSPECIFIED_REASON",
+    /* 0x09 */ "VERY_EARLY_NEXT_ATTEMPT",
+    /* 0x0A */ "SM_INVALID_PARAMS",
+    /* 0x0B */ "SMP_SC_DHKEY_CHECK_FAILED",
+    /* 0x0C */ "SMP_SC_NUMCOMPARISON_FAILED"
+  };
+
+  switch (status)
+  {
+    case 0x00: /* Success */
+      BLE_MANAGER_PRINTF("aci_gap_pairing_complete_event %s\r\n", status_string[status]);
+      update_white_list();
+      BLE_MANAGER_DELAY(100);
+      break;
+    case 0x02: /* Pairing Failed */
+      BLE_MANAGER_PRINTF("aci_gap_pairing_complete_event failed:\r\n\tstatus= %s\r\n\treason= %s\r\n",
+                         status_string[status],
+                         reason_string[reason]);
+#if 0
+      /* Not sure... */
+      BLE_MANAGER_PRINTF("Issue one aci_gap_terminate\r\n");
+      /*
+       0x05: Authentication Failure
+       0x13: Remote User Terminated Connection
+       0x14: Remote Device Terminated Connection due to Low Resources
+       0x15: Remote Device Terminated Connection due to Power Off
+       0x1A: Unsupported Remote Feature
+       0x3B: Unacceptable Connection Parameters
+      */
+      aci_gap_terminate(connection_handle, 0x05);
+#endif /* 0 */
+      break;
+    case 0x01: /* Timeout */
+    case 0x03: /* Encryption failed, LTK missing on local device */
+    case 0x04: /* Encryption failed, LTK missing on peer device */
+    case 0x05: /* Encryption not supported by remote device */
+      BLE_MANAGER_PRINTF("aci_gap_pairing_complete_event failed:\r\n\tstatus= %s\r\n\treason= %s\r\n",
+                         status_string[status],
+                         reason_string[reason]);
+      break;
+  }
+
+  BLE_UNUSED(status_string);
+  BLE_UNUSED(reason_string);
+
+  pairing_completed_function(status);
+  return BLE_STATUS_SUCCESS;
+}
+#else /* (BLUE_CORE == STM32WBA) */
 /*******************************************************************************
   * Function Name  : aci_att_exchange_mtu_resp_event
   * Description    : This event is generated in response to an Exchange MTU request
@@ -4776,8 +5281,31 @@ void aci_gap_pass_key_req_event(uint16_t connection_handle)
   *         procedure timeout has occurred or the pairing has failed. This is to notify the application that
   *         we have paired with a remote device so that it can take further actions or to notify that a
   *         timeout has occurred so that the upper layer can decide to disconnect the link.
-  * @param  See file bluenrg_lp_events.h
-  * @retval See file bluenrg_lp_events.h
+  * @param connection_handle Connection handle on which the pairing procedure
+  *        completed
+  * @param status Pairing status. If 0x02, see reason code.
+  *        Values:
+  *        - 0x00: Success
+  *        - 0x01: Timeout
+  *        - 0x02: Pairing Failed
+  *        - 0x03: Encryption failed, LTK missing on local device
+  *        - 0x04: Encryption failed, LTK missing on peer device
+  *        - 0x05: Encryption not supported by remote device
+  * @param reason Pairing reason error code
+  *        Values:
+  *        - 0x00
+  *        - 0x01: PASSKEY_ENTRY_FAILED
+  *        - 0x02: OOB_NOT_AVAILABLE
+  *        - 0x03: AUTH_REQ_CANNOT_BE_MET
+  *        - 0x04: CONFIRM_VALUE_FAILED
+  *        - 0x05: PAIRING_NOT_SUPPORTED
+  *        - 0x06: INSUFF_ENCRYPTION_KEY_SIZE
+  *        - 0x07: CMD_NOT_SUPPORTED
+  *        - 0x08: UNSPECIFIED_REASON
+  *        - 0x09: VERY_EARLY_NEXT_ATTEMPT
+  *        - 0x0A: SM_INVALID_PARAMS
+  *        - 0x0B: SMP_SC_DHKEY_CHECK_FAILED
+  *        - 0x0C: SMP_SC_NUMCOMPARISON_FAILED
   */
 void aci_gap_pairing_complete_event(uint16_t connection_handle, uint8_t status, uint8_t reason)
 {
@@ -4850,8 +5378,10 @@ void aci_gap_pairing_complete_event(uint16_t connection_handle, uint8_t status, 
 
   pairing_completed_function(status);
 }
+#endif /* (BLUE_CORE == STM32WBA) */
 
-#if (BLUE_CORE != BLUENRG_MS)
+
+#if (BLUE_CORE != BLUENRG_MS && BLUE_CORE != STM32WBA)
 /*******************************************************************************
   * Function Name  : aci_l2cap_connection_update_resp_event
   * Description    : This event is generated when the master responds to the connection
@@ -4963,7 +5493,6 @@ void hci_le_data_length_change_event(uint16_t connection_handle,
   * @param connection_handle Connection handle related to the response
   * @param Error_Code Indicates whether the procedure completed with an error or
   *        was successful.
-  * @retval None
   */
 /* Error Code Values:
   - 0x00: Success
@@ -5096,7 +5625,6 @@ void aci_gatt_clt_proc_complete_event(uint16_t connection_handle,
   *        - 0x01: The receiver PHY for the connection is LE 1M
   *        - 0x02: The receiver PHY for the connection is LE 2M
   *        - 0x03: The receiver PHY for the connection is LE Coded
-  * @retval None
   */
 void hci_le_phy_update_complete_event(uint8_t status,
                                       uint16_t connection_handle,
@@ -5117,7 +5645,6 @@ void hci_le_phy_update_complete_event(uint8_t status,
   * @param attribute_handle The handle of the attribute
   * @param attribute_value_length Length of attribute_value in octets
   * @param attribute_value The current value of the attribute
-  * @retval None
   */
 void aci_gatt_indication_event(uint16_t connection_handle,
                                uint16_t attribute_handle,
@@ -5175,7 +5702,6 @@ void aci_gatt_indication_event(uint16_t connection_handle,
   * @param attribute_handle The handle of the attribute
   * @param attribute_value_length Length of attribute_value in octets
   * @param attribute_value The current value of the attribute
-  * @retval None
   */
 void aci_gatt_clt_indication_event(uint16_t connection_handle,
                                    uint16_t CID,
@@ -5232,7 +5758,6 @@ void aci_gatt_clt_indication_event(uint16_t connection_handle,
   * @param attribute_handle The handle of the attribute
   * @param attribute_value_length Length of attribute_value in octets
   * @param attribute_value The current value of the attribute
-  * @retval None
   */
 void aci_gatt_clt_indication_event(uint16_t connection_handle,
                                    uint16_t attribute_handle,
@@ -5290,18 +5815,16 @@ void aci_gatt_clt_indication_event(uint16_t connection_handle,
   *        This is a critical event that should not happen during normal operating conditions.
   *        It is an indication of either a major disruption in the communication link or a mistake in the application
   *        which does not provide a reply to GATT procedures. After this event, the GATT channel is closed and no more
-  *        GATT communication can be performed. The applications is expected to issue an
-  *        @ref aci_gap_terminate to disconnect from the peer device. It is important to leave an 100 ms blank
-  *             window before sending the
-  *        @ref aci_gap_terminate, since immediately after this event, system could save important information
-  *             in non volatile memory.
+  *        GATT communication can be performed. The applications is expected to issue an to disconnect from the peer
+  *        device (use aci_gap_terminate API). It is important to leave an 100 ms blank window before calling the
+  *        API aci_gap_terminate, since immediately after this event, system could save important information
+  *        in non volatile memory.
   * @param connection_handle Connection handle on which the GATT procedure has timed out
-  * @retval None
   */
 void aci_gatt_proc_timeout_event(uint16_t connection_handle)
 {
   BLE_MANAGER_PRINTF("\r\n-------->aci_gatt_proc_timeout_event<--------\r\n");
-  /* ... it is important to leave an 100 ms blank window before sending the @ref aci_gap_terminate...*/
+  /* ... it is important to leave an 100 ms blank window before calling the API aci_gap_terminate...*/
   BLE_MANAGER_DELAY(500);
 
   /*
@@ -5322,17 +5845,19 @@ void aci_gatt_proc_timeout_event(uint16_t connection_handle)
   *        It is an indication of either a major disruption in the communication link or a mistake in the application
   *        which does not provide a reply to GATT procedures. After this event, the GATT channel is closed and no more
   *        GATT communication can be performed. The applications is expected to issue an
-  *        @ref aci_gap_terminate to disconnect from the peer device. It is important to leave an 100 ms blank
-  *             window before sending the
-  *        @ref aci_gap_terminate, since immediately after this event, system could save important information
-  *             in non volatile memory.
+  *        GATT communication can be performed. The applications is expected to issue an to disconnect from the peer
+  *        device (use aci_gap_terminate API). It is important to leave an 100 ms blank window before calling the
+  *        API aci_gap_terminate, since immediately after this event, system could save important information
+  *        in non volatile memory.
   * @param connection_handle Connection handle on which the GATT procedure has timed out
-  * @retval None
+  * @param CID If equal to 0x0004, the event is related to an unenhanced ATT
+  *        bearer. Otherwise, the value is the local endpoint identifying the
+  *        enhanced ATT bearer.
   */
 void aci_gatt_proc_timeout_event(uint16_t connection_handle, uint16_t CID)
 {
   BLE_MANAGER_PRINTF("\r\n-------->aci_gatt_proc_timeout_event<--------\r\n");
-  /* ... it is important to leave an 100 ms blank window before sending the @ref aci_gap_terminate...*/
+  /* ... it is important to leave an 100 ms blank window before calling the API aci_gap_terminate...*/
   BLE_MANAGER_DELAY(500);
 
   /*
@@ -5361,7 +5886,6 @@ void aci_gatt_proc_timeout_event(uint16_t connection_handle, uint16_t CID)
   *        - 0x01: Radio state error
   *        - 0x02: Timer overrun error
   *        - 0x03: Internal queue overflow error
-  * @retval None
   */
 void hci_hardware_error_event(uint8_t hardware_code)
 {
@@ -5387,8 +5911,6 @@ void aci_gap_bond_lost_event(void)
 #endif /* (BLUE_CORE != STM32WB05N) */
 /**
   * @brief  This function Updates the White list for BLE Connection
-  * @param None
-  * @retval None
   */
 static void update_white_list(void)
 {
@@ -5466,31 +5988,249 @@ void hci_encryption_change_event(uint8_t status, uint16_t connection_handle, uin
   BLE_MANAGER_PRINTF("hci_encryption_change_event\r\n");
 #endif /* (BLE_DEBUG_LEVEL>2) */
 }
-#endif /* (BLUE_CORE != BLUENRG_MS) */
+
+#elif (BLUE_CORE == STM32WBA)
+
+tBleStatus hci_encryption_change_event(uint8_t status, uint16_t connection_handle, uint8_t encryption_enabled)
+{
+#if (BLE_DEBUG_LEVEL>2)
+  BLE_MANAGER_PRINTF("hci_encryption_change_event\r\n");
+#endif /* (BLE_DEBUG_LEVEL>2) */
+  return BLE_STATUS_SUCCESS;
+}
+
+tBleStatus aci_l2cap_connection_update_resp_event(uint16_t connection_handle,
+                                                  uint16_t result)
+{
+#if (BLE_DEBUG_LEVEL>2)
+  BLE_MANAGER_PRINTF("aci_l2cap_connection_update_resp_event Result=%d\r\n", result);
+#endif /* (BLE_DEBUG_LEVEL>2) */
+  return HCI_SUCCESS_ERR_CODE;
+}
+
+/*******************************************************************************
+  * Function Name  : hci_le_connection_update_complete_event
+  * Description    : It indicates that the Controller process to update the connection has completed
+  * Input          : See file bluenrg1_events.h
+  * Output         : See file bluenrg1_events.h
+  * Return         : See file bluenrg1_events.h
+  *******************************************************************************/
+tBleStatus hci_le_connection_update_complete_event(uint8_t status,
+                                                   uint16_t connection_handle,
+                                                   uint16_t conn_interval,
+                                                   uint16_t conn_latency,
+                                                   uint16_t supervision_timeout)
+{
+#if (BLE_DEBUG_LEVEL>2)
+  BLE_MANAGER_PRINTF("hci_le_connection_update_complete_event:\r\n");
+  BLE_MANAGER_PRINTF("\tStatus=%d\r\n", status);
+  BLE_MANAGER_PRINTF("\tConn_Interval=%d\r\n", conn_interval);
+  BLE_MANAGER_PRINTF("\tConn_Latency=%d\r\n", conn_latency);
+  BLE_MANAGER_PRINTF("\tSupervision_Timeout=%d\r\n", supervision_timeout);
+#endif /* (BLE_DEBUG_LEVEL>2) */
+  return HCI_SUCCESS_ERR_CODE;
+}
+
+/*******************************************************************************
+  * Function Name  : aci_gatt_proc_complete_event
+  * Description    : This event is generated when a GATT client procedure completes
+  *                  either with error or successfully
+  * Input          : See file bluenrg1_events.h
+  * Output         : See file bluenrg1_events.h
+  * Return         : See file bluenrg1_events.h
+  *******************************************************************************/
+tBleStatus aci_gatt_proc_complete_event(uint16_t connection_handle,
+                                        uint8_t error_code)
+{
+  if (error_code != 0U)
+  {
+    BLE_MANAGER_PRINTF("Error: aci_gatt_proc_complete_event Error Code=%d\r\n", error_code);
+#if (BLE_DEBUG_LEVEL>2)
+  }
+  else
+  {
+    BLE_MANAGER_PRINTF("aci_gatt_proc_complete_event Success\r\n");
+#endif /* (BLE_DEBUG_LEVEL>2) */
+  }
+  return HCI_SUCCESS_ERR_CODE;
+}
+
+/*******************************************************************************
+  * Function Name  : hci_le_data_length_change_event
+  * Description    : The LE Data Length Change event notifies the Host of a change
+  *                  to either the maximum Payload length or the maximum transmission
+  *                  time of Data Channel PDUs in either direction
+  * Input          : See file bluenrg1_events.h
+  * Output         : See file bluenrg1_events.h
+  * Return         : See file bluenrg1_events.h
+  *******************************************************************************/
+tBleStatus hci_le_data_length_change_event(uint16_t connection_handle,
+                                           uint16_t max_tx_octets,
+                                           uint16_t max_tx_time,
+                                           uint16_t max_rx_octets,
+                                           uint16_t max_rx_time)
+{
+#if (BLE_DEBUG_LEVEL>2)
+  BLE_MANAGER_PRINTF("hci_le_data_length_change_event\r\n");
+#endif /* (BLE_DEBUG_LEVEL>2) */
+
+  return HCI_SUCCESS_ERR_CODE;
+}
+
+/**
+  * @brief This event is generated when an indication is received from the server.
+  * @param connection_handle Connection handle related to the response
+  * @param attribute_handle The handle of the attribute
+  * @param attribute_value_length Length of attribute_value in octets
+  * @param attribute_value The current value of the attribute
+  * @retval None
+  */
+tBleStatus aci_gatt_indication_event(uint16_t connection_handle,
+                                     uint16_t attribute_handle,
+                                     uint8_t attribute_value_length,
+                                     const uint8_t attribute_value[])
+{
+  ble_status_t ret_status = HCI_SUCCESS_ERR_CODE;
+
+  /* This callback should be called when we connect the .box also to something
+  * that could work also like server mode.
+  * In our case we don't need to do nothing when we receive this indication,
+  * except it's confirmation
+  */
+
+  BLE_MANAGER_PRINTF("aci_gatt_indication_event\r\n");
+#ifdef BLE_MANAGER_DEBUG
+#if (BLE_DEBUG_LEVEL>2)
+  BLE_MANAGER_PRINTF("aci_gatt_indication_event:\r\n");
+  BLE_MANAGER_PRINTF("\tConnection_Handle=0x%x\r\n", connection_handle);
+  BLE_MANAGER_PRINTF("\tAttribute_Handle=0x%x\r\n", attribute_handle);
+  if (attribute_value_length == 4U)
+  {
+    uint16_t start_handle = 0;
+    uint16_t stop_handle  = 0;
+    /* Should be the range of Handles */
+    start_handle = (((uint16_t) attribute_value[1]) << 8);
+    start_handle = start_handle  | ((uint16_t)attribute_value[0]);
+    stop_handle  = (((uint16_t) attribute_value[3]) << 8);
+    stop_handle = stop_handle | ((uint16_t)attribute_value[2]);
+    BLE_MANAGER_PRINTF("\tFrom Handles =0x%x to 0x%x\r\n", start_handle, stop_handle);
+  }
+#endif /* (BLE_DEBUG_LEVEL>2) */
+  BLE_MANAGER_PRINTF("Nothing to do except send confirmation\r\n");
+#endif /* BLE_MANAGER_DEBUG */
+
+  return ret_status;
+}
+
+/**
+  * @brief This event is generated by the client/server to the application on a GATT timeout (30 seconds).
+  *        This is a critical event that should not happen during normal operating conditions.
+  *        It is an indication of either a major disruption in the communication link or a mistake in the application
+  *        which does not provide a reply to GATT procedures. After this event, the GATT channel is closed and no more
+  *        GATT communication can be performed. The applications is expected to issue an
+  *        @ref aci_gap_terminate to disconnect from the peer device. It is important to leave an 100 ms blank
+  *             window before sending the
+  *        @ref aci_gap_terminate, since immediately after this event, system could save important information
+  *             in non volatile memory.
+  * @param connection_handle Connection handle on which the GATT procedure has timed out
+  * @retval None
+  */
+tBleStatus aci_gatt_proc_timeout_event(uint16_t connection_handle)
+{
+  BLE_MANAGER_PRINTF("\r\n-------->aci_gatt_proc_timeout_event<--------\r\n");
+  /* ... it is important to leave an 100 ms blank window before sending the @ref aci_gap_terminate...*/
+  BLE_MANAGER_DELAY(500);
+
+  /*
+   0x05: Authentication Failure
+   0x13: Remote User Terminated Connection
+   0x14: Remote Device Terminated Connection due to Low Resources
+   0x15: Remote Device Terminated Connection due to Power Off
+   0x1A: Unsupported Remote Feature
+   0x3B: Unacceptable Connection Parameters
+  */
+  BLE_MANAGER_PRINTF("Issue one aci_gap_terminate\r\n");
+  aci_gap_terminate(connection_handle, 0x13);
+  return BLE_STATUS_SUCCESS;
+
+}
+
+/**
+  * @brief The Hardware Error event is used to indicate some implementation specific type of hardware failure for the
+  *        controller. This event is used to notify the Host that a hardware failure has occurred in the Controller.
+  * @param hardware_code Hardware Error Event code.
+  *        Error code 0x01 and 0x02 are errors generally caused by hardware issue on the PCB;
+  *        another possible cause is a slow crystal startup.
+  *        In the latter case, the HS_STARTUP_TIME in the device configuration needs to be tuned.
+  *        Error code 0x03 indicates an internal error of the protocol stack.
+  *        After this event is recommended to force device reset.
+  *        Values:
+  *        - 0x01: Radio state error
+  *        - 0x02: Timer overrun error
+  *        - 0x03: Internal queue overflow error
+  * @retval None
+  */
+tBleStatus hci_hardware_error_event(uint8_t hardware_code)
+{
+  hardware_error_event_handler_function(hardware_code);
+  return BLE_STATUS_SUCCESS;
+}
+
+tBleStatus aci_gap_bond_lost_event(uint16_t Connection_Handle)
+{
+  aci_gap_allow_rebond(Connection_Handle);
+#if (BLE_DEBUG_LEVEL>2)
+  BLE_MANAGER_PRINTF("aci_gap_allow_rebond()\r\n");
+#endif /* (BLE_DEBUG_LEVEL>2) */
+
+  return BLE_STATUS_SUCCESS;
+}
+
+static void update_white_list(void)
+{
+
+}
+
+/*******************************************************************************
+  * Function Name  : aci_gap_numeric_comparison_value_event
+  * Description    : This event is sent only during SC v.4.2 Pairing
+  *                  when Numeric Comparison Association model is selected
+  * Input          : See file bluenrg1_events.h
+  * Output         : See file bluenrg1_events.h
+  * Return         : See file bluenrg1_events.h
+  *******************************************************************************/
+tBleStatus aci_gap_numeric_comparison_value_event(uint16_t connection_handle, uint32_t numeric_value)
+{
+#if (BLE_DEBUG_LEVEL>2)
+  BLE_MANAGER_PRINTF("aci_gap_numeric_comparison_value_event Numeric Value=%ld\r\n", (long)numeric_value);
+#endif /* (BLE_DEBUG_LEVEL>2) */
+
+  /* Confirm Yes... without control of Numeric Value received from Master */
+  aci_gap_numeric_comparison_value_confirm_yesno(connection_handle, 0x01);
+  return BLE_STATUS_SUCCESS;
+}
+#endif /* (BLUE_CORE != BLUENRG_MS && BLUE_CORE != STM32WBA) */
 
 /*************************** Bluetooth Communication **************************/
 #if (BLUE_CORE == BLUENRG_MS)
 /**
   * @brief  This function is called when there is a LE Connection Complete event.
-  * @param  uint16_t connection_handle
-  * @param  uint8_t addr[6]
-  * @retval None
+  * @param  connection_handle Connection handle related to the response
+  * @param  addr[]
   */
 __weak void connection_completed_function(uint16_t connection_handle, uint8_t addr[6])
 #elif (BLUE_CORE == BLUE_WB)
 /**
   * @brief  This function is called when there is a LE Connection Complete event.
-  * @param  uint16_t connection_handle
-  * @retval None
+  * @param  connection_handle Connection handle related to the response
   */
 __weak void connection_completed_function(uint16_t connection_handle)
 #else /* (BLUE_CORE == BLUENRG_MS) */
 /**
   * @brief  This function is called when there is a LE Connection Complete event.
-  * @param  uint16_t connection_handle
-  * @param  uint8_t address_type
-  * @param  uint8_t addr[6]
-  * @retval None
+  * @param  connection_handle Connection handle related to the response
+  * @param  address_type
+  * @param  addr[]
   */
 __weak void connection_completed_function(uint16_t connection_handle, uint8_t address_type, uint8_t addr[6])
 #endif /* (BLUE_CORE == BLUENRG_MS) */
@@ -5516,8 +6256,6 @@ __weak void connection_completed_function(uint16_t connection_handle, uint8_t ad
 
 /**
   * @brief  This function is called when the peer device get disconnected.
-  * @param  None
-  * @retval None
   */
 __weak void disconnection_completed_function(void)
 {
@@ -5532,8 +6270,7 @@ __weak void disconnection_completed_function(void)
 /**
   * @brief  This function is called when the pairing process has completed successfully
   *         or a pairing procedure timeout has occurred or the pairing has failed.
-  * @param  uint8_t pairing_status
-  * @retval None
+  * @param  pairing_status
   */
 __weak void pairing_completed_function(uint8_t pairing_status)
 {
@@ -5550,8 +6287,7 @@ __weak void pairing_completed_function(uint8_t pairing_status)
 
 /**
   * @brief  This function is called when the device is put in connectable mode.
-  * @param  uint8_t *manuf_data Filling Manufacter Advertise data
-  * @retval None
+  * @param  *manuf_data Filling Manufacturer Advertise data
   */
 __weak void set_connectable_function(uint8_t *manuf_data)
 {
@@ -5565,6 +6301,12 @@ __weak void set_connectable_function(uint8_t *manuf_data)
            the set_connectable_function could be implemented in the user file
    */
 }
+
+/**
+  * @brief  This function is called when the device is put in connectable mode
+  *         to read the MTU value.
+  * @param  server_rx_mtu
+  */
 
 __weak void mtu_exchange_resp_event_function(uint16_t server_rx_mtu)
 {
@@ -5582,8 +6324,6 @@ __weak void mtu_exchange_resp_event_function(uint16_t server_rx_mtu)
 /**
   * @brief  This function is called when bluetooth congestion buffer occurs
   *         or a pairing procedure timeout has occurred or the pairing has failed.
-  * @param  None
-  * @retval None
   */
 __weak void aci_gatt_tx_pool_available_event_function(void)
 {
@@ -5597,8 +6337,7 @@ __weak void aci_gatt_tx_pool_available_event_function(void)
 
 /**
   * @brief  This event is used to notify the Host that a hardware failure has occurred in the Controller.
-  * @param  uint8_t hardware_code Hardware Error event code.
-  * @retval None
+  * @param  hardware_code Hardware Error event code.
   */
 __weak void hardware_error_event_handler_function(uint8_t hardware_code)
 {
@@ -5632,9 +6371,9 @@ __weak void hardware_error_event_handler_function(uint8_t hardware_code)
 /******************************** Debug Console *******************************/
 /**
   * @brief  This function makes the parsing of the Debug Console
-  * @param  uint8_t *att_data attribute data
-  * @param  uint8_t data_length length of the data
-  * @retval uint32_t send_back_data true/false
+  * @param  *att_data attribute data
+  * @param  data_length length of the data
+  * @retval send_back_data true/false
   */
 __weak uint32_t debug_console_parsing(uint8_t *att_data, uint8_t data_length)
 {
@@ -5704,8 +6443,6 @@ __weak uint32_t debug_console_parsing(uint8_t *att_data, uint8_t data_length)
 /********************************* Config Char ********************************/
 /**
   * @brief  This function is called when there is a change on the gatt attribute.
-  * @param  None
-  * @retval None
   */
 __weak void attr_mod_config_function(uint8_t *att_data, uint8_t data_length)
 {
@@ -5719,9 +6456,8 @@ __weak void attr_mod_config_function(uint8_t *att_data, uint8_t data_length)
 
 /**
   * @brief  Callback Function for Config write request.
-  * @param uint8_t *att_data attribute data
-  * @param uint8_t data_length length of the data
-  * @retval None
+  * @param *att_data attribute data
+  * @param data_length length of the data
   */
 __weak void write_request_config_function(uint8_t *att_data, uint8_t data_length)
 {
@@ -5742,13 +6478,12 @@ __weak void write_request_config_function(uint8_t *att_data, uint8_t data_length
   ***********************************************************************************/
 /**
   * @brief  Callback Function for answering to the UID command
-  * @param  uint8_t **uid STM32 UID Return value
-  * @retval None
+  * @param  **uid STM32 UID Return value
   */
-__weak void ext_ext_config_uid_command_callback(uint8_t **uid)
+__weak void ext_ext_config_uid_command_callback(uint32_t **uid)
 {
 #ifdef BLE_STM32_UUID
-  *uid = (uint8_t *)BLE_STM32_UUID;
+  *uid = (uint32_t *)BLE_STM32_UUID;
 #endif /* BLE_STM32_UUID */
 
   BLE_MANAGER_PRINTF("Call to ext_ext_config_uid_command_callback (It is a weak function)\r\n");
@@ -5761,8 +6496,7 @@ __weak void ext_ext_config_uid_command_callback(uint8_t **uid)
 
 /**
   * @brief  Callback Function for answering to VersionFw command
-  * @param  uint8_t *answer Return String
-  * @retval None
+  * @param  *answer Return String
   */
 __weak void ext_config_version_fw_command_callback(uint8_t *answer)
 {
@@ -5783,8 +6517,7 @@ __weak void ext_config_version_fw_command_callback(uint8_t *answer)
 
 /**
   * @brief  Callback Function for answering to Info command
-  * @param  uint8_t *answer Return String
-  * @retval None
+  * @param  *answer Return String
   */
 __weak void ext_config_info_command_callback(uint8_t *answer)
 {
@@ -5814,8 +6547,7 @@ __weak void ext_config_info_command_callback(uint8_t *answer)
 
 /**
   * @brief  Callback Function for answering to Help command
-  * @param  uint8_t *answer Return String
-  * @retval None
+  * @param  *answer Return String
   */
 __weak void ext_config_help_command_callback(uint8_t *answer)
 {
@@ -5836,8 +6568,7 @@ __weak void ext_config_help_command_callback(uint8_t *answer)
 
 /**
   * @brief  Callback Function for answering to PowerStatus command
-  * @param  uint8_t *answer Return String
-  * @retval None
+  * @param  *answer Return String
   */
 __weak void ext_config_power_status_command_callback(uint8_t *answer)
 {
@@ -5857,8 +6588,7 @@ __weak void ext_config_power_status_command_callback(uint8_t *answer)
 
 /**
   * @brief  Callback Function for managing the ChangePin command
-  * @param  uint32_t new_pin
-  * @retval None
+  * @param  new_pin
   */
 __weak void ext_config_change_pin_command_callback(uint32_t new_pin)
 {
@@ -5875,8 +6605,6 @@ __weak void ext_config_change_pin_command_callback(uint32_t new_pin)
 
 /**
   * @brief  Callback Function for managing the ClearDB command
-  * @param  None
-  * @retval None
   */
 __weak void ext_config_clear_db_command_callback(void)
 {
@@ -5890,8 +6618,7 @@ __weak void ext_config_clear_db_command_callback(void)
 
 /**
   * @brief  Callback Function for managing the ReadCert command
-  * @param  uint8_t *certificate Certificate to register
-  * @retval None
+  * @param  *certificate Certificate to register
   */
 __weak void ext_config_read_cert_command_callback(uint8_t *certificate)
 {
@@ -5908,8 +6635,7 @@ __weak void ext_config_read_cert_command_callback(uint8_t *certificate)
 
 /**
   * @brief  Callback Function for managing the SetCert command
-  * @param  uint8_t *certificate registered certificate
-  * @retval None
+  * @param  *certificate registered certificate
   */
 __weak void ext_config_set_cert_command_callback(uint8_t *certificate)
 {
@@ -5925,8 +6651,6 @@ __weak void ext_config_set_cert_command_callback(uint8_t *certificate)
 
 /**
   * @brief  Callback Function for managing the DFU command
-  * @param  None
-  * @retval None
   */
 __weak void ext_config_reboot_on_dfu_mode_command_callback(void)
 {
@@ -5940,8 +6664,6 @@ __weak void ext_config_reboot_on_dfu_mode_command_callback(void)
 
 /**
   * @brief  Callback Function for managing the PowerOff command
-  * @param  None
-  * @retval None
   */
 __weak void ext_config_power_off_command_callback(void)
 {
@@ -5955,10 +6677,9 @@ __weak void ext_config_power_off_command_callback(void)
 
 /**
   * @brief  Callback Function for answering to ReadBanksFwId command
-  * @param  uint8_t *cur_bank Number Current Bank
-  * @param  uint16_t *fw_id1 Bank1 Firmware Id
-  * @param  uint16_t *fw_id2 Bank2 Firmware Id
-  * @retval None
+  * @param  *cur_bank Number Current Bank
+  * @param  *fw_id1 Bank1 Firmware Id
+  * @param  *fw_id2 Bank2 Firmware Id
   */
 __weak void ext_config_read_banks_fw_id_command_callback(uint8_t *cur_bank, uint16_t *fw_id1, uint16_t *fw_id2)
 {
@@ -5977,8 +6698,6 @@ __weak void ext_config_read_banks_fw_id_command_callback(uint8_t *cur_bank, uint
 
 /**
   * @brief  Callback Function for answering to BanksSwap command
-  * @param  None
-  * @retval None
   */
 __weak void ext_config_banks_swap_command_callback(void)
 {
@@ -5993,8 +6712,7 @@ __weak void ext_config_banks_swap_command_callback(void)
 
 /**
   * @brief  Callback Function for managing the SetName command
-  * @param  uint8_t *new_name
-  * @retval None
+  * @param  *new_name
   */
 __weak void ext_config_set_name_command_callback(uint8_t *new_name)
 {
@@ -6012,8 +6730,7 @@ __weak void ext_config_set_name_command_callback(uint8_t *new_name)
 
 /**
   * @brief  Custom commands definition
-  * @param  JSON_Array *json_command_array
-  * @retval None
+  * @param  *json_command_array
   */
 __weak void ext_config_read_custom_commands_callback(JSON_Array *json_command_array)
 {
@@ -6265,12 +6982,11 @@ __weak void ext_config_read_custom_commands_callback(JSON_Array *json_command_ar
 
 /**
   * @brief  Callback Function for managing the custom command
-  * @param  ble_custom_commad_result_t *custom_command:
-  * @param                            uint8_t *CommandName: Name of the command
-  * @param                            custom_command->CommandType: Type of the command
-  * @param                            int32_t IntValue:    Integer or boolean parameter
-  * @param                            uint8_t *StringValue: String parameter
-  * @retval None
+  * @param  *custom_command:
+  *         - *CommandName: Name of the command
+  *         - CommandType: Type of the command
+  *         - IntValue:    Integer or boolean parameter
+  *         - *StringValue: String parameter
   */
 __weak void  ext_config_custom_command_callback(ble_custom_commad_result_t *custom_command)
 {
@@ -6338,8 +7054,7 @@ __weak void  ext_config_custom_command_callback(ble_custom_commad_result_t *cust
 
 /**
   * @brief  Callback Function for managing the SetDate command
-  * @param  uint8_t *new_date
-  * @retval None
+  * @param  *new_date
   */
 __weak void ext_config_set_date_command_callback(uint8_t *new_date)
 {
@@ -6355,8 +7070,7 @@ __weak void ext_config_set_date_command_callback(uint8_t *new_date)
 
 /**
   * @brief  Callback Function for managing the SetTime command
-  * @param  uint8_t *new_time
-  * @retval None
+  * @param  *new_time
   */
 __weak void ext_config_set_time_command_callback(uint8_t *new_time)
 {
@@ -6372,8 +7086,7 @@ __weak void ext_config_set_time_command_callback(uint8_t *new_time)
 
 /**
   * @brief  Callback Function for managing the SetWiFi command
-  * @param  ble_wifi_cred_acc_t new_wifi_cred
-  * @retval None
+  * @param  new_wifi_cred
   */
 __weak void ext_config_set_wi_fi_command_callback(ble_wifi_cred_acc_t new_wifi_cred)
 {

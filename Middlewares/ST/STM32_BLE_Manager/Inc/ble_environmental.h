@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_environmental.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Environmental info services APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -39,31 +39,30 @@ extern "C" {
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init environmental info service
-  * @param  uint8_t press_enable:     1 for enabling the BLE pressure feature, 0 otherwise.
-  * @param  uint8_t hum_enable:       1 for enabling the BLE humidity feature, 0 otherwise.
-  * @param  uint8_t num_temp_enabled: 0 for disabling BLE temperature feature
-  *                                   1 for enabling only one BLE temperature feature
-  *                                   2 for enabling two BLE temperatures feature
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for environmental info service
+  * @param  press_enable:    1 for enabling the BLE pressure feature, 0 otherwise.
+  * @param  hum_enable:      1 for enabling the BLE humidity feature, 0 otherwise.
+  * @param  num_temp_enabled: 0 for disabling BLE temperature feature
+  *                                 1 for enabling only one BLE temperature feature
+  *                                 2 for enabling two BLE temperatures feature
+  * @retval *ble_char_pointer: Data structure pointer for environmental info service
   */
 extern ble_char_object_t *ble_init_env_service(uint8_t press_enable, uint8_t hum_enable, uint8_t num_temp_enabled);
 
 #ifndef BLE_MANAGER_SDKV2
 /**
   * @brief  Setting Environmental Advertise Data
-  * @param  uint8_t *manuf_data: Advertise Data
-  * @retval None
+  * @param  *manuf_data: Advertise Data
   */
 extern void ble_set_env_advertise_data(uint8_t *manuf_data);
 #endif /* BLE_MANAGER_SDKV2 */
 
 /**
   * @brief  Update Environmental characteristic value
-  * @param  int32_t press:       Pressure in mbar (Set 0 if not used)
-  * @param  uint16_t hum:        humidity RH (Relative Humidity) in thenths of % (Set 0 if not used)
-  * @param  int16_t temp1:       Temperature in tenths of degree (Set 0 if not used)
-  * @param  int16_t temp2:       Temperature in tenths of degree (Set 0 if not used)
-  * @retval ble_status_t:          Status
+  * @param  press:  Pressure in mbar (Set 0 if not used)
+  * @param  hum:    humidity RH (Relative Humidity) in thenths of % (Set 0 if not used)
+  * @param  temp1:  Temperature in tenths of degree (Set 0 if not used)
+  * @param  temp2:  Temperature in tenths of degree (Set 0 if not used)
+  * @retval status
   */
 extern ble_status_t ble_environmental_update(int32_t press, uint16_t hum, int16_t temp1, int16_t temp2);
 

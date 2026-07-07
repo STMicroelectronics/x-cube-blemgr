@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_activity_recognition.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Activity Recognition info service APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -53,26 +53,24 @@ typedef enum
 
 /* Exported functions ------------------------------------------------------- */
 /**
-  * @brief  Init Activity Recognition info service
-  * @param  None
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for Activity Recognition info service
+  * @brief  Init Activity Recognition service
+  * @retval *ble_char_pointer: Data structure pointer forActivity Recognition service
   */
 extern ble_char_object_t *ble_init_act_rec_service(void);
 
 #ifndef BLE_MANAGER_SDKV2
 /**
   * @brief  Setting Activity Recognition Advertise Data
-  * @param  uint8_t *manuf_data: Advertise Data
-  * @retval None
+  * @param  *manuf_data: Advertise Data
   */
 extern void ble_set_act_rec_advertise_data(uint8_t *manuf_data);
 #endif /* BLE_MANAGER_SDKV2 */
 
 /**
   * @brief  Update Activity Recognition characteristic
-  * @param  ble_ar_output_t activity_code Activity Recognized
-  * @param  ble_ar_algo_idx_t Algorithm Code
-  * @retval ble_status_t   Status
+  * @param  activity_code Activity Recognized
+  * @param  algorithm Code
+  * @retval status
   */
 extern ble_status_t ble_act_rec_update(ble_ar_output_t activity_code, ble_ar_algo_idx_t algorithm);
 

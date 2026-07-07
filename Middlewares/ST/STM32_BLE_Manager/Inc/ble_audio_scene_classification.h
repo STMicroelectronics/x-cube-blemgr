@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_audio_scene_classification.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Audio Scene Classification info service APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -47,16 +47,16 @@ typedef enum
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init Audio Scene Classification info service
-  * @param  uint8_t send_algorithm_code 0/1 -> Send also the Audio Scene Classificatio algorithm code
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for Activity Classification info service
+  * @param  send_algorithm_code 0/1 -> Send also the Audio Scene Classificatio algorithm code
+  * @retval *ble_char_pointer: Data structure pointer for Activity Classification info service
   */
 extern ble_char_object_t *ble_init_audio_scene_class_service(uint8_t send_algorithm_code);
 
 /**
   * @brief  Update Audio Scene Classification characteristic
-  * @param  ble_asc_output_t asc_code Audio Scene Classification Code
-  * @param ble_asc_algorithm_t asc_alg_id Algorithm Id
-  * @retval ble_status_t   Status
+  * @param  asc_code Audio Scene Classification Code
+  * @param  asc_alg_id Algorithm Id
+  * @retval status
   */
 extern ble_status_t ble_audio_scene_class_update(ble_asc_output_t asc_code, ble_asc_algorithm_t asc_alg_id);
 

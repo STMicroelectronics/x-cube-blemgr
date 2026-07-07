@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_motion_algorithms.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Motion Algorithms info service APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -43,15 +43,14 @@ typedef void (*custom_write_request_motion_algorithms_t)(ble_motion_algorithms_t
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init Motion Algorithms info service
-  * @param  None
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for Motion Algorithms info service
+  * @retval *ble_char_pointer: Data structure pointer for Motion Algorithms info service
   */
 extern ble_char_object_t *ble_init_motion_algorithms_service(void);
 
 /**
   * @brief  Update Motion Algorithms characteristic
-  * @param  uint8_t motion_code Detected Motion
-  * @retval ble_status_t   Status
+  * @param  motion_code Detected Motion
+  * @retval status
   */
 extern ble_status_t ble_motion_algorithms_update(uint8_t motion_code);
 

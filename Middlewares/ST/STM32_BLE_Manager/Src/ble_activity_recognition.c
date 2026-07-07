@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_activity_recognition.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Add Activity Recognition service using vendor specific profiles.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -61,8 +61,7 @@ static void read_request_act_rec(void *ble_char_pointer,
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init Activity Recognition service
-  * @param  None
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer forActivity Recognition service
+  * @retval *ble_char_pointer: Data structure pointer forActivity Recognition service
   */
 ble_char_object_t *ble_init_act_rec_service(void)
 {
@@ -91,8 +90,7 @@ ble_char_object_t *ble_init_act_rec_service(void)
 #ifndef BLE_MANAGER_SDKV2
 /**
   * @brief  Setting Activity Recognition Advertise Data
-  * @param  uint8_t *manuf_data: Advertise Data
-  * @retval None
+  * @param  *manuf_data: Advertise Data
   */
 void ble_set_act_rec_advertise_data(uint8_t *manuf_data)
 {
@@ -102,9 +100,9 @@ void ble_set_act_rec_advertise_data(uint8_t *manuf_data)
 
 /**
   * @brief  Update Activity Recognition characteristic
-  * @param  ble_ar_output_t activity_code Activity Recognized
-  * @param  ble_ar_algo_idx_t Algorithm Code
-  * @retval ble_status_t   Status
+  * @param  activity_code Activity Recognized
+  * @param  algorithm Code
+  * @retval status
   */
 ble_status_t ble_act_rec_update(ble_ar_output_t activity_code, ble_ar_algo_idx_t algorithm)
 {
@@ -147,16 +145,15 @@ ble_status_t ble_act_rec_update(ble_ar_output_t activity_code, ble_ar_algo_idx_t
   * @brief  This function is called when there is a change on the gatt attribute
   *         With this function it's possible to understand if Activity Recognition
   *         is subscribed or not to the one service
-  * @param  void *void_char_pointer
-  * @param  uint16_t attr_handle Handle of the attribute
-  * @param  uint16_t offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
-  *                          - Bits 0-14: offset of the reported value inside the attribute.
-  *                          - Bit 15: if the entire value of the attribute does not fit inside a single
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
-  * @param  uint8_t data_length length of the data
-  * @param  uint8_t *att_data attribute data
-  * @retval None
+  * @param  *void_char_pointer
+  * @param  attr_handle Handle of the attribute
+  * @param  offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
+  *                 - Bits 0-14: offset of the reported value inside the attribute.
+  *                 - Bit 15: if the entire value of the attribute does not fit inside a single
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
+  * @param  data_length length of the data
+  * @param  *att_data attribute data
   */
 static void attr_mod_request_act_rec(void *void_char_pointer, uint16_t attr_handle, uint16_t offset,
                                      uint8_t data_length,
@@ -188,9 +185,8 @@ static void attr_mod_request_act_rec(void *void_char_pointer, uint16_t attr_hand
 
 /**
   * @brief  This event is given when a read request is received by the server from the client.
-  * @param  void *void_char_pointer
-  * @param  uint16_t handle Handle of the attribute
-  * @retval None
+  * @param  *void_char_pointer
+  * @param  handle Handle of the attribute
   */
 
 #if ((BLUE_CORE != BLUENRG_LP) && (BLUE_CORE != STM32WB07_06) && (BLUE_CORE != STM32WB05N))
@@ -268,8 +264,7 @@ static void read_request_act_rec(void *ble_char_pointer,
   *************************************************/
 /**
   * @brief  Callback Function for Un/Subscription Feature
-  * @param  ble_notify_event_t Event Sub/Unsub
-  * @retval None
+  * @param  event Sub/Unsub
   */
 __weak void notify_event_activity_recognition(ble_notify_event_t event)
 {
@@ -291,9 +286,8 @@ __weak void notify_event_activity_recognition(ble_notify_event_t event)
   *******************************************************/
 /**
   * @brief  Callback Function for Activity Recognition read request.
-  * @param  ble_ar_output_t *activity_code
-  * @param  ble_ar_algo_idx_t *algorithm
-  * @retval None
+  * @param  *activity_code
+  * @param  *algorithm
   */
 __weak void read_request_activity_recognition_function(ble_ar_output_t *activity_code, ble_ar_algo_idx_t *algorithm)
 {

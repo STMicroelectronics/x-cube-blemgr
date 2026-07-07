@@ -450,6 +450,11 @@
               <FilePath>../../../../../../Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_ll_exti.c</FilePath>
             </File>
             <File>
+              <FileName>stm32u5xx_ll_pwr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_ll_pwr.c</FilePath>
+            </File>
+            <File>
               <FileName>stm32u5xx_hal_spi.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_hal_spi.c</FilePath>

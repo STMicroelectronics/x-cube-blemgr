@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_battery.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Battery info services APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -29,27 +29,25 @@ extern "C" {
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init battery info service
-  * @param  None
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for battery info service
+  * @retval *ble_char_pointer: Data structure pointer for battery info service
   */
 extern ble_char_object_t *ble_init_battery_service(void);
 
 #ifndef BLE_MANAGER_SDKV2
 /**
   * @brief  Setting Battery Advertise Data
-  * @param  uint8_t *manuf_data: Advertise Data
-  * @retval None
+  * @param  *manuf_data: Advertise Data
   */
 extern void ble_set_battery_advertise_data(uint8_t *manuf_data);
 #endif /* BLE_MANAGER_SDKV2 */
 
 /**
   * @brief  Update Battery characteristic
-  * @param  int32_t battery_level %Charge level
-  * @param  uint32_t voltage Battery voltage
-  * @param  uint32_t current Battery current (0x8000 if not available)
-  * @param  uint32_t status Charging/Discharging
-  * @retval ble_status_t   Status
+  * @param  battery_level %Charge level
+  * @param  voltage Battery voltage
+  * @param  current Battery current (0x8000 if not available)
+  * @param  status Charging/Discharging
+  * @retval status
   */
 extern ble_status_t ble_battery_update(uint32_t battery_level, uint32_t voltage, uint32_t current, uint32_t status);
 

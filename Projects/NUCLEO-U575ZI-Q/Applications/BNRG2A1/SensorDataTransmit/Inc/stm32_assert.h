@@ -3,8 +3,8 @@
   ******************************************************************************
   * @file    stm32_assert.h
   * @author  System Research & Applications Team - Catania Lab.
-  * @version 4.1.0
-  * @date    10-April-2025
+  * @version 4.2.0
+  * @date    30-April-2026
   * @brief   STM32 assert file.
   ******************************************************************************
   * @attention

@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_raw_pn_pl_controlled.c
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Add Raw PnPL ControlledL info services using vendor specific profile.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -44,9 +44,9 @@ static void attr_mod_request_raw_pn_pl_controlled(void *ble_char_pointer, uint16
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief Init Raw PnPL ControlledL Service
-  * @param uint8_t max_char_size Max Dimension of the BLE Char
-  * @param uint8_t is_variable variable/Fixed length flag
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for Raw PnPL Controlled service
+  * @param max_char_size Max Dimension of the BLE Char
+  * @param is_variable variable/Fixed length flag
+  * @retval *ble_char_pointer: Data structure pointer for Raw PnPL Controlled service
   */
 ble_char_object_t *ble_init_raw_pn_pl_controlled_service(uint8_t max_char_size, uint8_t is_variable)
 {
@@ -73,8 +73,7 @@ ble_char_object_t *ble_init_raw_pn_pl_controlled_service(uint8_t max_char_size, 
 
 /**
   * @brief  Return the max Char length for Raw PnPL Controlled characteristic
-  * @param  None
-  * @retval uint16_t   Max Char length
+  * @retval Max Char length
   */
 uint16_t ble_raw_pn_pl_controlled_max_char_size(void)
 {
@@ -83,9 +82,9 @@ uint16_t ble_raw_pn_pl_controlled_max_char_size(void)
 
 /**
   * @brief  Update  Raw PnPL Controlled characteristic value
-  * @param  uint8_t *data data to Update
-  * @param  uint8_t data_size Size of data to Update
-  * @retval ble_status_t   Status
+  * @param  *data data to Update
+  * @param  data_size Size of data to Update
+  * @retval status
   */
 ble_status_t ble_raw_pn_pl_controlled_status_update(uint8_t *data, uint8_t data_size)
 {
@@ -99,16 +98,15 @@ ble_status_t ble_raw_pn_pl_controlled_status_update(uint8_t *data, uint8_t data_
 /**
   * @brief  This function is called when there is a change on the GATT attribute
   *         With this function it's possible to understand if PnPLike is subscribed or not to the one service
-  * @param  void *void_char_pointer
-  * @param  uint16_t attr_handle Handle of the attribute
-  * @param  uint16_t offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
-  *                          - Bits 0-14: offset of the reported value inside the attribute.
-  *                          - Bit 15: if the entire value of the attribute does not fit inside a single
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
-  *                            ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
-  * @param  uint8_t data_length length of the data
-  * @param  uint8_t *att_data attribute data
-  * @retval None
+  * @param  *void_char_pointer
+  * @param  attr_handle Handle of the attribute
+  * @param  offset: (SoC mode) the offset is never used and it is always 0. Network coprocessor mode:
+  *                 - Bits 0-14: offset of the reported value inside the attribute.
+  *                 - Bit 15: if the entire value of the attribute does not fit inside a single
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT event, this bit is set to 1 to notify that other
+  *                 ACI_GATT_ATTRIBUTE_MODIFIED_EVENT events will follow to report the remaining value.
+  * @param  data_length length of the data
+  * @param  *att_data attribute data
   */
 static void attr_mod_request_raw_pn_pl_controlled(void *void_char_pointer, uint16_t attr_handle, uint16_t offset,
                                                   uint8_t data_length,
@@ -143,8 +141,7 @@ static void attr_mod_request_raw_pn_pl_controlled(void *void_char_pointer, uint1
   *************************************************/
 /**
   * @brief  Callback Function for Un/Subscription Feature
-  * @param  ble_notify_event_t Event Sub/Unsub
-  * @retval None
+  * @param  event Sub/Unsub
   */
 __weak void notify_event_raw_pn_p_like_controlled(ble_notify_event_t event)
 {

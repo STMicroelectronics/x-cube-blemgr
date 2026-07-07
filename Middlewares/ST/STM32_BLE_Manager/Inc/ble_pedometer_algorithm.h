@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_pedometer_algorithm.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Pedometer Algorithm info service APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -36,24 +36,22 @@ typedef struct
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init Pedometer Algorithm info service
-  * @param  None
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for Pedometer Algorithm info service
+  * @retval *ble_char_pointer: Data structure pointer for Pedometer Algorithm info service
   */
 extern ble_char_object_t *ble_init_pedometer_algorithm_service(void);
 
 #ifndef BLE_MANAGER_SDKV2
 /**
   * @brief  Setting Pedometer Algorithm Advertise Data
-  * @param  uint8_t *manuf_data: Advertise Data
-  * @retval None
+  * @param  *manuf_data: Advertise Data
   */
 extern void ble_set_pedometer_algorithm_advertise_data(uint8_t *manuf_data);
 #endif /* BLE_MANAGER_SDKV2 */
 
 /**
   * @brief  Update Pedometer Algorithm characteristic
-  * @param  ble_pm_output_t pedometer_algorithm_data Pedometer Algorithm data output
-  * @retval ble_status_t   Status
+  * @param  pedometer_algorithm_data Pedometer Algorithm data output
+  * @retval status
   */
 extern ble_status_t ble_pedometer_algorithm_update(ble_pm_output_t *pedometer_algorithm_data);
 

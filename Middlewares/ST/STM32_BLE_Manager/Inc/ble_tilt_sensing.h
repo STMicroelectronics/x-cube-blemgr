@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_tilt_sensing.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Tilt Sensing info service APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -37,16 +37,15 @@ typedef struct
 
 /* Exported functions ------------------------------------------------------- */
 /**
-  * @brief  Init Tilt Sensing info service
-  * @param  None
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for Tilt Sensing info service
+  * @brief  Init Tilt Sensing service
+  * @retval *ble_char_pointer: Data structure pointer for Tilt Sensing service
   */
 extern ble_char_object_t *ble_init_tilt_sensing_service(void);
 
 /**
   * @brief  Update Tilt Sensing characteristic
-  * @param  ble_angles_output_t tilt_sensing_measure Tilt Sensing Recognized
-  * @retval ble_status_t   Status
+  * @param  tilt_sensing_measure Tilt Sensing Recognized
+  * @retval status
   */
 extern ble_status_t ble_tilt_sensing_update(ble_angles_output_t tilt_sensing_measure);
 

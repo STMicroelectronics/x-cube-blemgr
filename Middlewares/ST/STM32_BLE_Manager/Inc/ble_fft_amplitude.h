@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_fft_amplitude.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   FFT Amplitude info services APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -29,24 +29,23 @@ extern "C" {
 /* Exported functions ------------------------------------------------------- */
 /**
   * @brief  Init FFT Amplitude info service
-  * @param  None
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for FFT Amplitude info service
+  * @retval *ble_char_pointer: Data structure pointer for FFT Amplitude info service
   */
 extern ble_char_object_t *ble_init_fft_amplitude_service(void);
 
 /*
  * @brief  Update FFT Amplitude characteristic value
- * @param  uint8_t *data_to_send:
+ * @param  *data_to_send:
  *                  - 2 bytes for number of samples
  *                  - 1 byte for number of components (up to 3 components)
  *                  - 4 bytes for frequency steps
  *                  - 4 bytes for each component
  *                     (if number of components is more 1, for example 3, send the data in this format:
  *                      X1,X2,X3,...Xn,Y1,Y2,Y3,...Yn,X1,Z2,Z3,...Zn)
- * @param  uint16_t data_number Number of samples
- * @param  uint8_t *sending_fft
- * @param  uint16_t *count_send_data
- * @retval ble_status_t   Status
+ * @param  data_number Number of samples
+ * @param  *sending_fft
+ * @param  *count_send_data
+ * @retval status
  */
 extern ble_status_t ble_fft_amplitude_update(uint8_t *data_to_send, uint16_t data_number, uint8_t *sending_fft,
                                              uint16_t *count_send_data);

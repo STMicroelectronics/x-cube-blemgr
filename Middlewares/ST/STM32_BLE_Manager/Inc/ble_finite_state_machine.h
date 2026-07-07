@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_finite_state_machine.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Finite State Machine info services APIs.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -41,18 +41,18 @@ typedef enum
 
 /* Exported functions ------------------------------------------------------- */
 /**
-  * @brief  Init Machine Learning Core info service
-  * @param  ble_finite_state_machine_num_reg_t num_reg Number of Registers
-  * @retval ble_char_object_t* ble_char_pointer: Data structure pointer for Machine Learning Core info service
+  * @brief  Init Finite State Machine info service
+  * @param  num_reg Number of Registers
+  * @retval *ble_char_pointer: Data structure pointer for Machine Learning Core info service
   */
 extern ble_char_object_t *ble_init_finite_state_machine_service(ble_finite_state_machine_num_reg_t num_reg);
 
 /**
-  * @brief  Update Machine Learning Core output registers characteristic
-  * @param  uint8_t *fsm_out pointers to 16 FSM register
-  * @param  uint8_t *fsm_status_a_mainpage pointer to the FSM status bits from 1 to 8
-  * @param  uint8_t *fsm_status_a_mainpage pointer to the FSM status bits from 9 to 16
-  * @retval ble_status_t Status
+  * @brief  Update Finite State Machine output registers characteristic
+  * @param  *fsm_out pointers to 16 FSM register
+  * @param  *fsm_status_a_mainpage pointer to the FSM status bits from 1 to 8
+  * @param  *fsm_status_b_mainpage pointer to the FSM status bits from 9 to 16
+  * @retval status
   */
 extern ble_status_t ble_finite_state_machine_update(uint8_t *fsm_out, uint8_t *fsm_status_a_mainpage,
                                                     uint8_t *fsm_status_b_mainpage);

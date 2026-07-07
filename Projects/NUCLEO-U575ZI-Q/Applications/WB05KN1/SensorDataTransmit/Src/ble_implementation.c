@@ -3,13 +3,15 @@
   ******************************************************************************
   * @file    ble_implementation.c
   * @author  System Research & Applications Team - Catania Lab.
+  * @version 4.2.0
+  * @date    30-April-2026
   * @brief   BLE Implementation header template file.
   *          This file should be copied to the application folder and renamed
   *          to ble_implementation.c.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file

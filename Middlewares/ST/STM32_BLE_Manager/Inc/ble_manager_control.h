@@ -2,13 +2,13 @@
   ******************************************************************************
   * @file    ble_manager_control.h
   * @author  System Research & Applications Team - Agrate/Catania Lab.
-  * @version 2.1.0
-  * @date    11-March-2025
+  * @version 2.2.0
+  * @date    20-April-2026
   * @brief   Control Compilation defines
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -46,9 +46,9 @@ extern "C" {
 #error "BLE_MEM_CPY Not Defined"
 #endif /* BLE_MEM_CPY */
 
-#if ((!defined BLUE_CORE) || ((BLUE_CORE < 0x00) || (BLUE_CORE > 0x05)))
+#if ((!defined BLUE_CORE) || ((BLUE_CORE < 0x00) || (BLUE_CORE > 0x06)))
 #error "It's necessary to set the of the Bluetooth type: BLUENRG 1_2/_MS/_LP/ or STM32WB 07_06/05N or BLUE_WB"
-#endif /* ((!defined BLUE_CORE) || ((BLUE_CORE < 0x00) || (BLUE_CORE > 0x03))) */
+#endif /* ((!defined BLUE_CORE) || ((BLUE_CORE < 0x00) || (BLUE_CORE > 0x06))) */
 
 #ifdef __cplusplus
 }
